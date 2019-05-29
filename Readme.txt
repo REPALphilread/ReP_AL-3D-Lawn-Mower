@@ -16,6 +16,10 @@ Test sketches can found in the Test Sketches folder
 They are designed to test the indiviual components in your build to see if they are working. 
 Ihe idea is to debug the components indicudually so you are faster in completing the project.
 
+CAD Data 
+--------
+is fouind in the STEP Files Folder
+
 
 ----------------------------------------------
 All my work falls under the GNU Public License
