@@ -15,7 +15,7 @@ Features of 6.1
 - Menu options have been improved. Scrolling in both directions and easier coding.
 - More Test options have been added including a compass test and a volt amps test
 - First trials at compass mowing (very initial stages - not working well and not advised to use it yet)
-- Stabalised the heading hold by using compass degrees instead of heading.
+- Stabilised the heading hold by using compass degrees instead of heading.
 
 
 NodeMCU Board URL:
