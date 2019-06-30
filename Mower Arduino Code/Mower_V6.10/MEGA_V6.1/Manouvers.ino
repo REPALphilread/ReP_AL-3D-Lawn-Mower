@@ -595,10 +595,13 @@ void Manouver_Exit_To_Zone_X() {
        if (Mower_Parked == 0) Manouver_Start_Mower();
      }
     if (Wire_Detected == 0) {
-        Serial.println("");
-        Serial.println("Perimeter Wire not detected");
-        Manouver_Park_The_Mower();
-      }
+        TestforBoundaryWire();                                      // Test again for the boundary wire
+          if (Wire_Detected == 0) {                                 // if its still saying the wire is off then park the mower.
+          Serial.println("");
+          Serial.println("Perimeter Wire not detected");
+          Manouver_Park_The_Mower();
+          }
+        }   
     }
   if (Perimeter_Wire_Enabled == 0) {
        Serial.println("");
