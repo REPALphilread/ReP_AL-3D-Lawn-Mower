@@ -493,9 +493,9 @@ void Manouver_Dock_The_Mower() {
   
   //Setup Alarms 
   Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
-  if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
-  if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
-  if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
+  //if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
+  //if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
+  //if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
  
 }
 
@@ -514,9 +514,9 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Motor_Action_Stop_Spin_Blades();
 
   Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
-  if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
-  if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
-  if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
+  //if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
+  //if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
+  //if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
 }
 
 
@@ -539,9 +539,9 @@ void Manouver_Park_The_Mower() {
   Turn_Off_Relay();
 
   Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
-  if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
-  if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
-  if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
+  //if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
+  //if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
+  //if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
   }
 
 void Manouver_Hibernate_Mower() {
