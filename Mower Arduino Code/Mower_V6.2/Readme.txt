@@ -1,21 +1,21 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V6.1   
+Code V6.2   
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
-Upload the Nano code to the Arduino Nano
-Upload the NodeMCU code to the NodeMCU Board
+Upload the Nano code to the Arduino Nano (same as 6.1)
+Upload the NodeMCU code to the NodeMCU Board (same as 6.1)
 
 
-Features of 6.1
+Features of 6.2
 ---------------
 
-- Menu options have been improved. Scrolling in both directions and easier coding.
-- More Test options have been added including a compass test and a volt amps test
-- First trials at compass mowing (very initial stages - not working well and not advised to use it yet)
-- Stabalised the heading hold by using compass degrees instead of heading.
+- Alarm timer function fixed
+- Added more options for timed mow
+- Easier menu in code to add custom options
+- mower displays the off time in timed mow.
 
 
 NodeMCU Board URL:
