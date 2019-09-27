@@ -3,11 +3,6 @@
 These files can be downloaded undee the GNU License provided
 ------------------------------------------------------------
 
-Latest version V7 
-------------------
-Rain sensor
-
-
 
 In addition
 -----------
