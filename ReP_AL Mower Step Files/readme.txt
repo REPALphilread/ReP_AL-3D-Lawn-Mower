@@ -1,5 +1,5 @@
 
-ReP_AL Lawn Mower STL Files
+ReP_AL Lawn Mower CAD STEP Files
 
 ------------------------------------------------------------
 These files can be downloaded undee the GNU License provided
