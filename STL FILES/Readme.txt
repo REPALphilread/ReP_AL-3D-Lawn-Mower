@@ -4,6 +4,6 @@ Latest and all Previous Versions of the ReP_AL Lawn Mower
 
 V2 = Lower Ground Clearance Version
 V3 = First High Ground Clearance Version
-V4 = high Ground Clearance Direct Drive Version (motors directly attached to the wheels)
+V4 = High Ground Clearance Direct Drive Version (motors directly attached to the wheels and wheel arches)
 
 *V6 = current version on thingiverse
