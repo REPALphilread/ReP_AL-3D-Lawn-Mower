@@ -9,10 +9,17 @@ Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board
 
 
-Features of 6.41
+Features of 6.6
 ---------------
 
-- 
+- Spiral cut feature available.  (be careful on slopes)
+- More EEPROM settings available
+- Improved compass home feature and angle setting
+
+DO NOT USE!!!!
+
+- Tip safety - not working yet
+- Parallel cut - not working 100% yet.
 
 
 NodeMCU Board URL:
