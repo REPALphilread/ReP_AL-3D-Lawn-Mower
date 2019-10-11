@@ -15,7 +15,7 @@ void Print_LCD_Menu_Settings(byte LCD_Menu_Settings) {
   if (LCD_Menu_Settings == 10) lcd.print(F("Pattern Mow"));
   if (LCD_Menu_Settings == 11) lcd.print(F("Battery Min"));  
   if (LCD_Menu_Settings == 12) lcd.print(F("Tracking PID"));   
-  if (LCD_Menu_Settings == 13) lcd.print(F("Tip Safety"));   
+  if (LCD_Menu_Settings == 13) lcd.print(F("**TiP**"));   
   if (LCD_Menu_Settings == 14) lcd.print(F("SPARE"));  
   if (LCD_Menu_Settings == 15) lcd.print(F("SPARE"));   
   if (LCD_Menu_Settings == 16) lcd.print(F("SPARE"));   
@@ -1277,7 +1277,7 @@ if (Menu_Mode_Selection == 9) {
        // Tip Safety ** Experimental**
        lcd.clear();
        lcd.setCursor(0,0);
-       lcd.print(F("Tip Safety"));
+       lcd.print(F("Tip DO NOT USE!"));
        lcd.setCursor(0,1);
        lcd.print(F("Mode"));
        delay(1000);
