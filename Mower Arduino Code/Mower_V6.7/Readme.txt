@@ -11,7 +11,7 @@ Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 
 Features of 6.7
 ---------------
-
+- DO NOT use the tip safety code.  It is not working!
 - PLEASE UPDATE YOUR WIFI APP BY FOLLOWING THE WIFI INSTRUCTIONS ON THE WEBSITE11
 - CHANGES ARE IN THE SEGMENTED SWITCH AT THE BOTTOM OF THE APP SCREEN
 https://repalmakershop.com/pages/3d-printed-lawn-mower-wifi-app
