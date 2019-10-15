@@ -12,7 +12,11 @@ Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 Features of 6.7
 ---------------
 
-- Allows the control of the pattern mow via the APP.
+- PLEASE UPDATE YOUR WIFI APP BY FOLLOWING THE WIFI INSTRUCTIONS ON THE WEBSITE11
+- CHANGES ARE IN THE SEGMENTED SWITCH AT THE BOTTOM OF THE APP SCREEN
+https://repalmakershop.com/pages/3d-printed-lawn-mower-wifi-app
+
+- Allows the control of the pattern mow via the APP. 
 - Parallel mow is still under development but you can trial it.
 
 
