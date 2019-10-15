@@ -6,5 +6,5 @@ MEGA - Needs to be uploaded to the Arduino MEGA
 NANO - Needs to be uploaded to the Arduino NANO   
 NodeMCU - Needs to be uploaded to the NodeMCU board
 
-Newest Code Version 6.6    Uploaded 11.10.2019
+Newest Code Version 6.7    Uploaded 15.10.2019
 
