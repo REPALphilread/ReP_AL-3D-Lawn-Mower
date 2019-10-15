@@ -115,12 +115,12 @@ void Pattern_Mow_Spirals() {
 
 void Pattern_Mow_Parallel() {
   
-  int Turn_90_Delay_LH        = 1150;
-  int Turn_90_Delay_RH        = 1250;
-  int Move_to_next_line_delay = 1000;
-  int Line_Length_Cycles      = 25;
-  int Parallel_Compass_Assist = 1;
-  int Turning_Compass_Assist  = 0;
+  int Turn_90_Delay_LH        = 1150;      // adjust this number so the mower turns 90° Left
+  int Turn_90_Delay_RH        = 1250;      // adjust this number so the mower turns 90° Right
+  int Move_to_next_line_delay = 1000;      // distance between lines
+  int Line_Length_Cycles      = 25;        // length of the line mowed
+  int Parallel_Compass_Assist = 1;         // compass tries to keep the mowed line straight
+  int Turning_Compass_Assist  = 0;         // compass assists to turn the mower 90° at each corner - DOESNT WORK YET!!!
        
 
 
