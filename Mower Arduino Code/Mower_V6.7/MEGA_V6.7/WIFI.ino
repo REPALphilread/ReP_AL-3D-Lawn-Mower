@@ -143,12 +143,12 @@ delay(30);
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
-// Manuel Button in Blynk App
+// Manual Button in Blynk App
  if (val_WIFI == 15)  {    
    Serial.println("");
    Serial.print(F("WIFI Command: ")); 
    Serial.print(val_WIFI);
-   Serial.println(F("|Manuel Mode"));
+   Serial.println(F("|Manual Mode"));
    Manouver_Park_The_Mower(); 
    delay(1000);
    Manouver_Manuel_Mode(); 
