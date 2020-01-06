@@ -290,7 +290,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.7";
+  char Version[16] = "V6.8";
 
   bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;                          // Activates the WIFI Fucntions
