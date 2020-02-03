@@ -8,13 +8,16 @@ Arduino Code
 The mower software is in the folder Mower Arduino Code:  
 MEGA - Needs to be uploaded to the Arduino MEGA 
 NANO - Needs to be uploaded to the Arduino NANO   
+NODEMCU - Needs to be uploaded to the NODEMcu board
+
 (I needed to use the "old bootloader" option in the Arduino IDE to get the sketch to upload to the NANO)
 Perimeter Wire - Sender_station_V1 needs to be uploaded to the Arduino in the perimeter wire transmitter.
 
 
 Libraries
 ---------
-All the libraries I used for the Arduino Code can be found in this folder
+All the libraries I used for the Arduino Code can be found in this folder.
+Ensure these are installed in the Arduino libraries folder otherwise the main code wont compile
 
 
 Test sketches folder
