@@ -765,7 +765,7 @@ void Activate_Menu_Option_Sensors() {
              if (!Minus_Key_X) {
                lcd.setCursor(0,1);
                lcd.print(F("Status: "));
-               Rain_Sensor_Installed = 0;
+               WIFI_Enabled = 0;
                lcd.print(F("Disabled"));
                Serial.print(F("Status:"));
                Serial.println(WIFI_Enabled);
