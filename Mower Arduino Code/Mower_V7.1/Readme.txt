@@ -14,6 +14,7 @@ Features of 7.1
 
 - Bumper Bar is added to the code.
 - Bumper Bar can be activated in the sensors menu.
+- Bumper Bar can be tested in the tet menu
 
 
 
