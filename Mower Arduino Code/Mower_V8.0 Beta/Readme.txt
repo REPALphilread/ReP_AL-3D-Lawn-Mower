@@ -8,7 +8,7 @@ Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 Upload the TFT Code to the TFT MEGA Shield
-Upload the BMP Files to the TFT SD Card
+Upload the BMP Files to the TFT SD Card (in the route folder of the SD card)
 
 
 Features of 8.0 BETA
