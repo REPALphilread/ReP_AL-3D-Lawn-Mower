@@ -82,22 +82,20 @@ delay(30);
    if (Mower_Docked == 1)   {  
 
    // Update the TFT Display
-   Serial.println(F("Updating TFT of WIFI Command to Exit dock"));
+   #ifdef DEBUG
+    Serial.println(F("Updating TFT of WIFI Command to Exit dock"));
+   #endif
    Exiting_Dock = 1;
    Mower_Error_Value = 0;
-   Send_Mower_Docked_Data();                                   // Send the Docked TX Data package to the mower.
-     
-   Serial.println("");
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("Exit Dock| "));
-   Serial.println(F("Zone 1"));
-   lcd.clear();
-   lcd.print(F("WIFI Start"));
-   lcd.setCursor(0,1);
-   lcd.print(F("Exit Dock Z1"));
-   delay(500);
-   lcd.clear();
+   Send_Mower_Docked_Data(); 
+                                     // Send the Docked TX Data package to the mower.
+   #ifdef DEBUG  
+    Serial.println("");
+    Serial.print(F("WIFI Command: ")); 
+    Serial.print(val_WIFI);
+    Serial.print(F("Exit Dock| "));
+    Serial.println(F("Zone 1"));
+   #endif
    Exit_Zone = 1;
    Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
    Manouver_Exit_To_Zone_X();
@@ -233,20 +231,24 @@ delay(30);
 void Execute_Manuel_Blynk_Command_To_Mower() {
 // insert wheel motions here.
 
- if (val_WIFI == 16)  {    
-   Serial.println("");
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode"));
+ if (val_WIFI == 16)  {
+   #ifdef DEBUG    
+    Serial.println("");
+    Serial.print(F("WIFI Command: ")); 
+    Serial.print(val_WIFI);
+    Serial.println(F("|Automatic Mode"));
+   #endif
    Manouver_Park_The_Mower(); 
    Turn_On_Relay(); 
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
  if (val_WIFI == 17)  {    
-   Serial.print(F("WIFI")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Forward"));
+   #ifdef DEBUG
+    Serial.print(F("WIFI")); 
+    Serial.print(val_WIFI);
+    Serial.print(F("|Wheel Forward"));
+   #endif
    SetPins_ToGoForwards(); 
    Motor_Action_Go_Full_Speed();
    delay(300);
@@ -254,10 +256,12 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
- if (val_WIFI == 18)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Reverse"));
+ if (val_WIFI == 18)  { 
+   #ifdef DEBUG   
+    Serial.print(F("WIFI:")); 
+    Serial.print(val_WIFI);
+    Serial.print(F("|Wheel Reverse"));
+   #endif
    SetPins_ToGoBackwards(); 
    Motor_Action_Go_Full_Speed();
    delay(300);
@@ -265,10 +269,12 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
- if (val_WIFI == 19)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Left"));
+ if (val_WIFI == 19)  { 
+   #ifdef DEBUG   
+    Serial.print(F("WIFI:")); 
+    Serial.print(val_WIFI);
+    Serial.print(F("|Wheel Left"));
+   #endif
    SetPins_ToTurnLeft();
    Motor_Action_Go_Full_Speed();
    delay(200);
@@ -276,10 +282,12 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
- if (val_WIFI == 20)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Right"));
+ if (val_WIFI == 20)  {   
+   #ifdef DEBUG 
+    Serial.print(F("WIFI:")); 
+    Serial.print(val_WIFI);
+    Serial.print(F("|Wheel Right"));
+   #endif
    SetPins_ToTurnRight();
    Motor_Action_Go_Full_Speed();
    delay(200);

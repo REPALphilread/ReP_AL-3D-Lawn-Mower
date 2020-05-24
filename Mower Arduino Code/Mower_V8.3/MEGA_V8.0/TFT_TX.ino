@@ -1,12 +1,13 @@
 //Transmits Data to the TFT e.g. sensor data from EEPROM
-
 void Send_Data_To_TFT() {
     // Depending on the code received the following data set is sent through the Serial 3 port.
     
     // Menu Sonar
     if (TFT_Menu_Command == 10) {
-      Serial.println("TX Sonar to TFT");
-      
+      #ifdef DEBUG
+        Serial.println("TX Sonar to TFT");
+      #endif
+            
       Serial3.print(Sonar_1_Activate);
       Serial3.println("\a");
       delay(200);  
@@ -27,30 +28,36 @@ void Send_Data_To_TFT() {
       Serial3.println("\e");
       delay(200);
 
-      Serial.print(F("Sonar 2 Activated = "));
-      Serial.println(Sonar_2_Activate);
-      Serial.print(F("Sonar 1 Activated = "));
-      Serial.println(Sonar_1_Activate);
-      Serial.print(F("Sonar 3 Activated = "));
-      Serial.println(Sonar_3_Activate);
-      Serial.print(F("Sonar Max Distance = "));
-      Serial.println(maxdistancesonar);
-      Serial.print(F("Sonar Sensitivity= "));
-      Serial.println(Max_Sonar_Hit);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Sonar 2 Activated = "));
+        Serial.println(Sonar_2_Activate);
+        Serial.print(F("Sonar 1 Activated = "));
+        Serial.println(Sonar_1_Activate);
+        Serial.print(F("Sonar 3 Activated = "));
+        Serial.println(Sonar_3_Activate);
+        Serial.print(F("Sonar Max Distance = "));
+        Serial.println(maxdistancesonar);
+        Serial.print(F("Sonar Sensitivity= "));
+        Serial.println(Max_Sonar_Hit);
+        Serial.println(F(" "));
+      #endif
       }
 
 
     if (TFT_Menu_Command == 11) {
-      Serial.println("False Command");
+      #ifdef DEBUG
+        Serial.println("False Command");
+      #endif
       
     }
 
 
 // Menu Battery
     if (TFT_Menu_Command == 26) {
-      Serial.println("TX Battery to TFT");
-      
+      #ifdef DEBUG
+        Serial.println("TX Battery to TFT");
+      #endif
+
       Serial3.print(Battery_Min * 10);
       Serial3.println("\a");
       delay(300);  
@@ -58,19 +65,24 @@ void Send_Data_To_TFT() {
       Serial3.print(Low_Battery_Instances_Chg);
       Serial3.println("\b");
       delay(200);  
-
-      Serial.print(F("Battery Min = "));
-      Serial.println(Battery_Min);
-      Serial.print(F("Battery Sensitivity = "));
-      Serial.println(Low_Battery_Instances_Chg);
-      Serial.println(" ");
+      
+      #ifdef DEBUG
+        Serial.print(F("Battery Min = "));
+        Serial.println(Battery_Min);
+        Serial.print(F("Battery Sensitivity = "));
+        Serial.println(Low_Battery_Instances_Chg);
+        Serial.println(" ");
+      #endif
       
 }
 
-    // Menu Sonar
+    // Menu Sensors
     if (TFT_Menu_Command == 6) {
-      Serial.println("TX Sensors to TFT");
-      
+
+      #ifdef DEBUG
+        Serial.println("TX Sensors to TFT");
+      #endif
+
       Serial3.print(Perimeter_Wire_Enabled);
       Serial3.println("\a");
       delay(200);  
@@ -83,20 +95,23 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
-
-      Serial.print(F("Wire Module Activated = "));
-      Serial.println(Perimeter_Wire_Enabled);
-      Serial.print(F("WIFI Enabled = "));
-      Serial.println(WIFI_Enabled);
-      Serial.print(F("Bumper Activated = "));
-      Serial.println(Bumper_Activate_Frnt);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Wire Module Activated = "));
+        Serial.println(Perimeter_Wire_Enabled);
+        Serial.print(F("WIFI Enabled = "));
+        Serial.println(WIFI_Enabled);
+        Serial.print(F("Bumper Activated = "));
+        Serial.println(Bumper_Activate_Frnt);
+        Serial.println(F(" "));
+      #endif
       }
 
 
-// Menu Battery
+// Menu Rain
     if (TFT_Menu_Command == 12) {
-      Serial.println("TX Rain to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Rain to TFT");
+      #endif
       
       Serial3.print(Rain_Sensor_Installed);
       Serial3.println("\a");
@@ -105,18 +120,21 @@ void Send_Data_To_TFT() {
       Serial3.print(Rain_Total_Hits_Go_Home);
       Serial3.println("\b");
       delay(200);  
-
-      Serial.print(F("Rain Sensor ON/OFF = "));
-      Serial.println(Rain_Sensor_Installed);
-      Serial.print(F("Rain Sensor Sensitivity = "));
-      Serial.println(Rain_Total_Hits_Go_Home);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Rain Sensor ON/OFF = "));
+        Serial.println(Rain_Sensor_Installed);
+        Serial.print(F("Rain Sensor Sensitivity = "));
+        Serial.println(Rain_Total_Hits_Go_Home);
+        Serial.println(F(" "));
+      #endif
       }
 
 
 // Wheel Motor Data
     if (TFT_Menu_Command == 14) {
-      Serial.println("TX Wheel Motor to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Wheel Motor to TFT");
+      #endif
       
       Serial3.print(PWM_MaxSpeed_LH);
       Serial3.println("\a");
@@ -135,29 +153,34 @@ void Send_Data_To_TFT() {
       delay(200);  
 
       Slow_Speed_MAG = Slow_Speed_MAG / 10;
-      Serial.println("TX:");
-      Serial.println(Slow_Speed_MAG);
+      #ifdef DEBUG
+        Serial.println("TX:");
+        Serial.println(Slow_Speed_MAG);
+      #endif
       Serial3.print(Slow_Speed_MAG);
       Serial3.println("\e");
       delay(200);
-
-      Serial.print(F("Wheel Motor PWM LH = "));
-      Serial.println(PWM_MaxSpeed_LH);
-      Serial.print(F("Wheel Motor PWM RH = "));
-      Serial.println(PWM_MaxSpeed_RH);
-      Serial.print(F("Wheel Motor Slow Speed PWM LH = "));
-      Serial.println(PWM_Slow_Speed_LH);
-      Serial.print(F("Wheel Motor Slow Speed PWM RH = "));
-      Serial.println(PWM_Slow_Speed_RH);
-      Serial.print(F("Slow Speed MAG = "));
-      Serial.println(Slow_Speed_MAG * 10);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Wheel Motor PWM LH = "));
+        Serial.println(PWM_MaxSpeed_LH);
+        Serial.print(F("Wheel Motor PWM RH = "));
+        Serial.println(PWM_MaxSpeed_RH);
+        Serial.print(F("Wheel Motor Slow Speed PWM LH = "));
+        Serial.println(PWM_Slow_Speed_LH);
+        Serial.print(F("Wheel Motor Slow Speed PWM RH = "));
+        Serial.println(PWM_Slow_Speed_RH);
+        Serial.print(F("Slow Speed MAG = "));
+        Serial.println(Slow_Speed_MAG * 10);
+        Serial.println(F(" "));
+      #endif
       }
 
 
 // Blade Motor Data
     if (TFT_Menu_Command == 15) {
-      Serial.println("TX Blade Motor to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Blade Motor to TFT");
+      #endif
       
       Serial3.print(PWM_Blade_Speed);
       Serial3.println("\a");
@@ -166,20 +189,23 @@ void Send_Data_To_TFT() {
       Serial3.print(Cutting_Blades_Activate);
       Serial3.println("\b");
       delay(200);  
-      
-      Serial.print(F("Blade Motor PWM = "));
-      Serial.println(PWM_Blade_Speed);
-      Serial.print(F("Cutting Blade Activated = "));
-      Serial.println(Cutting_Blades_Activate);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Blade Motor PWM = "));
+        Serial.println(PWM_Blade_Speed);
+        Serial.print(F("Cutting Blade Activated = "));
+        Serial.println(Cutting_Blades_Activate);
+        Serial.println(F(" "));
+      #endif
 
 }
 
 
 // Blade Motor Data
     if (TFT_Menu_Command == 16) {
-      Serial.println("TX Movement to TFT");
-      
+      #ifdef DEBUG
+        Serial.println("TX Movement to TFT");
+      #endif
+
       Serial3.print(Max_Cycles_Straight / 10);
       Serial3.println("\a");
       delay(300);  
@@ -196,22 +222,26 @@ void Send_Data_To_TFT() {
       Serial3.println("\d");
       delay(200);  
       
-      Serial.print(F("Max Mow Length = "));
-      Serial.println(Max_Cycles_Straight);
-      Serial.print(F("Turn Angle Min = "));
-      Serial.println(Mower_Turn_Delay_Min);
-      Serial.print(F("Turn Angle Max = "));
-      Serial.println(Mower_Turn_Delay_Max);
-      Serial.print(F("Reverse Distance = "));
-      Serial.println(Mower_Reverse_Delay);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Max Mow Length = "));
+        Serial.println(Max_Cycles_Straight);
+        Serial.print(F("Turn Angle Min = "));
+        Serial.println(Mower_Turn_Delay_Min);
+        Serial.print(F("Turn Angle Max = "));
+        Serial.println(Mower_Turn_Delay_Max);
+        Serial.print(F("Reverse Distance = "));
+        Serial.println(Mower_Reverse_Delay);
+        Serial.println(F(" "));
+      #endif
 
 }
 
 
 // Tracking to Exit Data
     if (TFT_Menu_Command == 17) {
-      Serial.println("TX Exit to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Exit to TFT");
+      #endif
       
       Serial3.print(Track_Wire_Zone_1_Cycles / 100);
       Serial3.println("\a");
@@ -225,19 +255,23 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
-      Serial.print("Track Wire Zone 1 = ");
-      Serial.println(Track_Wire_Zone_1_Cycles);
-      
-      Serial.print("Track Wire Zone 2 = ");
-      Serial.println(Track_Wire_Zone_2_Cycles);
+      #ifdef DEBUG
+        Serial.print("Track Wire Zone 1 = ");
+        Serial.println(Track_Wire_Zone_1_Cycles);
+        
+        Serial.print("Track Wire Zone 2 = ");
+        Serial.println(Track_Wire_Zone_2_Cycles);
+      #endif
       
       if (CCW_Tracking_To_Start == 0) {
         CW_Tracking_To_Start = 1;
         CCW_Tracking_To_Charge = 1;
         CW_Tracking_To_Charge = 0;
 
-        Serial.println(F("Tracking to Charge = CCW"));
-        Serial.println(F("Tracking to Start = CW"));
+        #ifdef DEBUG
+          Serial.println(F("Tracking to Charge = CCW"));
+          Serial.println(F("Tracking to Start = CW"));
+        #endif
         }
         
       if (CCW_Tracking_To_Start == 1) {
@@ -245,30 +279,38 @@ void Send_Data_To_TFT() {
         CCW_Tracking_To_Charge = 0;
         CW_Tracking_To_Charge = 1;
         
-        Serial.println(F("Tracking to Charge = CW"));
-        Serial.println(F("Tracking to Start = CCW"));
-        
+        #ifdef DEBUG
+          Serial.println(F("Tracking to Charge = CW"));
+          Serial.println(F("Tracking to Start = CCW"));
+        #endif
+
         }
     }
 
 
 // Tracking Menu Data
     if (TFT_Menu_Command == 8) {
-      Serial.println("TX Tracking to TFT");
-    
+      #ifdef DEBUG
+        Serial.println("TX Tracking to TFT");
+      #endif
+
       Serial3.print(Use_Charging_Station);
       Serial3.println("\a");
       delay(300); 
 
-      Serial.print(F("USe Charging Station = "));
-      Serial.println(Use_Charging_Station); 
+      #ifdef DEBUG
+        Serial.print(F("USe Charging Station = "));
+        Serial.println(Use_Charging_Station); 
+      #endif
       } 
 
 
 // Tracking to Exit Data
     if (TFT_Menu_Command == 18) {
-      Serial.println("TX Find Wire to TFT");
-      
+      #ifdef DEBUG
+        Serial.println("TX Find Wire to TFT");
+      #endif
+
       Serial3.print(Max_Cycle_Wire_Find / 100);
       Serial3.println("\a");
       delay(300);  
@@ -281,19 +323,23 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
-      Serial.print(F("Wire Find Forwards / cylces = "));
-      Serial.println(Max_Cycle_Wire_Find);
-      
-      Serial.print(F("Wire Find Backwards / cylces = "));
-      Serial.println(Max_Cycle_Wire_Find_Back);
-      
-      Serial.print(F("Home Compass Heading / degrees "));
-      Serial.println(Home_Wire_Compass_Heading);      
+      #ifdef DEBUG
+        Serial.print(F("Wire Find Forwards / cylces = "));
+        Serial.println(Max_Cycle_Wire_Find);
+        
+        Serial.print(F("Wire Find Backwards / cylces = "));
+        Serial.println(Max_Cycle_Wire_Find_Back);
+        
+        Serial.print(F("Home Compass Heading / degrees "));
+        Serial.println(Home_Wire_Compass_Heading);  
+      #endif    
       }
 
 // Tracking PID
     if (TFT_Menu_Command == 19) {
-      Serial.println("TX Find Wire to TFT");
+      #ifdef DEBUG
+         Serial.println("TX Find Wire to TFT");
+      #endif
       
       Serial3.print(Max_Tracking_Turn_Left / 10);
       Serial3.println("\a");
@@ -307,19 +353,23 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
-      Serial.print(F("Max Cycles Left Wheel = "));
-      Serial.println(Max_Tracking_Turn_Left);
-      Serial.print(F("Max Cycles Right Wheel = "));
-      Serial.println(Max_Tracking_Turn_Right);         
-      Serial.print(F("PID P = "));
-      Serial.println(P);
-      Serial.println(F(" "));     
+      #ifdef DEBUG
+        Serial.print(F("Max Cycles Left Wheel = "));
+        Serial.println(Max_Tracking_Turn_Left);
+        Serial.print(F("Max Cycles Right Wheel = "));
+        Serial.println(Max_Tracking_Turn_Right);         
+        Serial.print(F("PID P = "));
+        Serial.println(P);
+        Serial.println(F(" "));  
+      #endif   
       }
 
 
 // Navigation Menu
     if (TFT_Menu_Command == 9) {
-      Serial.println("TX Nav to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Nav to TFT");
+      #endif
       
       Serial3.print(Compass_Activate);
       Serial3.println("\a");
@@ -333,17 +383,21 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
-      Serial.print(F("Compass Activated = "));
-      Serial.println(Compass_Activate);
-      Serial.print(F("Heading Hold Enebaled = "));
-      Serial.println(Compass_Heading_Hold_Enabled);          
-      Serial.print(F("Compass Power = "));
-      Serial.println(CPower);    
+      #ifdef DEBUG
+        Serial.print(F("Compass Activated = "));
+        Serial.println(Compass_Activate);
+        Serial.print(F("Heading Hold Enebaled = "));
+        Serial.println(Compass_Heading_Hold_Enabled);          
+        Serial.print(F("Compass Power = "));
+        Serial.println(CPower);    
+      #endif
       }
 
 // Alarm 1
     if (TFT_Menu_Command == 20) {
-      Serial.println("TX Alarm1 TFT");
+      #ifdef DEBUG
+        Serial.println("TX Alarm1 TFT");
+      #endif
       
       Serial3.print(Alarm_1_ON);
       Serial3.println("\a");
@@ -365,26 +419,30 @@ void Send_Data_To_TFT() {
       Serial3.println("\e");
       delay(200); 
 
-      Serial.print(F("Alarm 1 ON = "));
-      Serial.println(Alarm_1_ON);
+      #ifdef DEBUG
+        Serial.print(F("Alarm 1 ON = "));
+        Serial.println(Alarm_1_ON);
 
-      Serial.print(F("Alarm 1 Time = "));
-      Serial.print(Alarm_1_Hour);
-      Serial.print(F(":"));
-      Serial.println(Alarm_1_Minute);
+        Serial.print(F("Alarm 1 Time = "));
+        Serial.print(Alarm_1_Hour);
+        Serial.print(F(":"));
+        Serial.println(Alarm_1_Minute);
 
-      Serial.print(F("Alarm 1 Repeat = "));
-      Serial.println(Alarm_1_Repeat);
-      
-      Serial.print(F("Alarm 1 Action = "));
-      Serial.println(Alarm_1_Action);    
+        Serial.print(F("Alarm 1 Repeat = "));
+        Serial.println(Alarm_1_Repeat);
+        
+        Serial.print(F("Alarm 1 Action = "));
+        Serial.println(Alarm_1_Action);  
+      #endif  
       }
 
 
 // Alarm 2
     if (TFT_Menu_Command == 21) {
-      Serial.println("TX Alarm2 TFT");
-      
+      #ifdef DEBUG
+       Serial.println("TX Alarm2 TFT");
+      #endif
+
       Serial3.print(Alarm_2_ON);
       Serial3.println("\a");
       delay(300);  
@@ -405,26 +463,30 @@ void Send_Data_To_TFT() {
       Serial3.println("\e");
       delay(200); 
 
-      Serial.print(F("Alarm 2 ON = "));
-      Serial.println(Alarm_2_ON);
+      #ifdef DEBUG
+        Serial.print(F("Alarm 2 ON = "));
+        Serial.println(Alarm_2_ON);
 
-      Serial.print(F("Alarm 2 Time = "));
-      Serial.print(Alarm_2_Hour);
-      Serial.print(F(":"));
-      Serial.println(Alarm_2_Minute);
+        Serial.print(F("Alarm 2 Time = "));
+        Serial.print(Alarm_2_Hour);
+        Serial.print(F(":"));
+        Serial.println(Alarm_2_Minute);
 
-      Serial.print(F("Alarm 2 Repeat = "));
-      Serial.println(Alarm_2_Repeat);
-      
-      Serial.print(F("Alarm 2 Action = "));
-      Serial.println(Alarm_2_Action);    
+        Serial.print(F("Alarm 2 Repeat = "));
+        Serial.println(Alarm_2_Repeat);
+        
+        Serial.print(F("Alarm 2 Action = "));
+        Serial.println(Alarm_2_Action);  
+      #endif  
       }
 
 
 // Alarm 3
     if (TFT_Menu_Command == 22) {
-      Serial.println("TX Alarm3 TFT");
-      
+      #ifdef DEBUG
+        Serial.println("TX Alarm3 TFT");
+      #endif
+
       Serial3.print(Alarm_3_ON);
       Serial3.println("\a");
       delay(300);  
@@ -445,25 +507,29 @@ void Send_Data_To_TFT() {
       Serial3.println("\e");
       delay(200); 
 
-      Serial.print(F("Alarm 3 ON = "));
-      Serial.println(Alarm_3_ON);
+      #ifdef DEBUG
+        Serial.print(F("Alarm 3 ON = "));
+        Serial.println(Alarm_3_ON);
 
-      Serial.print(F("Alarm 3 Time = "));
-      Serial.print(Alarm_3_Hour);
-      Serial.print(F(":"));
-      Serial.println(Alarm_3_Minute);
+        Serial.print(F("Alarm 3 Time = "));
+        Serial.print(Alarm_3_Hour);
+        Serial.print(F(":"));
+        Serial.println(Alarm_3_Minute);
 
-      Serial.print(F("Alarm 3 Repeat = "));
-      Serial.println(Alarm_3_Repeat);
-      
-      Serial.print(F("Alarm 3 Action = "));
-      Serial.println(Alarm_3_Action);    
+        Serial.print(F("Alarm 3 Repeat = "));
+        Serial.println(Alarm_3_Repeat);
+        
+        Serial.print(F("Alarm 3 Action = "));
+        Serial.println(Alarm_3_Action); 
+      #endif   
       }
 
 
 // Set Time
     if (TFT_Menu_Command == 23) {
-      Serial.println("Set Time TFT");
+      #ifdef DEBUG
+        Serial.println("Set Time TFT");
+      #endif
       Time t = rtc.time();
       int Time_Hour = t.hr;
       int Time_Minute = t.min;   
@@ -476,17 +542,21 @@ void Send_Data_To_TFT() {
       Serial3.println("\b");
       delay(200);  
 
-      Serial.print(F("Time Now = "));
-      Serial.print(Time_Hour);
-      Serial.print(F(":"));
-      Serial.println(Time_Minute);
+      #ifdef DEBUG
+        Serial.print(F("Time Now = "));
+        Serial.print(Time_Hour);
+        Serial.print(F(":"));
+        Serial.println(Time_Minute);
+      #endif
       }
 
 
 
 // Tip Sensor Menu
     if (TFT_Menu_Command == 24) {
-      Serial.println("TX Tip Sensor to TFT");
+      #ifdef DEBUG
+        Serial.println("TX Tip Sensor to TFT");
+      #endif
       
       Serial3.print(Angle_Sensor_Enabled);
       Serial3.println("\a");
@@ -495,19 +565,22 @@ void Send_Data_To_TFT() {
       Serial3.print(Tip_Over_Sensor_Enabled);
       Serial3.println("\b");
       delay(200);  
-      
-      Serial.print(F("Tilt Angle Sensor = "));
-      Serial.println(Angle_Sensor_Enabled);
-      Serial.print(F("Tip Over Sensor = "));
-      Serial.println(Tip_Over_Sensor_Enabled);
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Tilt Angle Sensor = "));
+        Serial.println(Angle_Sensor_Enabled);
+        Serial.print(F("Tip Over Sensor = "));
+        Serial.println(Tip_Over_Sensor_Enabled);
+        Serial.println(F(" "));
+      #endif
 
 }
 
 
 // Tip Sensor Menu
     if (TFT_Menu_Command == 25) {
-      Serial.println(F("TX Pattern to TFT"));
+      #ifdef DEBUG
+       Serial.println(F("TX Pattern to TFT"));
+      #endif
       
       Serial3.print(Turn_90_Delay_LH / 10);
       Serial3.println("\a");
@@ -536,22 +609,23 @@ void Send_Data_To_TFT() {
       Serial3.print(Compass_Mow_Direction / 10 );
       Serial3.println("\g");
       delay(300);        
-      
-      Serial.print(F("Pattern Mow ON/OFF = "));
-      Serial.println(Pattern_Mow);  
-      Serial.print(F("Turn 90° LH= "));
-      Serial.println(Turn_90_Delay_LH);
-      Serial.print(F("Turn 90° RH= "));
-      Serial.println(Turn_90_Delay_RH);
-      Serial.print(F("Distance to next row= "));
-      Serial.println(Move_to_next_line_delay);
-      Serial.print(F("Row Length= "));
-      Serial.println(Line_Length_Cycles);      
-      Serial.print(F("Max Cycles Spirals= "));
-      Serial.println(Max_Cycles_Spirals);  
-      Serial.print(F("Compass Mow Direction= "));
-      Serial.println(Compass_Mow_Direction); 
-      Serial.println(F(" "));
+      #ifdef DEBUG
+        Serial.print(F("Pattern Mow ON/OFF = "));
+        Serial.println(Pattern_Mow);  
+        Serial.print(F("Turn 90° LH= "));
+        Serial.println(Turn_90_Delay_LH);
+        Serial.print(F("Turn 90° RH= "));
+        Serial.println(Turn_90_Delay_RH);
+        Serial.print(F("Distance to next row= "));
+        Serial.println(Move_to_next_line_delay);
+        Serial.print(F("Row Length= "));
+        Serial.println(Line_Length_Cycles);      
+        Serial.print(F("Max Cycles Spirals= "));
+        Serial.println(Max_Cycles_Spirals);  
+        Serial.print(F("Compass Mow Direction= "));
+        Serial.println(Compass_Mow_Direction); 
+        Serial.println(F(" "));
+      #endif
 
 }
 
@@ -559,7 +633,9 @@ void Send_Data_To_TFT() {
 
 // Initial Start Up Values
     if (TFT_Menu_Command == 55) {
-      Serial.println("TX Start Up Values TFT");
+      #ifdef DEBUG
+        Serial.println("TX Start Up Values TFT");
+      #endif
 
       Serial3.print(Alarm_1_ON);
       Serial3.println("\a");
@@ -584,25 +660,28 @@ void Send_Data_To_TFT() {
       delay(300);
 
  
-
-      Serial.print(F("Alarm 1 ON = "));
-      Serial.println(Alarm_1_ON);
-      Serial.print(F("Alarm 2 ON = "));
-      Serial.println(Alarm_2_ON);
-      Serial.print(F("Alarm 3 ON = "));
-      Serial.println(Alarm_3_ON);
-      Serial.print(F("|Time:"));
-      Serial.print(t.hr);
-      Serial.print(F(":"));
-      if (t.min < 10) Serial.print("0");
-      Serial.print(t.min);
+      #ifdef DEBUG
+        Serial.print(F("Alarm 1 ON = "));
+        Serial.println(Alarm_1_ON);
+        Serial.print(F("Alarm 2 ON = "));
+        Serial.println(Alarm_2_ON);
+        Serial.print(F("Alarm 3 ON = "));
+        Serial.println(Alarm_3_ON);
+        Serial.print(F("|Time:"));
+        Serial.print(t.hr);
+        Serial.print(F(":"));
+        if (t.min < 10) Serial.print("0");
+        Serial.print(t.min);
+      #endif
 }
 
 
 
 // Test Wire Sensor
     if (TFT_Menu_Command == 41) {
-      Serial.println("Test Wire Sensor");
+      #ifdef DEBUG
+        Serial.println("Test Wire Sensor");
+      #endif
 
       bool Test_Complete = 0;
 
@@ -631,21 +710,27 @@ void Send_Data_To_TFT() {
           Serial3.print(Test_Complete);
           Serial3.println("\c");
           delay(200);  
-    
-          Serial.print(F("IN/Out:"));
-          Serial.print(perimeter.isInside(0));
-          Serial.print(F("   MAG:"));
-          Serial.print(perimeter.getMagnitude(0)); 
-          Serial.print(F("   i:"));
-          Serial.println(i);
+
+          #ifdef DEBUG
+            Serial.print(F("IN/Out:"));
+            Serial.print(perimeter.isInside(0));
+            Serial.print(F("   MAG:"));
+            Serial.print(perimeter.getMagnitude(0)); 
+            Serial.print(F("   i:"));
+            Serial.println(i);
+          #endif
           }
-      Serial.println(F("Test Completed"));
+      #ifdef DEBUG
+        Serial.println(F("Test Completed"));
+      #endif
       }
 
 
 // Start Sonar Test
   if (TFT_Menu_Command == 45) {
-    Serial.println(F("Sonar Test"));
+    #ifdef DEBUG
+      Serial.println(F("Sonar Test"));
+    #endif
     bool Test_Complete = 0;
 
       for (int i = 0; i <= 30; i++) {
@@ -676,13 +761,17 @@ void Send_Data_To_TFT() {
         Serial3.print(Test_Complete);
         Serial3.println("\d");
         delay(200);    
-
-        Serial.print("Test Complete");
-        Serial.println(Test_Complete);
+        
+        #ifdef DEBUG
+          Serial.print("Test Complete");
+          Serial.println(Test_Complete);
+        #endif
       
       
       }
-    Serial.println(F("Sonar Test Complete"));
+    #ifdef DEBUG
+      Serial.println(F("Sonar Test Complete"));
+    #endif
     
 
     }
@@ -690,7 +779,9 @@ void Send_Data_To_TFT() {
 
 // Start Compass Test
   if (TFT_Menu_Command == 48) {
-    Serial.println(F("Compass Test"));
+    #ifdef DEBUG
+      Serial.println(F("Compass Test"));
+    #endif
     bool Test_Complete = 0;
 
       for (int i = 0; i <= 30; i++) {
@@ -713,21 +804,27 @@ void Send_Data_To_TFT() {
         Serial3.println("\c");
         delay(300);    
 
-        Serial.print("Heading: ");
-        Serial.print(Heading);
-        Serial.print("  Degrees: ");
-        Serial.println(Compass_Degrees_TX);
+        #ifdef DEBUG
+          Serial.print("Heading: ");
+          Serial.print(Heading);
+          Serial.print("  Degrees: ");
+          Serial.println(Compass_Degrees_TX);
+        #endif
       }
-
-    Serial.print(F("Compass Test Complete"));
-    Serial.println(Test_Complete);
+    
+    #ifdef DEBUG
+      Serial.print(F("Compass Test Complete"));
+      Serial.println(Test_Complete);
+    #endif
     }
 
 
 
 // Start Compass Test
   if (TFT_Menu_Command == 47) {
-    Serial.println(F("Volt Amp Test"));
+    #ifdef DEBUG
+      Serial.println(F("Volt Amp Test"));
+    #endif
     bool Test_Complete = 0;
 
       for (int i = 0; i <= 30; i++) {
@@ -751,21 +848,27 @@ void Send_Data_To_TFT() {
         Serial3.println("\c");
         delay(300);    
 
-        Serial.print("VoltsRX: ");
-        Serial.print(VoltsRX);
-        Serial.print("  Volts: ");
-        Serial.print(Volts);
-        Serial.print("  Amps: ");
-        Serial.println(Amps);
+        #ifdef DEBUG
+          Serial.print("VoltsRX: ");
+          Serial.print(VoltsRX);
+          Serial.print("  Volts: ");
+          Serial.print(Volts);
+          Serial.print("  Amps: ");
+          Serial.println(Amps);
+        #endif
       }
 
-    Serial.print(F("Volt Amp Test Complete"));
-    Serial.println(Test_Complete);
+    #ifdef DEBUG
+      Serial.print(F("Volt Amp Test Complete"));
+      Serial.println(Test_Complete);
+    #endif
     }
 
 // Start Tilt Test
   if (TFT_Menu_Command == 40) {
-    Serial.println(F("Tilt Test"));
+    #ifdef DEBUG
+      Serial.println(F("Tilt Test"));
+    #endif
     bool Test_Complete = 0;
     Setup_Tilt_Tip_Safety();
 
@@ -788,21 +891,27 @@ void Send_Data_To_TFT() {
         Serial3.println("\c");
         delay(300);    
 
-        Serial.print(F("   Data sent"));
+        #ifdef DEBUG
+          Serial.print(F("   Data sent"));
 
-        Serial.print(F("  Test Completed "));
-        Serial.println(Test_Complete);
+          Serial.print(F("  Test Completed "));
+          Serial.println(Test_Complete);
+        #endif
       }
 
-    Serial.print(F("Tilt Test Complete : "));
-    Serial.println(Test_Complete);
+    #ifdef DEBUG
+      Serial.print(F("Tilt Test Complete : "));
+      Serial.println(Test_Complete);
+    #endif
     }
 
 
 
 // Start Bumper Test
   if (TFT_Menu_Command == 50) {
-    Serial.println(F("Bumper Bar Test"));
+    #ifdef DEBUG
+      Serial.println(F("Bumper Bar Test"));
+    #endif
     bool Test_Complete = 0;
     bool Bump_LH;
     bool Bump_RH;
@@ -829,16 +938,20 @@ void Send_Data_To_TFT() {
         
         Serial3.print(Test_Complete);
         Serial3.println("\c");
-        delay(300);    
+        delay(300);  
 
+        #ifdef DEBUG
         Serial.print("Bump LH: ");
         Serial.print(Bump_LH);
         Serial.print("  Bump RH: ");
         Serial.println(Bump_RH);
+        #endif
       }
 
-    Serial.print(F("Volt Bumper Test Complete"));
-    Serial.println(Test_Complete);
+    #ifdef DEBUG
+      Serial.print(F("Volt Bumper Test Complete"));
+      Serial.println(Test_Complete);
+    #endif
     }
 
 
@@ -894,7 +1007,9 @@ void Send_Mower_Error_Data() {
 void Send_Mower_Running_Data() {
         int Delay_running = 200;
 
-        Serial.println("|TFT_Data Running Turn Point");
+        #ifdef DEBUGca
+          Serial.println("|TFT_Data Running Turn Point");
+        #endif
        
         Serial3.print(Sonar_Status);
         Serial3.println(F("\a"));        
@@ -930,22 +1045,22 @@ void Send_Mower_Running_Data() {
 
         Calculate_TFT_Mower_Status_Value(); 
 
-
-        Serial.print(F("|S:"));          
-        Serial.print(Sonar_Status);
-        Serial.print(F("|W:"));
-        Serial.print(Outside_Wire);  
-        Serial.print(F("|B:"));
-        Serial.print(Bumper_Status); 
-        Serial.print(F("|MS:"));
-        Serial.print(Mower_Status_Value);  
-        Serial.print(F("|ME:"));
-        Serial.print(Mower_Error_Value); 
-        Serial.print(F("|Tip:"));
-        Serial.print(Tilt_Angle_Sensed);     
-        Serial.print(F("|VTX:"));
-        Serial.println(VoltsTX);          
-       
+        #ifdef DEBUG
+          Serial.print(F("|S:"));          
+          Serial.print(Sonar_Status);
+          Serial.print(F("|W:"));
+          Serial.print(Outside_Wire);  
+          Serial.print(F("|B:"));
+          Serial.print(Bumper_Status); 
+          Serial.print(F("|MS:"));
+          Serial.print(Mower_Status_Value);  
+          Serial.print(F("|ME:"));
+          Serial.print(Mower_Error_Value); 
+          Serial.print(F("|Tip:"));
+          Serial.print(Tilt_Angle_Sensed);     
+          Serial.print(F("|VTX:"));
+          Serial.println(VoltsTX);          
+       #endif
 
 }
 
@@ -991,16 +1106,16 @@ void Send_Mower_Docked_Data()  {
         Serial3.println("\d");
         delay(300); 
 
-
-        Serial.print(F("|VTX:"));
-        Serial.print(VoltsTX);
-        Serial.print(F("|MS:"));
-        Serial.print(Mower_Status_Value);            
-        Serial.print(F("|ME:"));
-        Serial.print(Mower_Error_Value);                 
-        Serial.print(F("|C:"));
-        Serial.print(Charging); 
-        
+        #ifdef DEBUG
+          Serial.print(F("|VTX:"));
+          Serial.print(VoltsTX);
+          Serial.print(F("|MS:"));
+          Serial.print(Mower_Status_Value);            
+          Serial.print(F("|ME:"));
+          Serial.print(Mower_Error_Value);                 
+          Serial.print(F("|C:"));
+          Serial.print(Charging); 
+        #endif
         } 
 
 void Calculate_TFT_Mower_Status_Value() {

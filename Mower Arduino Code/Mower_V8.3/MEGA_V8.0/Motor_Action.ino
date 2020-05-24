@@ -19,13 +19,17 @@ void Motor_Action_Go_Mowing_Speed() {
 void Motor_Action_Go_Full_Speed()     {
       analogWrite(ENAPin, PWM_MaxSpeed_RH);                       // Speed = 0-255  (255 is max speed). Speed is set in the settings                        
       analogWrite(ENBPin, PWM_MaxSpeed_LH);                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
-      Serial.print(F("Wheel:FULL|"));
+      #ifdef DEBUG
+        Serial.print(F("Wheel:FULL|"));
+      #endif
       }  
 
 void Motor_Action_Go_Slow_Speed()     {
       analogWrite(ENAPin,  PWM_Slow_Speed_RH);                       // Speed = 0-255  (255 is max speed). Speed is set in the settings                        
       analogWrite(ENBPin,  PWM_Slow_Speed_LH);                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
-      Serial.print(F("Wheel:SLOW|"));
+      #ifdef DEBUG
+        Serial.print(F("Wheel:SLOW|"));
+      #endif
       }  
 
 void Motor_Action_GoFullSpeed_Out_Garage()     {
@@ -36,8 +40,10 @@ void Motor_Action_GoFullSpeed_Out_Garage()     {
   if (PWM_MaxSpeed_RH > 255)  PWM_MaxSpeed_RH = 255;
   
   analogWrite(ENAPin, PWM_MaxSpeed_RH);                                       // Speed = 0-255  (255 is max speed). Speed is set in the settings
-  analogWrite(ENBPin, PWM_MaxSpeed_LH);   
-  Serial.print(F("Wheel:FULL|"));
+  analogWrite(ENBPin, PWM_MaxSpeed_LH);
+  #ifdef DEBUG
+    Serial.print(F("Wheel:FULL|"));
+  #endif
   }
 
 
@@ -46,7 +52,9 @@ void SetPins_ToGoForwards()     {                                 // Motor Bridg
   digitalWrite(IN2Pin, HIGH);
   digitalWrite(IN3Pin, LOW);
   digitalWrite(IN4Pin, HIGH);
-  Serial.print(F("Wheel:For|"));
+  #ifdef DEBUG
+    Serial.print(F("Wheel:For|"));
+  #endif
   }
 
 
@@ -55,7 +63,9 @@ void SetPins_ToGoBackwards()      {                               // Motor Bridg
   digitalWrite(IN2Pin, LOW);
   digitalWrite(IN3Pin, HIGH);                                     // Motor 2
   digitalWrite(IN4Pin, LOW);
-  Serial.print(F("Wheel:Rev|"));
+  #ifdef DEBUG
+    Serial.print(F("Wheel:Rev|"));
+  #endif
   delay(20);
   }
 
@@ -69,7 +79,9 @@ void Motor_Action_Stop_Motors()  {                                     // Motor 
   digitalWrite(IN3Pin, LOW);
   digitalWrite(IN4Pin, LOW);
 
-  Serial.print(F("Wheel:0FF|"));
+  #ifdef DEBUG
+    Serial.print(F("Wheel:0FF|"));
+  #endif
 }
 
 
@@ -78,7 +90,9 @@ void SetPins_ToTurnLeft()       {                              // Pins are set s
     digitalWrite(IN2Pin, HIGH);
     digitalWrite(IN3Pin, HIGH);                                  // Motor 2
     digitalWrite(IN4Pin, LOW);
-    Serial.print(F("Wheel:TL_|"));  
+    #ifdef DEBUG
+    Serial.print(F("Wheel:TL_|")); 
+    #endif
     }
 
 
@@ -87,7 +101,9 @@ void SetPins_ToTurnRight() {                                    // Pins are set 
       digitalWrite(IN2Pin, LOW);
       digitalWrite(IN3Pin, LOW);                                    //Motor 2
       digitalWrite(IN4Pin, HIGH);
-      Serial.print(F("Wheel:R|"));
+      #ifdef DEBUG
+        Serial.print(F("Wheel:R|"));
+      #endif
       }
 
 
@@ -107,7 +123,9 @@ void Motor_Action_Spin_Blades()  {
     delay(20);
     analogWrite(RPWM, PWM_Blade_Speed);
     delay(20);
-    Serial.print(F("Blades:ON_|"));
+    #ifdef DEBUG
+      Serial.print(F("Blades:ON_|"));
+    #endif
    }                 
 
   if (Cutting_Blades_Activate == 0) {                                     // Blades are turn off in settings and will not spin!
@@ -121,17 +139,21 @@ void Motor_Action_Stop_Spin_Blades()  {
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
   delay(20);
-  Serial.print(F("Blades:0FF|"));
+  #ifdef DEBUG
+    Serial.print(F("Blades:0FF|"));
+  #endif
 }
 
 //Steers the Mower depending on the PID input from the Algorythm
 void Motor_Action_Dynamic_PWM_Steering() {
       analogWrite(ENAPin, PWM_Right);                             // ENA low = Right Swerve   ENB low = Left Swerve
       analogWrite(ENBPin, PWM_Left);
-      Serial.print(F("PWM_R:"));
-      Serial.print(PWM_Right);
-      Serial.print(F("|"));
-      Serial.print(F("PWM_L:"));
-      Serial.print(PWM_Left);
-      Serial.print(F("|"));
+      #ifdef DEBUG
+        Serial.print(F("PWM_R:"));
+        Serial.print(PWM_Right);
+        Serial.print(F("|"));
+        Serial.print(F("PWM_L:"));
+        Serial.print(PWM_Left);
+        Serial.print(F("|"));
+      #endif
 }

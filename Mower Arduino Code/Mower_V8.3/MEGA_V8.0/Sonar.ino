@@ -45,65 +45,75 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     distance is then set to 999cm so the missed ping is not seen as an object detected.*/
   if (distanceX == 0) {
     distanceX = 999;
+    #ifdef DEBUG
+      Serial.print(F("S"));
+      Serial.print(sonarX);
+      Serial.print(F(":"));
+      Serial.print(F("NP!"));
+      Serial.print(F("|"));
+    #endif
+  }
+
+  #ifdef DEBUG
+    /*Prints the Sonar letter and distance measured on the serial Monitor*/
     Serial.print(F("S"));
     Serial.print(sonarX);
     Serial.print(F(":"));
-    Serial.print(F("NP!"));
-    Serial.print(F("|"));
-  }
-
-  /*Prints the Sonar letter and distance measured on the serial Monitor*/
-  Serial.print(F("S"));
-  Serial.print(sonarX);
-  Serial.print(F(":"));
-  Serial.print(distanceX);
-  Serial.print(F("cm"));
-  Serial.print(F("/"));
+    Serial.print(distanceX);
+    Serial.print(F("cm"));
+    Serial.print(F("/"));
+  #endif
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/
   if (distanceX <= maxdistancesonar ) {
-    //Prints that Sonar X has detected an object to the Mower LCD.
-    lcd.setCursor(LCDRow, LCDColumn);                //sets location for text to be written
-    lcd.print("X");
-    delay(10);
     if (sonarX == 1) {
         Sonar_Hit_1_Total = (Sonar_Hit_1_Total + 1);
-        Serial.print(Sonar_Hit_1_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_1_Total);
+        #endif
         }
       if (sonarX == 2) {
         Sonar_Hit_2_Total = (Sonar_Hit_2_Total + 1);
-        Serial.print(Sonar_Hit_2_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_2_Total);
+        #endif
         }
       if (sonarX == 3) {
         Sonar_Hit_3_Total = (Sonar_Hit_3_Total + 1);
-        Serial.print(Sonar_Hit_3_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_3_Total);
+        #endif
         }      
     if ( (Sonar_Hit_1_Total == Max_Sonar_Hit) || (Sonar_Hit_2_Total == Max_Sonar_Hit) || (Sonar_Hit_3_Total == Max_Sonar_Hit) ) {
       Sonar_Hit = 1;  
-      Print_Sonar_Hit();
-      Serial.println("");
-      Serial.println("Sonar Hit Detected");
+      #ifdef DEBUG
+        Serial.println("");
+        Serial.println("Sonar Hit Detected");
+      #endif
       }
     
     }
 
   /*If sonar distance is greater than maximum distance then no object is registered to avoid*/
   if (distanceX > maxdistancesonar) {
-    //Prints that the path of Sonar X is open.
-    lcd.setCursor(LCDRow, LCDColumn);                 //sets location for text to be written
-    lcd.print("_");
     delay(10);
     if (sonarX == 1) {
         Sonar_Hit_1_Total = 0;
-        Serial.print(Sonar_Hit_1_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_1_Total);
+        #endif
         }
       if (sonarX == 2) {
         Sonar_Hit_2_Total = 0;
-        Serial.print(Sonar_Hit_2_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_2_Total);
+        #endif
         }
       if (sonarX == 3) {
         Sonar_Hit_3_Total = 0;
-        Serial.print(Sonar_Hit_3_Total);
+        #ifdef DEBUG
+          Serial.print(Sonar_Hit_3_Total);
+        #endif
         }   
     }
    

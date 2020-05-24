@@ -136,7 +136,9 @@ void StopSpinBlades()  {
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
   delay(20);
-    Serial.print("Blades:0FF|");
+    #ifdef DEBUG
+      Serial.print("Blades:0FF|");
+    #endif
 }
 
 

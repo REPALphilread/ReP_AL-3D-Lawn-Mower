@@ -6,11 +6,15 @@ void Process_Volt_Information()   {
     
     if (Volts < Battery_Min) {
       Low_Battery_Detected = (Low_Battery_Detected + 1);
-      Serial.print(F("VLow:"));
-      Serial.print(Low_Battery_Detected);
-      Serial.print(F("|"));
+      #ifdef DEBUG
+        Serial.print(F("VLow:"));
+        Serial.print(Low_Battery_Detected);
+        Serial.print(F("|"));
+      #endif
       if (Low_Battery_Detected > Low_Battery_Instances_Chg) {
+        #ifdef DEBUG
          Serial.println(F("Low Battery Detected"));
+        #endif
          if (Use_Charging_Station == 1) {
           // need to add a low batt code... to TFT
           Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
@@ -20,9 +24,11 @@ void Process_Volt_Information()   {
       }
 
     if (Volts >= Battery_Min) {
-      Serial.print(F("VLow:"));
-      Serial.print(Low_Battery_Detected);
-      Serial.print(F("|"));
+      #ifdef DEBUG
+        Serial.print(F("VLow:"));
+        Serial.print(Low_Battery_Detected);
+        Serial.print(F("|"));
+      #endif
       Low_Battery_Detected = 0;
       }
 }
@@ -34,26 +40,33 @@ void Check_if_Charging() {
 
 
     if (Charging == 4)  {                            // If the value recieved is equal to 1 or 0 as expected then print the value to the serial monitor
-        Serial.print(F("Charging:"));
-        Serial.print(Charging);
-        Serial.print(F("|"));
         Charge_Detected_MEGA = 1;
-        Print_Charging_LCD();
-        Serial.print(F("MEGA = 1|"));
+        #ifdef DEBUG
+          Serial.print(F("Charging:"));
+          Serial.print(Charging);
+          Serial.print(F("|"));                
+          Serial.print(F("MEGA = 1|"));
+        #endif
         }
     if (Charging == 0)  {                            // If the value recieved is equal to 1 or 0 as expected then print the value to the serial monitor
-        Serial.print(F("Charging:"));
-        Serial.print(Charging);
-        Serial.print(F("|"));
         Charge_Detected_MEGA = 0;
-        Print_Charging_LCD();
+        #ifdef DEBUG
+          Serial.print(F("Charging:"));
+          Serial.print(Charging);
+          Serial.print(F("|"));
+        #endif
+        
+        
         }
       if ((Charging != 4) && (Charging !=0)) {
-        Serial.print(F("Charging:"));
-        Serial.print(Charging);
-        Serial.print(F("|"));
         Charge_Detected_MEGA = 0;
-        Print_Charging_LCD();
+        #ifdef DEBUG
+          Serial.print(F("Charging:"));     
+          Serial.print(Charging);
+          Serial.print(F("|"));
+        #endif
+        
+        
         }
       
     
@@ -72,15 +85,12 @@ void Check_if_Charging() {
 void Check_if_Docked() {
   
   if (Charge_Detected_MEGA == 1) {                                    // if Amps are between this there is a charge detected.  Amps above 4 are discounted as a miscommunication
-        Motor_Action_Stop_Motors();    
+        Motor_Action_Stop_Motors();
+        #ifdef DEBUG    
         Serial.println(F("Charging Current detected"));
         Serial.println(F("Mower Docked"));
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print(F("Docked in"));
-        lcd.setCursor(0, 1);
-        lcd.print(F("Charging Station"));                                // Prints info to LCD display
-        delay(2000);
+        #endif
+        //delay(2000);   //COMPERTA
         Mower_Docked = 1;
         // Update the TFT Screen
         if (TFT_Screen_Menu == 1) {
@@ -90,24 +100,28 @@ void Check_if_Docked() {
             Go_To_Charging_Station = 0;
             }
         Manouver_Dock_The_Mower();                                    // Shuts down the Mower ready for charging and mowing again.
-        lcd.clear();
+
         }
-   Serial.println("");
+   #ifdef DEBUG
+    Serial.println("");
+   #endif
   }
         
 void Calculate_Volt_Amp_Charge() {
 
-if (Show_TX_Data == 1) {
-      Serial.print(F("Amp:"));
-      Serial.print(RawValueAmp);
-      Serial.print(F("|"));
-      Serial.print(F("Volt:"));
-      Serial.print(RawValueVolt);
-      Serial.print(F("|"));
-      Serial.print(F("Rain:"));
-      Serial.print(Rain_Detected);
-      Serial.print(F("|"));
-      }
+#ifdef DEBUG
+  if (Show_TX_Data == 1) {
+        Serial.print(F("Amp:"));
+        Serial.print(RawValueAmp);
+        Serial.print(F("|"));
+        Serial.print(F("Volt:"));
+        Serial.print(RawValueVolt);
+        Serial.print(F("|"));
+        Serial.print(F("Rain:"));
+        Serial.print(Rain_Detected);
+        Serial.print(F("|"));
+        }
+#endif
 
 // Calculate Amps from NANO RX Data
  int mVperAmp = 185;
@@ -118,9 +132,11 @@ if (Show_TX_Data == 1) {
  Amps_Now =  ((VoltageAmp - ACSoffset) / mVperAmp);
  Amps = Amps_Now;
  
- Serial.print(F("A:"));    
- Serial.print(Amps);
- Serial.print(F("|"));
+ #ifdef DEBUG
+  Serial.print(F("A:"));    
+  Serial.print(Amps);
+  Serial.print(F("|"));
+ #endif
 
 
 // Calculate Voltage from NANO RX Data
@@ -142,10 +158,11 @@ if (Show_TX_Data == 1) {
  if (Zero_Volts > 5) Volts = 0;
  
  }
-
- Serial.print(F("V:"));    
- Serial.print(Volts);
- Serial.print(F("|"));
+  #ifdef DEBUG
+    Serial.print(F("V:"));    
+    Serial.print(Volts);
+    Serial.print(F("|"));
+  #endif
 
  if (Amps < 0.4) Charging = 0;
  if (Amps > 0.4) Charging = 4;

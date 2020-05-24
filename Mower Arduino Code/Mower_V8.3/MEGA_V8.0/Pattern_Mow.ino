@@ -39,73 +39,61 @@ void Pattern_Mow_Spirals() {
 
       if (Spiral_Mow < 3) {
         
-      
-      Serial.print(F("Wheel:CIRCLE|"));
-      lcd.setCursor(9,1);
-      if (Spiral_Mow == 1) lcd.print("R");
-      if (Spiral_Mow == 2) lcd.print("L");
-      if (Spiral_Mow == 3) lcd.print("|");
+      #ifdef DEBUG
+        Serial.print(F("Wheel:CIRCLE|"));
+      #endif
 
       if (Loop_Cycle_Mowing < End_Linking) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_MaxSpeed_RH);
         if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_MaxSpeed_LH);
-        lcd.print("|");
         }
 
       //Inside Spiral
       if ((Loop_Cycle_Mowing >= End_Linking) && (Loop_Cycle_Mowing < End_Spiral_1)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_1);
         if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_1);
-        lcd.print("1");
         }
 
       // Sprial Ring 2
       if ((Loop_Cycle_Mowing >= End_Spiral_1) && (Loop_Cycle_Mowing < End_Spiral_2)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_2);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_2);
-        lcd.print("2");        
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_2);     
         }
 
       // Sprial Ring 3
       if ((Loop_Cycle_Mowing >= End_Spiral_2) && (Loop_Cycle_Mowing < End_Spiral_3)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_3);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_3);
-        lcd.print("3");         
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_3);   
         }
 
       // Sprial Ring 4
       if ((Loop_Cycle_Mowing >= End_Spiral_3) && (Loop_Cycle_Mowing < End_Spiral_4)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_4);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_4);
-        lcd.print("4");         
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_4);   
         }
       
       // Sprial Ring 5
       if ((Loop_Cycle_Mowing >= End_Spiral_4) && (Loop_Cycle_Mowing < End_Spiral_5)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_5);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_5);
-        lcd.print("5");         
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_5);  
         }
 
       // Sprial Ring 6
       if ((Loop_Cycle_Mowing >= End_Spiral_5) && (Loop_Cycle_Mowing < End_Spiral_6)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_6);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_6);
-        lcd.print("6");         
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_6);     
         }
 
       // Sprial Ring 7
       if ((Loop_Cycle_Mowing >= End_Spiral_6) && (Loop_Cycle_Mowing < End_Spiral_7)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_7);
-        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_7);
-        lcd.print("7");         
+        if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_7);  
         }
         
       // Mower moves away to new position
       if ((Loop_Cycle_Mowing >= End_Spiral_7) && (Loop_Cycle_Mowing < Max_Cycles_Spirals)) {
         if (Spiral_Mow == 1) analogWrite(ENAPin, PWM_MaxSpeed_RH);
         if (Spiral_Mow == 2) analogWrite(ENBPin, PWM_MaxSpeed_LH);
-        lcd.print("X");     
         }
       }
 
@@ -144,9 +132,10 @@ void Pattern_Mow_Parallel() {
           Get_Compass_Reading(); 
           Calculate_Compass_Wheel_Compensation();
           Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
-          Print_LCD_Parallel_Mowing();
-          Serial.print(F("C-Lock:ON_"));
-          Serial.print("|");
+          #ifdef DEBUG
+            Serial.print(F("C-Lock:ON_"));
+            Serial.print("|");
+          #endif
           }
         }
      }
@@ -155,7 +144,9 @@ void Pattern_Mow_Parallel() {
     // No use of compass assist
     if (Parallel_Compass_Assist == 0) {
         Motor_Action_Go_Mowing_Speed();
-        Serial.println("Compass not activated in the settings");
+        #ifdef DEBUG
+          Serial.println("Compass not activated in the settings");
+        #endif
        }
     }
 
@@ -224,15 +215,7 @@ void Pattern_Mow_Parallel() {
         Motor_Action_Stop_Motors();
         Get_Compass_Reading(); 
         delay(500);
-        lcd.clear();
-        lcd.print("Turn Assist");
-        lcd.setCursor(0,1);
-        lcd.print("Target");
-        lcd.print(Compass_Target);
-        delay(1000);
-        lcd.clear();
         Turn_To_Compass_Heading();
-        lcd.clear();
       }
       if (Leg == 2) {
         SetPins_ToTurnRight();
@@ -241,15 +224,7 @@ void Pattern_Mow_Parallel() {
         Motor_Action_Stop_Motors();
         Get_Compass_Reading(); 
         delay(500);
-        lcd.clear();
-        lcd.print("Turn Assist");
-        lcd.setCursor(0,1);
-        lcd.print("Target");
-        lcd.print(Compass_Target);
-        delay(1000);
-        lcd.clear();
         Turn_To_Compass_Heading();
-        lcd.clear();
         }
       }
     
@@ -259,8 +234,6 @@ void Pattern_Mow_Parallel() {
 
 
     Loop_Cycle_Mowing   = 0;          // Reset the Loop counter
-    lcd.setCursor(13, 1);
-    lcd.print("   ");
     Leg = Leg + 1;                    // Advances the leg so the mower turns in the othe direction next.
     if (Leg > 2) Leg = 1;             // Keeps the leg variable to 1 or 2
      
