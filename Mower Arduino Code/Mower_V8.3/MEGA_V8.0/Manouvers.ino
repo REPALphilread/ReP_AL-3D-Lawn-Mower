@@ -104,12 +104,10 @@ void Manouver_Mow_The_Grass() {
       
       if (Pattern_Mow == 0) {
          if (Compass_Heading_Locked == 0) {
-           //lcd.setCursor(0, 1); 
            #ifdef DEBUG 
             Serial.print(F("C-Lock:OFF"));
             Serial.print(F("|"));
            #endif
-           //lcd.print("Mowing          ");
            Motor_Action_Go_Mowing_Speed();
            Compass_Steering_Status = 0;
            }
@@ -946,7 +944,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
 //     PrintBoundaryWireStatus();
      //Check_Wire_In_Out();
      delay(500);
-     distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0);
+     distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1);
      delay(500);
      #ifdef DEBUG
       Serial.print(F("Distance measured from sonar :"));
@@ -961,7 +959,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
         ADCMan.run();
         UpdateWireSensor();
   //      PrintBoundaryWireStatus();
-        distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0); 
+        distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1); 
         delay(10);
         //Check_Wire_In_Out();
       }
@@ -978,7 +976,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
        delay(200);
        Motor_Action_Turn_Speed();                                                             
        delay(100); 
-       distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0); 
+       distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1); 
        delay(10);
      }
      Motor_Action_Stop_Motors;
@@ -990,10 +988,6 @@ void Manouver_Outside_Wire_ReFind_Function(){
    #ifdef DEBUG
     Serial.println("Mower is now back inside the wire......?");
    #endif
-   //lcd.clear();
-   //lcd.print("Mower now");
-   //lcd.setCursor(0,1);
-   //lcd.print("Inside Wire?");
    Outside_Wire_Count = 0;
    //FindWireTrack();
 }

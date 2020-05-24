@@ -11,9 +11,9 @@ void Check_Sonar_Sensors() {
 
  // Pings each sonar at a 15ms interval
 
- if (Sonar_2_Activate == 1) distance2 = PingSonarX(trigPin2, echoPin2, 2, 2, 2, 0, 0);         //SONAR2
- if (Sonar_1_Activate == 1) distance1 = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 1, 0);         //SONAR1
- if (Sonar_3_Activate == 1) distance3 = PingSonarX(trigPin3, echoPin3, 3, 3, 3, 2, 0);         //SONAR3
+ if (Sonar_2_Activate == 1) distance2 = PingSonarX(trigPin2, echoPin2, 2, 2, 2);         //SONAR2
+ if (Sonar_1_Activate == 1) distance1 = PingSonarX(trigPin1, echoPin1, 1, 1, 1);         //SONAR1
+ if (Sonar_3_Activate == 1) distance3 = PingSonarX(trigPin3, echoPin3, 3, 3, 3);         //SONAR3
 
  }
   
@@ -22,11 +22,11 @@ void Check_Sonar_Sensors() {
 /* SONAR Function
 ************************************************************************************/
 // Function to Ping the Sonar calculate the distance from Object to the Sonars.
-// Distance calculated is printed to serial printer and displays X or _ on the LCD Screen
+// Distance calculated is printed to serial printer
 // Distance calculated is then used for the object avoidance logic
 // Sonars used can be activated in the settings.
 
-int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int sonarX, int LCDRow, int LCDColumn) {
+int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int sonarX) {
   pinMode(trigPinX, OUTPUT);
   pinMode(echoPinX, INPUT);
   //Sets the trigPin at High state for 10 micro secs sending a sound wave

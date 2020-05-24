@@ -46,7 +46,6 @@ if ( (Mower_Running == 1) && (Rain_Hit_Detected == Rain_Total_Hits_Go_Home) ) {
     Serial.println("Rain detected");
     Serial.println("");
   #endif
-  //Print_Raining_LCD(); COMEPRTALCD
   delay(2000);
   Manouver_Go_To_Charging_Station();            // If the Mower is running then go to the charge station. 
   }

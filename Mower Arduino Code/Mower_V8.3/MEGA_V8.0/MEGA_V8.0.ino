@@ -20,11 +20,6 @@
 #include <stdio.h>
 #include <DS1302.h>
 
-//Libraries for ic2 Liquid Crystal
-#include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
-//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LAM Test
-
 
 //Libraries for the Mowing Calendar Function
 #include <TimeLib.h>
@@ -336,7 +331,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   The following setup parameters will setup the mower for your garden
   Turn on or off the settings to defien how you like the mower to behave.
   
-  Settings marked with EEPROM can be adjusted using the mower LCD menu.  Once changes and saved
+  Settings marked with EEPROM can be adjusted using the mower TFT menu.  Once changes and saved
   the EEPROM settings will override the settings in this menu.  
   
   To clear these settings you need to clear the EEPROM
@@ -348,7 +343,6 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   char Version[16] = "V8.0";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
-  bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -583,7 +577,7 @@ if  (Mower_Running == 1)                                                        
 if  (Mower_Running == 1)                                                                                                  TestforBoundaryWire();              // Test is the boundary wire is live
 if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                                         Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
-if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
 //if ((Mower_Running == 1) && (TFT_Screen_Menu == 1))                                                                       Send_Mower_Running_Data_Fly();      // Send only neccesary info

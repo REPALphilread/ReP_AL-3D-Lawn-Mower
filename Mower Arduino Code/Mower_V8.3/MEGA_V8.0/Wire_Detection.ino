@@ -98,8 +98,7 @@ void TestforBoundaryWire()  {
     // if the MAG fiels is strong then the wire is on.
     if (   (MAG_Now < -50 ) || (MAG_Now > 50 )  ) {
       Wire_Detected = 1;                                            // Wire is detected  
-      Wire_Off = 0;                                                 // Resets the counter
-      //if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Wire_ON();  
+      Wire_Off = 0;                                                 // Resets the counter  
       }
 
     // If the MAG field is very low between these values we can assume the wire is off

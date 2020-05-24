@@ -736,13 +736,13 @@ void Send_Data_To_TFT() {
       for (int i = 0; i <= 30; i++) {
 
         if (i > 28) Test_Complete = 1;
-        if (Sonar_1_Activate == 1) distance1 = PingSonarY(trigPin1, echoPin1, 1, 1, 1, 5, 0);          //SONAR1
+        if (Sonar_1_Activate == 1) distance1 = PingSonarY(trigPin1, echoPin1, 1, 1, 1);          //SONAR1
         if (Sonar_1_Activate == 0) distance1 = 999;
         delay(15);       
-        if (Sonar_2_Activate == 1) distance2 = PingSonarY(trigPin2, echoPin2, 2, 2, 2, 0, 0);         //SONAR2
+        if (Sonar_2_Activate == 1) distance2 = PingSonarY(trigPin2, echoPin2, 2, 2, 2);         //SONAR2
         if (Sonar_2_Activate == 0) distance1 = 999;
         delay(15);
-        if (Sonar_3_Activate == 1) distance3 = PingSonarY(trigPin3, echoPin3, 3, 3, 3, 10, 0);          //SONAR3
+        if (Sonar_3_Activate == 1) distance3 = PingSonarY(trigPin3, echoPin3, 3, 3, 3);          //SONAR3
         if (Sonar_3_Activate == 0) distance1 = 999;
         delay(15);
         

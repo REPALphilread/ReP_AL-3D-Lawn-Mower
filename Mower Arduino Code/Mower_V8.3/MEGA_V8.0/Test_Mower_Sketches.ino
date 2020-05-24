@@ -188,11 +188,11 @@ void Test_Sonar_Array()   {
    * Sonars are not fired in order to avoid reflections of sonar in the next sensor.
      distance# reurned (trigpin#, echopin#, distance#, duration#, Sonar#, LCDColumn#, LCD Row#)
    *********************************************************************************************/
-    if (Sonar_1_Activate) distance1 = PingSonarY(trigPin1, echoPin1, 1, 1, 1, 5, 0);          //SONAR1
+    if (Sonar_1_Activate) distance1 = PingSonarY(trigPin1, echoPin1, 1, 1, 1);          //SONAR1
     delay(15);
-    if (Sonar_2_Activate) distance2 = PingSonarY(trigPin2, echoPin2, 2, 2, 2, 0, 0);         //SONAR2
+    if (Sonar_2_Activate) distance2 = PingSonarY(trigPin2, echoPin2, 2, 2, 2);         //SONAR2
     delay(15);
-    if (Sonar_3_Activate) distance3 = PingSonarY(trigPin3, echoPin3, 3, 3, 3, 10, 0);          //SONAR3
+    if (Sonar_3_Activate) distance3 = PingSonarY(trigPin3, echoPin3, 3, 3, 3);          //SONAR3
     delay(15);
   }
 
@@ -207,7 +207,7 @@ void Test_Sonar_Array()   {
 // Distance calculated is then used for the object avoidance logic
 // Sonars used can be activated in the settings.
 
-int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int sonarY, int LCDRow, int LCDColumn) {
+int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int sonarY) {
   pinMode(trigPinY, OUTPUT);
   pinMode(echoPinY, INPUT);
   //Sets the trigPin at High state for 10 micro secs sending a sound wave

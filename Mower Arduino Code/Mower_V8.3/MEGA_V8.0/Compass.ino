@@ -316,15 +316,6 @@ if (Compass_Target >= 180) {
 }
 
 
-void Display_Compass_Current_Heading_on_LCD() {
-      lcd.setCursor(5, 1);
-      lcd.print("    ");
-      lcd.print(Compass_Heading_Degrees);
-      delay(10);
-}
-
-
-
 void Calculate_Compass_Wheel_Compensation() {
 
   float Compass_Error = Compass_Heading_Degrees - Heading_Lock;        // Calculates the error in compass heading from the saved lock heading
