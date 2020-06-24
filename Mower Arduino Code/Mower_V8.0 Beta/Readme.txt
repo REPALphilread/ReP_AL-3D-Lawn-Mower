@@ -1,6 +1,32 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
+
+DONT USE THIS VERSION - USE THE 8.2 Version
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Code V8.0  BETA    04.05.2020
 ------------------------------
 
