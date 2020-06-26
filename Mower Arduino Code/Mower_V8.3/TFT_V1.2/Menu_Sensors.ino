@@ -121,7 +121,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 26;
           Send_Menu_Selected_To_Mower_MEGA();
           Serial.println("RX Battery Values");        
-          delay(Receive_Values_Delay);
+          delay(Receive_Values_Delay + 300);
           Receive_Battery_Data();
           Print_Battery_Menu();
           
