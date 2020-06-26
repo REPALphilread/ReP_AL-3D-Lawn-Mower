@@ -175,8 +175,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 12;
           Send_Menu_Selected_To_Mower_MEGA();
           Serial.println("RX Rain Sensor Values");        
-          delay(Receive_Values_Delay);
-          //delay(750);
+          delay(Receive_Values_Delay + 400);
           Receive_Rain_Sensor_Data();
           Print_Rain_Sensor_Menu();
           
