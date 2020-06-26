@@ -1,6 +1,6 @@
 void Print_Battery_Menu() {  
     tft.fillScreen(BLACK);
-     if (Draw_Pictures == 1)   bmpDraw("Battery.bmp", 270, 60);      //Draw the mower picture
+     if (Draw_Pictures == 1)   bmpDraw("batterypack.bmp", 270, 60);      //Draw the mower picture
     delay(100);    
     
     // Framework for the + - buttons - setting the start position of the + button wil automatically then space the - button
