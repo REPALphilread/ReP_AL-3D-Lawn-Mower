@@ -110,7 +110,7 @@ void React_to_Button_Press_Options() {
           Menu_Active = 6;
           Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
           Serial.println("RX Sonar Values");
-          delay(Receive_Values_Delay);
+          delay(Receive_Values_Delay + 300);
           Receive_Sensor_Menu1_Data(); 
           Print_Sensors_Menu();
           
