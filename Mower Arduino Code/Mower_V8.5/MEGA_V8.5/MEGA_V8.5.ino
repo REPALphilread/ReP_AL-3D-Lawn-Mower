@@ -355,7 +355,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.3";
+  char Version[16] = "V8.5";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
