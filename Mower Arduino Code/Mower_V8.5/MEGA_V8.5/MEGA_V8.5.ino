@@ -359,7 +359,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
-  bool PCB                        = 1;                          // USE Printed Circuit Board Relay
+  bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
