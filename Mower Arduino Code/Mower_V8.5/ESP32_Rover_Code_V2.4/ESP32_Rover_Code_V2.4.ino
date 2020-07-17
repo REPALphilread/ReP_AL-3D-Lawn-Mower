@@ -224,7 +224,7 @@ delay(100);
 pinMode(GPS_Signal_Pin, OUTPUT);
 pinMode(GPS_Lock_Pin, OUTPUT);
 
-Clear_EEPROM();
+//Clear_EEPROM();
 Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
 Activate_GPS_Fence();
 if (GPS_WIFI_Enabled == true) Connect_ESP32_to_WIFI();
