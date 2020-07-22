@@ -145,7 +145,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Mower_Running;
   bool Mower_Parked_Low_Batt;
   int  Mower_Error;
-  bool Manuel_Mode;
+  bool Manual_Mode;
   int  Mower_Status_Value;
   int  Mower_Error_Value;
   bool Exiting_Dock;
@@ -586,7 +586,7 @@ if (Mower_Parked == 1)                                            Manouver_Park_
 if ((Mower_Parked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
 
 
-// Mower is Parked with Low Battery needing manuel charging
+// Mower is Parked with Low Battery needing Manual charging
 if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_LCD_Volt_Info();                                  // Print the battery voltage
 if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_Recharge_LCD();                                   // Print re-charge on the LCD screen
 if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Check_Membrane_Switch_Input_Parked();
@@ -615,9 +615,9 @@ if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Inside_Fence == 0))      
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
 
 // WIFI Commands from and to APP
-if (Manuel_Mode == 1) Receive_WIFI_Manuel_Commands();
-if (Manuel_Mode == 1) Print_LCD_Info_Manuel();
-if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+if (Manual_Mode == 1) Receive_WIFI_Manual_Commands();
+if (Manual_Mode == 1) Print_LCD_Info_Manual();
+if ((WIFI_Enabled == 1) && (Manual_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
 
 Serial.println(); 
   

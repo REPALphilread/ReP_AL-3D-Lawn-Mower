@@ -3,7 +3,7 @@ void Print_Mower_Status() {
   if (Mower_Docked == 1) Serial.print(F("Docked:1|"));
   if (Mower_Parked == 1) Serial.print(F("Parked:1|"));
   if (Mower_Running == 1) Serial.print(F("Running:1|"));
-  if (Manuel_Mode == 1) Serial.print(F("Manuel Mode:1|"));
+  if (Manual_Mode == 1) Serial.print(F("Manual Mode:1|"));
   if (Mower_Parked_Low_Batt == 1) Serial.print(F("Park_Low_Batt:1|"));
   if (Mower_Error == 1) Serial.print(F("Mower Error:1|"));
   
