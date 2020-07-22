@@ -227,7 +227,7 @@ delay(100);
 pinMode(GPS_Signal_Pin, OUTPUT);
 pinMode(GPS_Lock_Pin, OUTPUT);
 
-Clear_EEPROM();
+//Clear_EEPROM();         // uncomment to clear EEPROM
 //Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
 
 
