@@ -15,9 +15,6 @@
 
 #include "camera_pins.h"
 
-//const char* ssid = "WLAN Name";
-//const char* password = "WLAN Password";
-
 const char* ssid = "WLAN Name";
 const char* password = "WLAN Password";
 
