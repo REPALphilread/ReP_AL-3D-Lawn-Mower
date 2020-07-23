@@ -18,8 +18,8 @@
 //const char* ssid = "WLAN Name";
 //const char* password = "WLAN Password";
 
-const char* ssid = "o2-WLAN61";
-const char* password = "9188952730856614";
+const char* ssid = "WLAN Name";
+const char* password = "WLAN Password";
 
 
 #define LED_BUILTIN 4
