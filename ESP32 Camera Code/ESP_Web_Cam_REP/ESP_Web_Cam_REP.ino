@@ -106,6 +106,7 @@ void loop() {
     Serial.println("ESPCAM Disconnected");
     Serial.println("Reconnecting ... ");
     WIFI_Connect() ;
+    startCameraServer();
     }
   else {
     digitalWrite(LED_BUILTIN, HIGH);
