@@ -931,7 +931,7 @@ void Manouver_Exit_To_Zone_X() {
    Send_Mower_Tracking_Data();                                  // Send the tracking TX Data package to the mower.   
    Manouver_Mower_Exit_Dock();                                  // Carry out the Exit Dock Manouver
    
-   _Docking_Station();                         // Move the Mower into position backing out of the docking station
+   Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
    if (Perimeter_Wire_Enabled == 1) {
      Mower_Track_To_Exit = 1;
      TestforBoundaryWire();
