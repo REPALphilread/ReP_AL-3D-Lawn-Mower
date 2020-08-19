@@ -456,7 +456,7 @@ void Manouver_Turn_Around() {
     Serial.println(F(""));
     if (Outside_Wire == 1)     Serial.println(F("Mower is Outside the Wire"));
     if (GPS_Inside_Fence == 0) Serial.println(F("Mower is Outside the GPS Fence"));
-    if (Wheel_Blocked == 1)    Serial.println(F("Mower Wheels are jammed"));
+    if (Wheel_Blocked == 4)    Serial.println(F("Mower Wheels are jammed"));
     Serial.println(F("Mower is Turning"));
     if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
     Serial.println(F(""));
