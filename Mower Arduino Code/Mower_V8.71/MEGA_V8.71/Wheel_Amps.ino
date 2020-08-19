@@ -17,6 +17,7 @@ void Check_Wheel_Amps() {
         Serial.println("!! Wheel_Blocked !!");
         Serial.print(F("|")); 
         Wheel_Blocked = 4;
+        Manouver_Turn_Around();
         }
         else 
         Wheel_Blocked = 0;
