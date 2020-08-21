@@ -9,7 +9,7 @@ Upload the TFT Code to the TFT MEGA Shield
 Upload the ESP32_Rover Code to the ESP32 Board (if using GPS)
 Upload the BMP Files to the TFT SD Card
 
-Newest Code Version 8.5    Uploaded 30.07.2020
+Newest Code Version 8.8    Uploaded 21.08.2020
 Please use this version
 
 
