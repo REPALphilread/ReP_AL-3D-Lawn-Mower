@@ -1192,7 +1192,7 @@ void Receive_Mower_Tracking_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' && recieved != '\f') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\l' && recieved != '\f') {   
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
       else if (recieved == '\a') {
@@ -1356,7 +1356,7 @@ void Receive_Mower_Running_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' 
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\s' && recieved != '\e' 
     && recieved != '\f' && recieved != '\g' && recieved != '\h' && recieved != '\i' ) { 
               
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
@@ -1436,7 +1436,7 @@ void Receive_Docked_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e') { 
+    if ( recieved != '\a' && recieved != '\w' && recieved != '\c' && recieved != '\d' && recieved != '\e') { 
       
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
