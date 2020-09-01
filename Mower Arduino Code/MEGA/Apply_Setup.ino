@@ -5,6 +5,7 @@ void Print_Mower_Status() {
   if (Mower_Running == 1) Serial.print("Running:1|");
   if (Manuel_Mode == 1) Serial.print("Manuel Mode:1|");
   if (Mower_Parked_Low_Batt == 1) Serial.print("Park_Low_Batt:1|");
+  if (Mower_Error == 1) Serial.print("Mower Error:1|");
   
 }
 
@@ -34,6 +35,7 @@ void Setup_Compass() {
   lcd.print("Compass  ");
   lcd.setCursor(0, 1);
   lcd.print("Setup");
+  Serial.println("Setup Compass");
   while (!compass.begin())
   {
     Serial.println(F("Could not find a valid QMC5883 sensor, check wiring!"));
@@ -69,6 +71,7 @@ if (Compass_Activate == 0) {
 
 
 void Setup_Relays() {
+  Serial.println("Setup Relays");
   pinMode(Relay_Motors, OUTPUT);
   delay(5);
   Turn_Off_Relay();
@@ -76,6 +79,7 @@ void Setup_Relays() {
   }
 
 void Setup_Motor_Pins() {
+  Serial.println("Setup Motor Pins");
   pinMode(L_EN, OUTPUT);
   pinMode(R_EN, OUTPUT);
   pinMode(RPWM, OUTPUT);
@@ -93,6 +97,7 @@ void  Turn_Off_Relay() {
    }
 
 void Setup_Membrane_Buttons() {
+  Serial.println("Setup Membrane Keys");
   pinMode(Start_Key, INPUT_PULLUP);            // set pin as input
   pinMode(Plus_Key, INPUT_PULLUP);            // set pin as input
   pinMode(Minus_Key, INPUT_PULLUP);            // set pin as input
@@ -100,6 +105,7 @@ void Setup_Membrane_Buttons() {
   }
 
 void Setup_ADCMan() {
+  Serial.println("ADCMAN");
   ADCMan.init();
   perimeter.setPins(pinPerimeterLeft, pinPerimeterRight);
   perimeter.useDifferentialPerimeterSignal = true;

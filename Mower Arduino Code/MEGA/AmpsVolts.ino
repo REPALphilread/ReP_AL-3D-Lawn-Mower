@@ -103,10 +103,11 @@ if (Show_TX_Data == 1) {
  int mVperAmp = 185;
  int ACSoffset = 2500; 
  double VoltageAmp = 0;
- double Amps = 0;
+ double Amps_Now = 0;
  VoltageAmp = (RawValueAmp / 1024.0) * 5000; // Gets you mV
- Amps =  ((VoltageAmp - ACSoffset) / mVperAmp);
-
+ Amps_Now =  ((VoltageAmp - ACSoffset) / mVperAmp);
+ Amps = Amps_Now;
+ 
  Serial.print(F("A:"));    
  Serial.print(Amps);
  Serial.print(F("|"));
@@ -117,7 +118,7 @@ if (Show_TX_Data == 1) {
  if (RawValueVolt > 100)  {
  float vout = 0.0;
  float R1 = 30000;      // 30000 Mower 2    Mower 1 30000
- float R2 = 7300;       // 7300 Mower 2     Mower 1 7500
+ float R2 = 7000;       // 7300 Mower 2     Mower 1 7500
  vout = (RawValueVolt * 5.0) / 1024.0; // see text
  Volts = vout / (R2/(R1+R2));
  Volts_Last = Volts;
