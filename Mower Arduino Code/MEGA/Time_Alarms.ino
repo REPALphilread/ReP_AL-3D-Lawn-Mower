@@ -14,157 +14,135 @@ void DisplayTime()   {
            t.hr, t.min, t.sec);
 
   // Print the formatted string to serial so we can see the time.
-  Serial.println(buf);
-  
+  Serial.print(buf);
+ 
   }
 
-void Set_Mower_Time ()     {
-  // Sets up time options in the LCD menu
-  lcd.setCursor(3,0);
-  lcd.print("Mow 1 Hour");
-  lcd.setCursor(3,1);
-  lcd.print("Mow Max Time");
-  Mow_Time_Set = 0;
-  while (Mow_Time_Set == 0)  {
-      Read_Membrane_Keys();
-      if(!Plus_Key_X) {
-         DisplayTime();
-         lcd.setCursor(0,0);
-         lcd.print(">");
-         lcd.setCursor(0,1);
-         lcd.print(" ");
-         Alarm_3_ON = 1;                          // Activate Alarm 3 (1 = ON 0 = OFF)
-         Alarm_Hour3 = Time_Hour + 1;                 // Sets time to 1 hour later.
-         Alarm_Minute3 = Time_Minute;
+void Print_Time_On_Serial() {
+      Serial.print("Time:");
+      Time t = rtc.time();
+      Serial.print(t.hr);
+      Serial.print(":");
+      if (t.min < 10) Serial.print ("0");
+      Serial.print(t.min);
+      Serial.print(".");
+      if (t.sec < 10) Serial.print ("0");
+      Serial.print(t.sec);
+      }
 
-         Serial.print(F("Finish Time set to : "));
-         Serial.print(Alarm_Hour3);
-         Serial.print(F(":"));
-         Serial.println(Alarm_Minute3);
-         Create_Alarms();
-         delay(100);
-         Display_Next_Alarm();
-         delay(100);
-         }
-         Read_Membrane_Keys();
-         if(!Minus_Key_X) {
-           lcd.setCursor(0,0);
-           lcd.print(" ");
-           lcd.setCursor(0,1);
-           lcd.print(">");
-           Alarm_3_ON = 0;
-           Create_Alarms();
-           delay(100);
-           Display_Next_Alarm();
-           delay(100);
-           }
-         if(!Start_Key_X) {
-           Mow_Time_Set = 1;
-           lcd.clear();
-           if (Alarm_3_ON == 1) {
-             lcd.print("1hr Mow Time");
-             lcd.setCursor(0,1);
-             lcd.print("Selected");
-             }
-         if (Alarm_3_ON == 0) {
-             lcd.print("Mow Max Time");
-             lcd.setCursor(0,1);
-             lcd.print("Selected");
-             }
-         delay(2000);
-         Serial.println(F("Alarm Confirmed"));
-         delay(500);
-         Menu_Mode_Selection = 0;
-         }
-        if(!Stop_Key_X){
-           Serial.println(F("Stop key is pressed"));
-           Alarm_3_ON = 0;
-           Create_Alarms();
-           delay(100);
-           Display_Next_Alarm();
-           delay(100);
-           lcd.clear();
-           lcd.setCursor(0,0);
-           lcd.print("Menu Cancelled");
-           delay(2000);
-           lcd.clear(); 
-           Menu_Complete = true;
-           Menu_Mode_Selection = 0;
-           Mow_Time_Set = 2;         
-           } 
-    }
- }
 
-void Create_Alarms() {
- if (Alarm_1_ON == 1 ) Alarm.alarmRepeat(Alarm_Hour1, Alarm_Minute1, Alarm_Second, Manouver_Start_Mower);
- if (Alarm_2_ON == 1 ) Alarm.alarmRepeat(Alarm_Hour2, Alarm_Minute2, Alarm_Second, Manouver_Start_Mower);
- if (Alarm_3_ON == 1 ) Alarm.alarmOnce(Alarm_Hour3, Alarm_Minute3, Alarm_Second, Timed_Mow);
- }
+void Activate_Alarms() {
 
+  Time t = rtc.time();
+
+  // Manual ALARM 1
+  if (Alarm_1_ON == 1) {  
+     if ((t.hr == Alarm_1_Hour) && (t.min == Alarm_1_Minute)) {
+       Serial.println("");
+       Serial.println("ALARM 1");
+       delay(2000);
+       // Insert action for Alarm 1 Here
+       Exit_Zone = 1;
+       Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
+       Manouver_Exit_To_Zone_X();
+       }
+     }
+ 
+  
+  // Manual ALARM 2
+  if (Alarm_2_ON == 1) {  
+     if ((t.hr == Alarm_2_Hour) && (t.min == Alarm_2_Minute)) {
+       Serial.println("");
+       Serial.println("ALARM 2");
+       delay(2000);
+       //Insert action for Alarm 2 Here
+       //
+       //
+
+       }
+     }
+
+  // Manual ALARM 3
+  if (Alarm_3_ON == 1) {  
+     if ((t.hr == Alarm_3_Hour) && (t.min == Alarm_3_Minute)) {
+       Serial.println("");
+       Serial.println("ALARM 3");
+       delay(2000);
+       //Insert action for Alarm 3 Here
+       //
+       //
+
+       }
+     }
+}
+
+
+// Set when choosing an option of 1hr or 2hr mow etc.
+void Check_Timed_Mow() {
+  
+  if (Alarm_Timed_Mow_ON == 1) {  
+      Time t = rtc.time();
+     if ((t.hr == Alarm_Timed_Mow_Hour) && (t.min == Alarm_Timed_Mow_Minute)) {
+       Serial.println("Timed Mow Complete");
+       delay(2000);
+       //Insert action for Timed Mow Alarm Here
+         if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
+         if (Use_Charging_Station == 0) Manouver_Park_The_Mower_Low_Batt();                      // Parks the mower with a low battery warning
+       }
+     }
+}
+ 
 
 // Prints the alarms set to the serial monitor
 void Display_Next_Alarm()  {
-  Serial.print("Alarm:");
   //Print_Day();
   
   if (Alarm_1_ON == 1 ) {
-  Serial.print(F(" "));
-  Serial.print(Alarm_Hour1);
+  Serial.print("|Alarm 1:");
+  Serial.print(Alarm_1_Hour);
   Serial.print(F(":"));
-  Serial.print(Alarm_Minute1);
+  if (Alarm_1_Minute < 10) Serial.print ("0");
+  Serial.print(Alarm_1_Minute);
   Serial.print("|");
   }
+  if (Alarm_1_ON == 0) Serial.print("|Alarm 1 OFF");
  
   if (Alarm_2_ON == 1) {
-  Serial.print(F(" "));
-  Serial.print(Alarm_Hour2);
+  Serial.print("|Alarm 2:");
+  Serial.print(Alarm_2_Hour);
   Serial.print(F(":"));
-  Serial.print(Alarm_Minute2);
+  if (Alarm_2_Minute < 10) Serial.print ("0");
+  Serial.print(Alarm_2_Minute);
   Serial.print("|");
   }
-
-  if (Alarm_3_ON == 1) {
-  Serial.print(F(" "));
-  Serial.print(Alarm_Hour3);
-  Serial.print(F(":"));
-  Serial.print(Alarm_Minute3);
-  Serial.print("|");
-  }
-
-  if ((Alarm_1_ON == 0)  && (Alarm_2_ON == 0) && (Alarm_3_ON == 0) ){
-    Serial.print("X");
-  }
+  if (Alarm_2_ON == 0) Serial.print("|Alarm 2 OFF");
   
+  if (Alarm_3_ON == 1) {
+  Serial.print("|Alarm 3:");
+  Serial.print(Alarm_3_Hour);
+  Serial.print(F(":"));
+  if (Alarm_3_Minute < 10) Serial.print ("0");
+  Serial.print(Alarm_3_Minute);
+  Serial.print("|");
+  }
+  if (Alarm_3_ON == 0) Serial.print("|Alarm 3 OFF");
+
+   
 }
 
 void Set_Time_On_RTC(){
-   // Uncomment the next 4 lines to reset the time on the clock
+   // Set_Time to 1 in the setting menu to set time.  Load the sketch then immediatley Set_Time = 0 and reload the sketch.
         rtc.writeProtect(false);
         rtc.halt(false);
-        Time t(2019, 04, 27, 00, 01, 00, Time::kSaturday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
+        Time t(2019, 07, 12, 15, 8, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
         rtc.time(t);    
         delay(10);
    }
 
-void Timed_Mow() {
-      Alarm_3_ON = 0;
-      Create_Alarms();
-      lcd.clear();
-      lcd.print("1 hour Mow. Job");
-      lcd.setCursor(0,1);
-      lcd.print("Done. Going Home!");
-      Motor_Action_Stop_Motors();
-      Motor_Action_Stop_Spin_Blades(); 
-      delay(200);
-      Serial.println(F("**************************************************"));
-      Serial.println(F("                   Mow Time Over"));
-      Serial.println(F("                    1 Hour ALARM"));
-      Serial.println(F("**************************************************"));
-      delay(5000);
-      lcd.clear();
-      lcd.print("Returning Home");
-      Serial.println(F("1hr Mow Complete - Sending Mower Home"));
-      if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();
-      if (Use_Charging_Station == 0) Manouver_Park_The_Mower();
-      lcd.clear();
-  }
+
+void Manage_Alarms() {
+    Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
+    if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
+    if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
+    if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
+    }

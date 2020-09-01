@@ -6,8 +6,13 @@ void Motor_Action_Go_Full_Speed()     {
 
 void Motor_Action_GoFullSpeed_Out_Garage()     {
   //Speeds can be changed to give the mower a slight curve when exiting the Garage.
+  
+  PWM_MaxSpeed_LH = PWM_MaxSpeed_LH + 20;                          
+  if (PWM_MaxSpeed_LH > 255)  PWM_MaxSpeed_LH = 255;
+  if (PWM_MaxSpeed_RH > 255)  PWM_MaxSpeed_RH = 255;
+  
   analogWrite(ENAPin, PWM_MaxSpeed_RH);                                       // Speed = 0-255  (255 is max speed). Speed is set in the settings
-  analogWrite(ENBPin, PWM_MaxSpeed_LH);                                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
+  analogWrite(ENBPin, PWM_MaxSpeed_LH);   
   Serial.print(F("Wheel:FULL|"));
   }
 
@@ -64,8 +69,8 @@ void SetPins_ToTurnRight() {                                    // Pins are set 
 
 // USed to turn the mower at a set speed.
 void Motor_Action_Turn_Speed() {
-      analogWrite(ENAPin, (PWM_MaxSpeed_RH - 0) );                                  // Change the 0 value to 10 or 20 to recuce the speed
-      analogWrite(ENBPin, (PWM_MaxSpeed_LH - 0) );                                  // Change the 0 value to 10 or 20 to recuce the speed
+      analogWrite(ENAPin, (PWM_MaxSpeed_RH - Turn_Adjust) );                                  // Change the 0 value to 10 or 20 to recuce the speed
+      analogWrite(ENBPin, (PWM_MaxSpeed_LH - Turn_Adjust) );                                  // Change the 0 value to 10 or 20 to recuce the speed
       }
 
 
