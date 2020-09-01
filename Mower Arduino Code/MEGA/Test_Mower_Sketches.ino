@@ -15,13 +15,13 @@
   }
 
   /* Prints Values to the Serial Monitor of mag, smag and signal quality.  */
-  Serial.print(F("Inside (1) or Outside (0):  "));
+  Serial.print("Inside (1) or Outside (0):  ");
   Serial.print((perimeter.isInside(0)));
-  Serial.print(F("     MAG: "));
+  Serial.print("     MAG: ");
   Serial.print((int)perimeter.getMagnitude(0));
-  Serial.print(F("    smag: "));
+  Serial.print("    smag: ");
   Serial.print((int)perimeter.getSmoothMagnitude(0));
-  Serial.print(F("     qaulity: "));
+  Serial.print("     qaulity: ");
   Serial.println((perimeter.getFilterQuality(0)));
 
 
@@ -336,18 +336,18 @@ int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int so
     distance is then set to 999cm so the missed ping is not seen as an object detected.*/
   if (distanceY == 0) {
     distanceY = 999;
-    Serial.print(F("SONAR "));
+    Serial.print("SONAR ");
     Serial.print(sonarY);
     Serial.print(": ");
-    Serial.println(F("NO PING ERROR REMOVED"));
+    Serial.println("NO PING ERROR REMOVED");
   }
 
   /*Prints the Sonar letter and distance measured on the serial Monitor*/
-  Serial.print(F("SONAR "));
+  Serial.print("SONAR ");
   Serial.print(sonarY);
   Serial.print(": ");
   Serial.print(distanceY);
-  Serial.println(F(" cm"));
+  Serial.println(" cm");
   //Serial.println(maxdistancesonar);
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/

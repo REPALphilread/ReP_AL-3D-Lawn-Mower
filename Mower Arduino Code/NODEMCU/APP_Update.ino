@@ -163,33 +163,11 @@ BLYNK_WRITE(V4) {
         Serial.println("Automatic Mode");
         Automatic_Mode = 1;
         Manuel_Mode = 0;
-        Set_To_Automatic_Mode_Random();
+        Set_To_Automatic_Mode();
         Update_Blynk_App_With_Status();
         break;
       }
     case 2: { // Item 2
-        Serial.println("Automatic Spiral");
-        Automatic_Mode = 2;
-        Manuel_Mode = 0;
-        Set_To_Automatic_Mode_Spiral();
-        Update_Blynk_App_With_Status();
-        break;
-      }
-    
-    case 3: { // Item 3
-        Serial.println("Automatic Parallel");
-        Manuel_Mode = 0;
-        Automatic_Mode = 1;
-        Set_To_Automatic_Mode_Parallel();
-        Mower_Parked = 0;
-        Mower_Docked = 0;
-        Mower_Running = 0;
-        Update_Blynk_App_With_Status();
-        break;
-      }
-
-    
-    case 4: { // Item 4
         Serial.println("Manuel Mode");
         Manuel_Mode = 1;
         Automatic_Mode = 0;
@@ -200,7 +178,6 @@ BLYNK_WRITE(V4) {
         Update_Blynk_App_With_Status();
         break;
       }
-
     }
 }
 

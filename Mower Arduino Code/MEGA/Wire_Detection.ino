@@ -13,7 +13,6 @@ void Check_Wire_In_Out() {
     if ( (perimeter.isInside(0)) == 1 )   {
       Outside_Wire = 0;                                               // Mower is inside the perimeter wire
       Outside_Wire_Count = 0;                                         // The number of outside wire counts is reset to 0
-      Wire_Refind_Tries = 0;
       }
     }
 
@@ -41,22 +40,6 @@ void Check_Wire_In_Out() {
       UpdateWireSensor();                                               // Read the wire sensor and see of the mower is now  or outside the wire  
       ADCMan.run();
       PrintBoundaryWireStatus(); 
-      Wire_Refind_Tries = Wire_Refind_Tries + 1;
-      Serial.println("");
-      Serial.print("|Wire Refind Atempts:");
-      Serial.print(Wire_Refind_Tries);
-      Serial.print("|");
-      Serial.println("");
-      if (Wire_Refind_Tries > 4) {
-        Motor_Action_Stop_Motors(); 
-        lcd.clear();
-        Mower_Error = 1;
-        Serial.println("");
-        Serial.println("Max refind tries exceeded - Parking the Mower");
-        delay(2000);
-      
-      }
-      
     }
   }
     
@@ -94,9 +77,9 @@ void TestforBoundaryWire()  {
     Serial.print(F(":"));
     if (Wire_Detected == 0) Serial.print(F("OFF|"));
     if (Wire_Detected == 1) Serial.print(F("ON|"));
-    //Serial.print(F("Mag:"));
-    //Serial.print(MAG_Now);
-    //Serial.print("|");
+    Serial.print(F("Mag:"));
+    Serial.print(MAG_Now);
+    Serial.print("|");
     
   }
 

@@ -7,7 +7,7 @@ void Special_Cut_Under_Trampoline_Function() {
 // after wire tracking the code to bering the mower to a sensible position away from the wire
 // This poart of the code should eb modified to fit your garden needs
 void Special_Move_Into_Garden_Zone_X() {
-    Serial.println(F("start mower code here"));
+    Serial.println("start mower code here");
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors
     SetPins_ToTurnLeft();                                           // Turn left
     Motor_Action_Go_Full_Speed();                                       
@@ -18,14 +18,14 @@ void Special_Move_Into_Garden_Zone_X() {
 
 void Special_Exit_From_Docking_Station() {
     lcd.clear();
-    lcd.print(F("Exiting Garage"));
+    lcd.print("Exiting Garage");
     delay(2000);
     SetPins_ToGoBackwards();                                        // Prepare motors pins to go Backwards
     Motor_Action_GoFullSpeed_Out_Garage();                          // Turn the wheels
-    Serial.print(F("Left Wheel PWM:"));
+    Serial.print("Left Wheel PWM:");
     Serial.print(PWM_MaxSpeed_LH);
     Serial.print("|");
-    Serial.print(F("Right Wheel PWM:"));
+    Serial.print("Right Wheel PWM:");
     Serial.println(PWM_MaxSpeed_RH);   
     delay (4000);                                                   // Backwards time
     Motor_Action_Stop_Motors;                                       // Stop
@@ -52,14 +52,13 @@ void Special_Exit_From_Docking_Station() {
 
 void Specials_Find_Wire_Track()  {
 
-  Serial.println("");
   Serial.println(F("Lost Mower - find wire Track"));
   lcd.clear();
   lcd.print("Finding Wire...  ");
   Motor_Action_Stop_Spin_Blades();
   delay(5);
   Abort_Wire_Find = 0;
-  //No_Wire_Found = 0;
+  No_Wire_Found = 0;
   TestforBoundaryWire();                                                                    // Check to see that the wire is on.
 
   for (int i = 0; i <= 1; i++) {
@@ -71,13 +70,11 @@ void Specials_Find_Wire_Track()  {
     ADCMan.run();
     UpdateWireSensor();
     delay(20);
+    Serial.println(F("before if loops start"));
     PrintBoundaryWireStatus();
-    //No_Wire_Found = 0;
-    Wire_Find_Attempt = 0;  
 
     // First go backwards if the mower is outside the wire
     if ( inside == false) {                                    // If the mower is outside the wire then run the following code.
-      Serial.println("Reversing to find the wire");
       ADCMan.run();
       UpdateWireSensor();
       PrintBoundaryWireStatus();
@@ -90,30 +87,21 @@ void Specials_Find_Wire_Track()  {
       lcd.setCursor(0,1);
       lcd.print("Finding Wire  ");
       delay(100);
-      
-      // While the mower is still outside the boundary wire run this code unless andabort signal from the APP comes or it runs out of tries.
-      while (( inside != true) && (Wire_Find_Attempt < 100) ){
+      while (( inside != true) && (Abort_Wire_Find == 0) ){                                 // While the mower is still outside the fence run this code
         Motor_Action_Go_Full_Speed();                                                       // Go full speed (in this case backwards)
         UpdateWireSensor();                                                                 // Read the wire sensor and see of the mower is now  or outside the wire
         ADCMan.run();
         PrintBoundaryWireStatus();                                                          // Prints of the status of the wire sensor readings.
         Serial.println("");
-        Wire_Find_Attempt = Wire_Find_Attempt + 1;                                                      // Counts how many loops have passed to find the wire.
-        Serial.print(F("No Wire Count Backwards:"));
-        Serial.print(Wire_Find_Attempt);
-        Serial.print("|");
         }
-      
       }
       
       Motor_Action_Stop_Motors();
       delay(5);
       }
-    
-    Wire_Find_Attempt = 0; 
+
     // Code to go forwards until the mower is outside/ON the wire
     if ( inside == true) {             // If the Mower is situated  the wire then run the following code.
-        Serial.println(F("Moving Forwards to find the wire"));
         ADCMan.run();
         UpdateWireSensor();
         Serial.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
@@ -123,22 +111,23 @@ void Specials_Find_Wire_Track()  {
         SetPins_ToGoForwards();                                                             // Set the motors to move the mower forwards
         delay(100);
         lcd.clear();
-        lcd.print(F("Forward Try...  "));
+        lcd.print("Forward Try...  ");
         lcd.setCursor(0,1);
-        lcd.print(F("Finding Wire  "));
-        delay(100);                                                                  // resets the cycles
-        while (( inside != false) && (Wire_Find_Attempt < 100)) {                               // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
+        lcd.print("Finding Wire  ");
+        delay(100);
+        int cycle = 0;                                                                      // resets the cycles
+        while ( inside != false) {                               // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
+          cycle = cycle + 1;
           Motor_Action_Go_Full_Speed();                                                     // Go full speed (in this case forwards)
           UpdateWireSensor();                                                               // Read the wire sensor and see of the mower is now  or outside the wire
           ADCMan.run();
           PrintBoundaryWireStatus();                                                        // Prints of the status of the wire sensor readings.
-          Serial.println("");
-          Wire_Find_Attempt = Wire_Find_Attempt + 1;                                                    // Counts how many loops have passed to find the wire.
-          Serial.print("No Wire Count Forwards:");
-          Serial.print(Wire_Find_Attempt);
-          Serial.print("|");
           }
-      }
+          if (cycle > Max_Cycle_Wire_Find) {                                                                // Track forwards for 500 cycles
+            No_Wire_Found = 1;                                                              // if mower is still tracking after 500 cycles then cancel the find.
+            Serial.println("Max Forward Cycles reached");
+          }
+        }
       Motor_Action_Stop_Motors();
       delay(5);
     }

@@ -44,29 +44,11 @@ void Set_To_Manuel_Mode() {
     Manuel_Mode = 1;
 }
 
-void Set_To_Automatic_Mode_Random() {
+void Set_To_Automatic_Mode() {
     Serial.println("");
-    Serial.println("Automatic Mode RANDOM Selected");
+    Serial.println("Automatic Mode Selected");
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 6;
     Transmit_Blynk_Data_to_Mega();
     Automatic_Mode = 1;
-}
-
-void Set_To_Automatic_Mode_Spiral() {
-    Serial.println("");
-    Serial.println("Automatic Mode SPIRAL Selected");
-    Update_Blynk_App_With_Status();
-    transmit_blynk_code = 11;
-    Transmit_Blynk_Data_to_Mega();
-    Automatic_Mode = 2;
-}
-
-void Set_To_Automatic_Mode_Parallel() {
-    Serial.println("");
-    Serial.println("Automatic Mode PARALLEL Selected");
-    Update_Blynk_App_With_Status();
-    transmit_blynk_code = 12;
-    Transmit_Blynk_Data_to_Mega();
-    Automatic_Mode = 2;
 }
