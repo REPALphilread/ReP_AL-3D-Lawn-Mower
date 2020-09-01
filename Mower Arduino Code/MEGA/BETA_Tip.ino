@@ -1,3 +1,33 @@
+
+// Test sketch to sense the tip of the Mower and shut dowen the
+// Mower blade.
+
+
+void Read_X_Y_Values() {
+  
+  // Retrieve the raw values from the magnetometer (not scaled).
+//  MagnetometerRaw raw = compass.ReadRawAxis();
+  
+  // Retrieve the scaled values from the magnetometer (scaled to the configured scale).
+  //MagnetometerScaled scaled = compass.ReadScaledAxis();
+
+  //Serial.print("Raw:\t");
+  //Serial.print(raw.XAxis);
+  //Serial.print("   ");   
+  //Serial.print(raw.YAxis);
+  //Serial.print("   ");   
+  //Serial.print(raw.ZAxis);
+  //Serial.print("   \tScaled:\t");
+
+  //Serial.print(scaled.XAxis);
+  Serial.print("   ");   
+  //Serial.print(scaled.YAxis);
+  Serial.print("   ");   
+  //Serial.print(scaled.ZAxis);
+}
+
+
+
 void Compass_Check_Tilt_Angle() {
      Vector mag = compass.readRaw();
      Y_Tilt = mag.YAxis + Calb_YAxis;

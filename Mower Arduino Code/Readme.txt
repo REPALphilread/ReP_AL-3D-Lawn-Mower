@@ -1,7 +1,7 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V7.0
+Code V7.1
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
@@ -9,14 +9,12 @@ Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 
 
-Features of 7.0
+Features of 7.1
 ---------------
 
-- Nearly all of the major Mower settings can now be set using the LCD screen and keypad
-- Settings are saved to EEPROM so they are transfered to later code updates.
-- Setting Alarms has been improved with an action available for each alarm.
-- Fixed the hours and minutes roll over in the alarm setting.
-- Fixed errorsa with exiting the settings sub menu.
+- Bumper Bar is added to the code.
+- Bumper Bar can be activated in the sensors menu.
+- Bumper Bar can be tested in the tet menu
 
 
 

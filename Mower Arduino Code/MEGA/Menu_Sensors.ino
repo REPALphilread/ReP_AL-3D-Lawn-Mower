@@ -12,7 +12,7 @@ void Print_LCD_Menu_Sensors(byte LCD_Menu_Sensors) {
   if (LCD_Menu_Sensors == 7)  lcd.print(F("RAIN ON/OFF"));
   if (LCD_Menu_Sensors == 8)  lcd.print(F("Rain Sensitivity"));
   if (LCD_Menu_Sensors == 9)  lcd.print(F("WIFI ON/OFF"));
-  if (LCD_Menu_Sensors == 10)  lcd.print(F(""));
+  if (LCD_Menu_Sensors == 10)  lcd.print(F("Bumper ON/OFF"));
   if (LCD_Menu_Sensors == 11) lcd.print(F(""));
   
   Max_Options_Sensors = 11;
@@ -765,10 +765,73 @@ void Activate_Menu_Option_Sensors() {
              if (!Minus_Key_X) {
                lcd.setCursor(0,1);
                lcd.print(F("Status: "));
-               WIFI_Enabled = 0;
+               Rain_Sensor_Installed = 0;
                lcd.print(F("Disabled"));
                Serial.print(F("Status:"));
                Serial.println(WIFI_Enabled);
+               delay(100);
+               }
+     }
+     }
+
+   if (Menu_Mode_Selection == 10) {
+       // Bumper Bar ON/OFF
+       lcd.clear();
+       lcd.print(F("Bumper Bar"));
+       delay(1000);
+       lcd.clear();
+       Menu_Mode_Selection = 0;
+       lcd.clear();
+       lcd.setCursor(0,0);
+       lcd.print(F("Bumper Bar"));
+       lcd.setCursor(0,1);
+       lcd.print(F("Status : "));
+       if (Bumper_Activate_Frnt == 1) lcd.print(F("ON "));
+       if (Bumper_Activate_Frnt == 0) lcd.print(F("OFF"));
+       
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
+          Read_Membrane_Keys();
+          delay(100);
+          //Enter Code Here to Cycle until stop key is pressed.
+             if(!Start_Key_X){
+               Serial.println(F("Wire Sensor ON/OFF Settings Saved"));
+               Menu_Complete_Sensors = true;
+               lcd.clear();
+               lcd.setCursor(0,0);
+               lcd.print(F("Bumper Bar"));
+               lcd.setCursor(0,1);
+               lcd.print(F("Saved: "));
+               if (Bumper_Activate_Frnt == 1) {
+                  lcd.print(F("ON "));
+                  Setup_Bumper_Bar();
+                  }
+               if (Bumper_Activate_Frnt == 0) lcd.print(F("OFF"));
+               Serial.print(F("Sensor:"));
+               Serial.println(Bumper_Activate_Frnt);
+               delay(2000);
+               lcd.clear();          
+               EEPROM.write(90 , 1);
+               EEPROM.write(91 , Bumper_Activate_Frnt);
+               Menu_Mode_Selection = 0;
+               
+               }
+             if (!Plus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print(F("Status : "));
+               Bumper_Activate_Frnt = 1;
+               lcd.print(F("ON "));
+               Serial.print(F("Sensor:"));
+               Serial.println(Bumper_Activate_Frnt);
+               delay(100);
+               }
+             if (!Minus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print(F("Status : "));
+               Bumper_Activate_Frnt = 0;
+               lcd.print(F("OFF"));
+               Serial.print(F("Sensor:"));
+               Serial.println(Bumper_Activate_Frnt);
                delay(100);
                }
      }

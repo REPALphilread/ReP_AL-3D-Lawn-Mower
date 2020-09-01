@@ -23,6 +23,7 @@
 //Libraries for ic2 Liquid Crystal
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
+//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LAM Test
 
 
 //Libraries for the Mowing Calendar Function
@@ -58,7 +59,9 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 #define echoPin3 38   //S3
 #define trigPin3 39
 
-
+//Bumper Microswitches
+#define Bumper_Switch_Frnt_RH  46               // Define Pin 47 on the MEGA to detect the microswitch
+#define Bumper_Switch_Frnt_LH  47               // Define Pin 46 on the MEGA to detect the microswitch
 
 //Membrane Switch
 #define Start_Key 50 //connect wire 1 to pin 2
@@ -118,6 +121,10 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Sonar_Hit_3 = 0;
   bool Sonar_Hit   = 0;
 
+  // Bumper Variables
+  bool Bump_Frnt_LH;
+  bool Bump_Frnt_RH;
+  bool Bumper;
 
   //Mower Status Variables
   bool Mower_Docked;
@@ -318,6 +325,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool  Cutting_Blades_Activate_EEPROM;
   int   Low_Battery_Instances_Chg_EEPROM;
   int   Alarm_1_Action_EEPROM;
+  bool  Bumper_Activate_Frnt_EEPROM;
 
   
 /***********************************************************************************************
@@ -336,7 +344,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V7.0";
+  char Version[16] = "V7.1";
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -396,6 +404,9 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Sonar_3_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 3
   int  Max_Sonar_Hit              = 3;      //EEPROM            // Maximum number of Sonar hits before object is discovered
   long maxdistancesonar           = 30;     //EEPROM            // distance in cm from the mower that the sonar will activate at.
+
+  // Bumper Module
+  bool Bumper_Activate_Frnt       = 0;      //EEPROM            // Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
 
   //Wheel Motors Setup
   int Max_Cycles_Straight        = 150;     //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
@@ -511,6 +522,7 @@ void setup() {
   Setup_Motor_Pins();
   Setup_ADCMan();
   Setup_Check_Pattern_Mow();
+  if (Bumper_Activate_Frnt == true) Setup_Bumper_Bar();
   }
 
 void loop() {
@@ -551,18 +563,19 @@ if (Mower_Error == 1) Check_Membrane_Switch_Input_Parked();
 
 
 // Mower is running cutting the grass.
-if (Mower_Running == 1)                                                                             Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
-if (Mower_Running == 1)                                                                             Process_Volt_Information();         // Take action based on the voltage readings
-if (Mower_Running == 1)                                                                             Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
-if (Mower_Running == 1)                                                                             Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
-if (Mower_Running == 1)                                                                             Check_Timed_Mow();                  // Check to see if the time to go home has come.
-if (Mower_Running == 1)                                                                             TestforBoundaryWire();              // Test is the boundary wire is live
-if ((Mower_Running == 1) && (Tip_Safety == 1))                                                      Compass_Check_Tilt_Angle();         // Tests to see if the mower is overturned.
-if ((Mower_Running == 1) && (Wire_Detected == 1))                                                   Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
-if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                            Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
-if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))        Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
-if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 1) && (Loop_Cycle_Mowing > 0)) Manouver_Turn_Around();             // If outside the wire turn around
-if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))        Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
+if (Mower_Running == 1)                                                                                                   Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
+if (Mower_Running == 1)                                                                                                   Process_Volt_Information();         // Take action based on the voltage readings
+if (Mower_Running == 1)                                                                                                   Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
+if (Mower_Running == 1)                                                                                                   Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
+if (Mower_Running == 1)                                                                                                   Check_Timed_Mow();                  // Check to see if the time to go home has come.
+if (Mower_Running == 1)                                                                                                   TestforBoundaryWire();              // Test is the boundary wire is live
+if ((Mower_Running == 1) && (Tip_Safety == 1))                                                                            Compass_Check_Tilt_Angle();         // Tests to see if the mower is overturned.
+if ((Mower_Running == 1) && (Wire_Detected == 1))                                                                         Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
+if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
 
 
 // WIFI Commands from and to APP
