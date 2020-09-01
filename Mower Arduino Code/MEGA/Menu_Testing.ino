@@ -12,7 +12,7 @@ void Print_LCD_Menu_Tests(byte LCD_Menu_Tests) {
   if (LCD_Menu_Tests == 7)  lcd.print(F("Volt Amp Test"));
   if (LCD_Menu_Tests == 8)  lcd.print(F("Compass Test"));
   if (LCD_Menu_Tests == 9)  lcd.print(F("Go Home Test"));
-  if (LCD_Menu_Tests == 10) lcd.print(F("SPARE 10"));
+  if (LCD_Menu_Tests == 10) lcd.print(F("Bumper Test"));
   if (LCD_Menu_Tests == 11) lcd.print(F("Spare 11"));  
   if (LCD_Menu_Tests == 12) lcd.print(F("Spare 12"));  
   if (LCD_Menu_Tests == 13) lcd.print(F("Spare 13"));  
@@ -312,6 +312,20 @@ void Activate_Menu_Option_Testing() {
         delay(3000);
         lcd.clear();
         Manouver_Go_To_Charging_Station();
+        }
+
+
+      // Tests the bumper bar is functioning correctly.  
+      if (Menu_Mode_Selection == 10) {
+        lcd.clear();
+        lcd.print("Bumper Bar");
+        lcd.setCursor(0,1);
+        lcd.print("Test");
+        Serial.println(F("Test Compass Turn to Home Test and Follow Wire"));
+        Menu_Mode_Selection = 0;
+        delay(3000);
+        lcd.clear();
+        Start_Bumper_Bar_Test();
         }
 
 

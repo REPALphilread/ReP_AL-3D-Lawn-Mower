@@ -374,6 +374,16 @@ Low_Battery_Instances_Chg_EEPROM = EEPROM.read(85);
     Serial.println(Low_Battery_Instances_Chg);
   }
 
+
+Bumper_Activate_Frnt_EEPROM = EEPROM.read(90);
+  if (Bumper_Activate_Frnt_EEPROM == 1) {
+    Bumper_Activate_Frnt = EEPROM.read(91);  
+    Serial.print(F("Bumper Bar Enabled from EEPROM : "));
+    if (Bumper_Activate_Frnt == 0) Serial.println(F("OFF"));
+    if (Bumper_Activate_Frnt == 1) Serial.println(F("ON"));
+  }
+
+
 Serial.println(F("*************************"));
  delay(500);
 
@@ -424,6 +434,7 @@ void Clear_EERPOM() {
   EEPROM.write(87,0);     // Alarm Actions 1-3
   EEPROM.write(88,0);
   EEPROM.write(89,0);
+  EEPROM.write(90,0);     // Bumper Bar
   Serial.println(F("All EEPROM Settings Cleared"));
   delay(1000);
   
