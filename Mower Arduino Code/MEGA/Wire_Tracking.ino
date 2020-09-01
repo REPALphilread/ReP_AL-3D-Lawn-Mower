@@ -45,10 +45,7 @@ void Track_Wire_From_Dock_to_Zone_X() {
   if (Exit_Zone == 1) lcd.print("Zone 1");
   if (Exit_Zone == 2) lcd.print("Zone 2");
   delay(1000);                                           // Prints info to LCD display
-  
-  Tracking_Turn_Right = 0;                                // resets the tracking errors for LH and RH.
-  Tracking_Turn_Left = 0;
-  
+
   //uses the PID settings in the setup
   Serial.print(F("P = "));
   Serial.print(P);
@@ -102,12 +99,6 @@ void Track_Wire_From_Dock_to_Zone_X() {
         Tracking_Turn_Left = 0;                                             // Failsafe if the mower looses the wire.  If the mower is commanded to turn left or right
         Tracking_Turn_Right = Tracking_Turn_Right + 1;                      // too many times it is assumed that the mower is spinning and cant get back on the wire.
         if (Tracking_Turn_Right > Max_Tracking_Turn_Right) {                // if this is detected then a function is ran to find the wire again.
-          Motor_Action_Stop_Motors();
-          lcd.clear();
-          lcd.print("Right Wheel");
-          lcd.print("Tracking_Turn_Right");
-          delay(2000);
-          lcd.clear();
           Tracking_Restart_Blocked_Path();
         }
 
@@ -138,12 +129,6 @@ void Track_Wire_From_Dock_to_Zone_X() {
         Tracking_Turn_Right = 0;
         Tracking_Turn_Left = Tracking_Turn_Left + 1;
         if (Tracking_Turn_Left > Max_Tracking_Turn_Left) {
-          Motor_Action_Stop_Motors();
-          lcd.clear();
-          lcd.print("Left Wheel");
-          lcd.print("Tracking_Turn_Left");
-          delay(2000);
-          lcd.clear();
           Tracking_Restart_Blocked_Path();
         }
       }

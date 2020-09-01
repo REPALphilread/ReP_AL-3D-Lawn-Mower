@@ -1,7 +1,6 @@
 // Infornation to be printed to the Mower LCD screen
 
 void Setup_Run_LCD_Intro () {
-  Serial.println("Setup LCD");
   lcd.begin(16, 2);
   lcd.clear();
   lcd.print("ReP_AL Robot");
@@ -11,20 +10,17 @@ void Setup_Run_LCD_Intro () {
     lcd.setCursor(7,1);
     lcd.print("WIFI ON");
     }
-  delay(1000);
+  delay(2000);
   lcd.clear();
-  Serial.println("LCD Setup OK");
   }
 
 
-void Print_Mower_Error() {
+void Print_Mower_Lost() {
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print("Mower Error");
-  if (Wire_Off > 5) {
-    lcd.setCursor(0,1);
-    lcd.print("Wire Off");
-  }
+  lcd.print("Mower Lost");
+  lcd.setCursor(0,1);
+  lcd.print("Reset Mower");
   
 }
 
@@ -59,20 +55,8 @@ void Print_LCD_Wire()  {
     }
 
 void Print_LCD_Mowing() {
-     if (Alarm_Timed_Mow_ON == 0) {
        lcd.setCursor(0, 1);
-       lcd.print("Mowing..    ");
-       }
-     if (Alarm_Timed_Mow_ON == 1) {
-       lcd.setCursor(0,1);
-       lcd.print("Timer:");
-       lcd.print(Alarm_Timed_Mow_Hour);
-       lcd.print(":");
-       if (Alarm_Timed_Mow_Minute < 10) lcd.print("0");
-       lcd.print(Alarm_Timed_Mow_Minute);
-       Mow_Time_Set = 1;
-       }   
-       
+       lcd.print("Mowing..    ");   
      }
 
 void Print_LCD_Compass_Mowing() {
@@ -107,25 +91,10 @@ void Print_LCD_NO_Wire() {
     if ( (Mower_Docked == 1) || (Mower_Parked == 1) ) {
       lcd.setCursor(7,1);
       lcd.print(":WIRE OFF");  
-      Wire_ON_Printed = 0;
       }
     if ( (Mower_Docked == 0) && (Mower_Parked == 0) ) {
       lcd.setCursor(0,1);
-      lcd.print(":WIRE OFF        ");      
-      Wire_ON_Printed = 0;
-      }
-}
-
-void Print_LCD_Wire_ON() {
-    if ( (Mower_Docked == 1) || (Mower_Parked == 1)  && (Wire_ON_Printed = 0)) {
-      lcd.setCursor(7,1);
-      lcd.print(":               ");  
-      Wire_ON_Printed = 1; 
-      }
-    if ( (Mower_Docked == 0) && (Mower_Parked == 0) && (Wire_ON_Printed = 0) ) {
-      lcd.setCursor(0,1);
-      lcd.print(":               ");   
-      Wire_ON_Printed = 1;    
+      lcd.print("WIRE OFF        ");      
       }
 }
 
@@ -152,12 +121,17 @@ void Print_LCD_Heading_for_Home() {
 
 
 void Print_Time_On_LCD() {
-    if ((Charge_Detected_MEGA == 0) && (Mower_Running == 0) && (Rain_Detected == 0)) {
-      lcd.setCursor(0,0);            // Spaces to the right & down
-      Time t = rtc.time();
-      lcd.print(t.hr);
-      lcd.print(":");
-      if (t.min < 10) lcd.print ("0");
-      lcd.print(t.min);
+    lcd.setCursor(0,0);            // Spaces to the right & down
+    if ((hour()) < 10) {                //moves the cursor to the right otherwise the first hour number from before is left behind on the LCD.
+      lcd.print("0");
+      lcd.setCursor(1,0);
       }
-   }
+    lcd.print(hour());
+    lcd.print(":");
+
+ 
+  if ((minute()) < 10) {
+      lcd.print("0");
+      }
+   //lcd.print(minute());
+  }

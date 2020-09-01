@@ -259,19 +259,4 @@ int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int so
   return sonarY;
 
 }
-
-
-void Test_Compass_Turn_Function() {
-    digitalWrite(Relay_Motors, LOW);
-    delay(200);
-    SetPins_ToGoForwards();
-    Motor_Action_Go_Full_Speed();
-    delay(2000);
-    Manouver_Turn_Around();
-    Turn_To_Compass_Heading();
-    SetPins_ToGoForwards();
-    Motor_Action_Go_Full_Speed();
-    delay(2000); 
-    digitalWrite(Relay_Motors, HIGH);
-    }
   

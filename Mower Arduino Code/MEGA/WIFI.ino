@@ -58,7 +58,7 @@ void Transmit_All_To_NODEMCU() {
   //Serial2.print(Mower_Parked_Low_Batt);
   //Serial2.println("\b");
     
-  //Serial2.print(Mower_Error);
+  //Serial2.print(Mower_Lost);
   //Serial2.println("\l"); 
    
   //Serial2.println(Compass_Heading_Locked);
