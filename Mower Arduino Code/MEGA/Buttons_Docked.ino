@@ -12,18 +12,18 @@ void Read_Membrane_Keys(){
 
 // Test to displyed on the LCD screen when using the membrane key menus
 void Print_LCD_Menu_Docked(byte LCD_Menu_Docked) {
-  if (LCD_Menu_Docked == 1) lcd.print("Exit Dock Z-1");
-  if (LCD_Menu_Docked == 2) lcd.print("Exit Dock Z-2");
-  if (LCD_Menu_Docked == 3) lcd.print("Quick Start");
-  if (LCD_Menu_Docked == 4) lcd.print("Trampoline Cut");
-  if (LCD_Menu_Docked == 5) lcd.print("Mow the Line");
-  if (LCD_Menu_Docked == 6) lcd.print("Test Menu");
-  if (LCD_Menu_Docked == 7) lcd.print("Setup Mower");
-  if (LCD_Menu_Docked == 8) lcd.print("-- Spare 8 --");
-  if (LCD_Menu_Docked == 9) lcd.print("-- Spare 9 --");
-  if (LCD_Menu_Docked == 10) lcd.print("-- Spare 10 --");
-  if (LCD_Menu_Docked == 11) lcd.print("-- Spare 11 --");
-  if (LCD_Menu_Docked == 12) lcd.print("-- Spare 12 --");
+  if (LCD_Menu_Docked == 1) lcd.print(F("Exit Dock Z-1"));
+  if (LCD_Menu_Docked == 2) lcd.print(F("Exit Dock Z-2"));
+  if (LCD_Menu_Docked == 3) lcd.print(F("Quick Start"));
+  if (LCD_Menu_Docked == 4) lcd.print(F("Trampoline Cut"));
+  if (LCD_Menu_Docked == 5) lcd.print(F("Mow the Line"));
+  if (LCD_Menu_Docked == 6) lcd.print(F("Test Menu"));
+  if (LCD_Menu_Docked == 7) lcd.print(F("Setup Mower"));
+  if (LCD_Menu_Docked == 8) lcd.print(F("-- Spare 8 --"));
+  if (LCD_Menu_Docked == 9) lcd.print(F("-- Spare 9 --"));
+  if (LCD_Menu_Docked == 10) lcd.print(F("-- Spare 10 --"));
+  if (LCD_Menu_Docked == 11) lcd.print(F("-- Spare 11 --"));
+  if (LCD_Menu_Docked == 12) lcd.print(F("-- Spare 12 --"));
   }
 
 

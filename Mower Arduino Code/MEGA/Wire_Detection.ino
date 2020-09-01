@@ -94,9 +94,9 @@ void TestforBoundaryWire()  {
     Serial.print(F(":"));
     if (Wire_Detected == 0) Serial.print(F("OFF|"));
     if (Wire_Detected == 1) Serial.print(F("ON|"));
-    Serial.print(F("Mag:"));
-    Serial.print(MAG_Now);
-    Serial.print("|");
+    //Serial.print(F("Mag:"));
+    //Serial.print(MAG_Now);
+    //Serial.print("|");
     
   }
 

@@ -8,15 +8,15 @@ void Print_LCD_Menu_Parked(byte LCD_Menu_Parked) {
     if (Use_Charging_Station == 1)  lcd.print("Go To Dock");
     if (Use_Charging_Station == 0)  lcd.print("Dock Removed");
     }
-  if (LCD_Menu_Parked == 3)   lcd.print("Trampoline Cut");
-  if (LCD_Menu_Parked == 4)   lcd.print("Test Menu");
-  if (LCD_Menu_Parked == 5)   lcd.print("Setup Mower");
-  if (LCD_Menu_Parked == 6)   lcd.print("-- SPARE 6 ---");
-  if (LCD_Menu_Parked == 7)   lcd.print("-- SPARE 7 ---");
-  if (LCD_Menu_Parked == 8)   lcd.print("-- SPARE 8 ---");
-  if (LCD_Menu_Parked == 9)   lcd.print("-- SPARE 9 ---");
-  if (LCD_Menu_Parked == 10)   lcd.print("-- SPARE 10 ---");
-  if (LCD_Menu_Parked == 11)   lcd.print("-- SPARE 11 ---");
+  if (LCD_Menu_Parked == 3)   lcd.print(F("Trampoline Cut"));
+  if (LCD_Menu_Parked == 4)   lcd.print(F("Test Menu"));
+  if (LCD_Menu_Parked == 5)   lcd.print(F("Setup Mower"));
+  if (LCD_Menu_Parked == 6)   lcd.print(F("-- SPARE 6 ---"));
+  if (LCD_Menu_Parked == 7)   lcd.print(F("-- SPARE 7 ---"));
+  if (LCD_Menu_Parked == 8)   lcd.print(F("-- SPARE 8 ---"));
+  if (LCD_Menu_Parked == 9)   lcd.print(F("-- SPARE 9 ---"));
+  if (LCD_Menu_Parked == 10)   lcd.print(F("-- SPARE 10 ---"));
+  if (LCD_Menu_Parked == 11)   lcd.print(F("-- SPARE 11 ---"));
   if (LCD_Menu_Parked == 12)   lcd.print("");    // Leave Blank
   }
   
@@ -273,7 +273,7 @@ void Activate_Menu_Option_Parked() {
       lcd.clear();
       Print_Membrane_Switch_Input_Timing();
       lcd.clear();
-      lcd.print("Mow Re-Starting");
+      lcd.print(F("Mow Re-Starting"));
       Serial.println(F("Mower Starting"));
       delay(2000);
       Manouver_Start_Mower();                                             // Restarts the mower again from standing position
@@ -283,7 +283,7 @@ void Activate_Menu_Option_Parked() {
      if (Menu_Mode_Selection == 2) {
       if (Use_Charging_Station == 1) {
           lcd.clear();
-          lcd.print("Returning Home");
+          lcd.print(F("Returning Home"));
           Serial.println(F("Sending Mower Home"));
           delay(100);
           Menu_Mode_Selection = 0;                                      // Releases the loop in the membrane button section.
@@ -293,7 +293,7 @@ void Activate_Menu_Option_Parked() {
           }
       if (Use_Charging_Station == 0) {
           lcd.clear();
-          lcd.print("No Dock Active");
+          lcd.print(F("No Dock Active"));
           Serial.println(F("Activate Docking Station in Settings"));
           delay(100);
           Menu_Mode_Selection = 0;                                      // Releases the loop in the membrane button section.

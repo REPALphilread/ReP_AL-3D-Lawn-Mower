@@ -3,17 +3,17 @@
 
 // Test to displyed on the LCD screen when using the membrane key menus
 void Print_LCD_Menu_Tests(byte LCD_Menu_Tests) {
-  if (LCD_Menu_Tests == 1) lcd.print("Wire Test");
-  if (LCD_Menu_Tests == 2) lcd.print("Relay Test");
-  if (LCD_Menu_Tests == 3) lcd.print("Wheel Test");
-  if (LCD_Menu_Tests == 4) lcd.print("Blade Test");
-  if (LCD_Menu_Tests == 5) lcd.print("Sonar Test");
-  if (LCD_Menu_Tests == 6) lcd.print("Turn Test");
-  if (LCD_Menu_Tests == 7) lcd.print("Volt Amp Test");
-  if (LCD_Menu_Tests == 8) lcd.print("Compass Test");
-  if (LCD_Menu_Tests == 9) lcd.print("Spare 9");
-  if (LCD_Menu_Tests == 10) lcd.print("Spare 10");
-  if (LCD_Menu_Tests == 11) lcd.print("Spare 11");  
+  if (LCD_Menu_Tests == 1) lcd.print(F("Wire Test"));
+  if (LCD_Menu_Tests == 2) lcd.print(F("Relay Test"));
+  if (LCD_Menu_Tests == 3) lcd.print(F("Wheel Test"));
+  if (LCD_Menu_Tests == 4) lcd.print(F("Blade Test"));
+  if (LCD_Menu_Tests == 5) lcd.print(F("Sonar Test"));
+  if (LCD_Menu_Tests == 6) lcd.print(F("Turn Test"));
+  if (LCD_Menu_Tests == 7) lcd.print(F("Volt Amp Test"));
+  if (LCD_Menu_Tests == 8) lcd.print(F("Compass Test"));
+  if (LCD_Menu_Tests == 9) lcd.print(F("Tilt Test"));
+  if (LCD_Menu_Tests == 10) lcd.print(F("Spare 10"));
+  if (LCD_Menu_Tests == 11) lcd.print(F("Spare 11"));  
   if (LCD_Menu_Tests == 12) lcd.print("");   // Leave Blank
   }
 
@@ -69,7 +69,7 @@ void Print_Membrane_Switch_Input_Tests() {
           Menu_Complete = true;
           lcd.clear();
           lcd.setCursor(0,0);
-          lcd.print("Menu Cancelled");
+          lcd.print(F("Menu Cancelled"));
           delay(1000);
           lcd.clear();          
           Menu_Mode_Selection = 0;
@@ -393,18 +393,19 @@ void Activate_Menu_Option_Testing() {
         lcd.clear();
         Menu_Complete = false;
         while (Menu_Complete == false) {
+          Read_Membrane_Keys();
           Read_Serial1_Nano();
           delay(100);
-          Serial.print("  Charging:");
+          Serial.print(F("  Charging:"));
           Serial.print(Charging);
           lcd.setCursor(0,0);
-          lcd.print("Volt:");
+          lcd.print(F("Volt:"));
           lcd.print(Volts);
           lcd.setCursor(0,1);
-          lcd.print("Amps:");
+          lcd.print(F("Amps:"));
           lcd.print(Amps);
           lcd.setCursor(13,1);
-          lcd.print("C:");
+          lcd.print(F("C:"));
           lcd.print(Charging);
 ;          Serial.println("");
         
@@ -413,7 +414,7 @@ void Activate_Menu_Option_Testing() {
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
-             lcd.print("Test Stopped");
+             lcd.print(F("Test Stopped"));
              delay(2000);
              lcd.clear();          
              Menu_Mode_Selection = 0;
@@ -434,8 +435,9 @@ void Activate_Menu_Option_Testing() {
         Menu_Complete = false;
         while (Menu_Complete == false) {
           // insert Test Code Here
+          Read_Membrane_Keys();
           Get_Compass_Reading();
-          Serial.print(F("Comp H:"));
+          Serial.print(F("Heading:"));
           Serial.print(Heading);
           Serial.print("|");
           Serial.println("");
@@ -460,12 +462,35 @@ void Activate_Menu_Option_Testing() {
         
       if (Menu_Mode_Selection == 9) {
         lcd.clear();
-        lcd.print("Spare 9");
-        Serial.println(F("Slot 9 Selected"));
+        lcd.print("Tilt Test");
+        Serial.println(F("Tilt Test Selected"));
         Menu_Mode_Selection = 0;
-        delay(3000);
+        delay(2000);
         lcd.clear();
-        }
+        Calibrate_Compass_Angle();
+        Menu_Complete = false;
+          delay(100);
+          while (Menu_Complete == false) {
+          // insert Test Code Here
+          Read_Membrane_Keys();
+          Test_Compass_Check_Tip_Angle();
+          
+             if(!Stop_Key_X){
+             Serial.println(F("Stop key is pressed"));
+             Menu_Complete = true;
+             lcd.clear();
+             lcd.setCursor(0,0);
+             lcd.print("Test Stopped");
+             delay(2000);
+             lcd.clear();          
+             Menu_Mode_Selection = 0;
+             }
+         }
+      }
+        
+
+
+        
       if (Menu_Mode_Selection == 10) {
         lcd.clear();
         lcd.print("Spare 10");

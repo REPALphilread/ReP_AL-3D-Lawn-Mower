@@ -83,7 +83,7 @@ void Motor_Action_Spin_Blades()  {
     delay(20);
     analogWrite(RPWM, PWM_Blade_Speed);
     delay(20);
-    Serial.print("Blades:ON_|");
+    Serial.print(F("Blades:ON_|"));
    }                 
 
   if (Cutting_Blades_Activate == 0) {                                     // Blades are turn off in settings and will not spin!
@@ -97,17 +97,17 @@ void Motor_Action_Stop_Spin_Blades()  {
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
   delay(20);
-  Serial.print("Blades:0FF|");
+  Serial.print(F("Blades:0FF|"));
 }
 
 //Steers the Mower depending on the PID input from the Algorythm
 void Motor_Action_Dynamic_PWM_Steering() {
       analogWrite(ENAPin, PWM_Right);                             // ENA low = Right Swerve   ENB low = Left Swerve
       analogWrite(ENBPin, PWM_Left);
-      Serial.print("PWM_R:");
+      Serial.print(F("PWM_R:"));
       Serial.print(PWM_Right);
-      Serial.print("|");
-      Serial.print("PWM_L:");
+      Serial.print(F("|"));
+      Serial.print(F("PWM_L:"));
       Serial.print(PWM_Left);
-      Serial.print("|");
+      Serial.print(F("|"));
 }

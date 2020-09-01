@@ -15,65 +15,139 @@ void Manouver_Mow_The_Grass() {
     Loop_Cycle_Mowing = (Loop_Cycle_Mowing + 1);
     Serial.print(F("Loop:"));
     Serial.print(Loop_Cycle_Mowing);
-    Serial.print("|");
+    Serial.print(F("|"));
     lcd.setCursor(13, 1);
     lcd.print(Loop_Cycle_Mowing);
     delay(1);
   
   if (Loop_Cycle_Mowing < 5  )  {                       
     Serial.print(F("C-Lock:OFF"));
-    Serial.print("|");
+    Serial.print(F("|"));
     Print_LCD_Mowing();
     if (Compass_Activate == 1) Get_Compass_Reading();
     Motor_Action_Go_Full_Speed();
     Compass_Heading_Locked = 0;                           // Turn off the compass heading lock for the new cycles
     }
 
+  // On the 5th Mowing cycle options are chosen how to Mow based on the settings of pattern mow
+  // Compass assistance etc.
+  
   if (Loop_Cycle_Mowing == 5)   {
-    if (Compass_Heading_Hold_Enabled == 0) {
-        Serial.print(F("C-Lock:OFF"));
-        Serial.print("|");
-        Print_LCD_Compass_Mowing();
-        Motor_Action_Go_Full_Speed();
-        Compass_Heading_Locked = 0;
-        }
-    if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1)) {
-        Get_Compass_Reading();                                                      // Gets the latest compass reading
-        if (Pattern_Mow == 1)  Heading_Lock = Compass_Target;                       // If pattern mow is enabled follow that heading
-        if (Pattern_Mow == 0)  Heading_Lock = Compass_Heading_Degrees;              // Otherwise use the current heading as the lock
-        Compass_Heading_Locked = 1;                                                 // One more cycle of normal movement
-        }
-    }
 
+    // Normal Random Mowing
+    if (Pattern_Mow == 0) {
+        
+        // Normal Random Mowing no compass Assistance
+        if (Compass_Heading_Hold_Enabled == 0) {
+          Serial.print(F("C-Lock:OFF"));
+          Serial.print(F("|"));
+          Print_LCD_Compass_Mowing();
+          Motor_Action_Go_Full_Speed();
+          Compass_Heading_Locked = 0;
+          }          
+
+        // Normal Random Mowing with Compass Assitnace turned on.
+        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1))  {
+           Get_Compass_Reading();                                                      // Gets the latest compass reading
+           Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
+           Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
+           Motor_Action_Go_Full_Speed();
+           }
+        else {
+          Motor_Action_Go_Full_Speed();
+          Serial.println("Compass not activated in the settings");
+          }
+      }
+
+    if (Pattern_Mow == 1)  {                                  
+        Motor_Action_Go_Full_Speed();
+        Print_LCD_Parallel();
+        Serial.print("Parallel:ON");
+        Serial.print(F("|"));
+
+        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1))  {         // use the heading hold funtion for Parallel Mowing
+           Get_Compass_Reading();                                                      // Gets the latest compass reading
+           Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
+           Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
+           Motor_Action_Go_Full_Speed();
+           }
+        else {
+          Motor_Action_Go_Full_Speed();                                                 // if the compass is not activated
+          Serial.println("Compass not activated in the settings");
+          }
+        
+        }
+
+    // Sets up the variables so that a spiral mow pattern is activated.
+    if (Pattern_Mow == 2)  {                                  
+        Compass_Heading_Locked = 0;                   // Compass Lock is switched off                 
+        Print_LCD_Spiral();
+        Serial.print("Spiral:ON");
+        Serial.print(F("|"));
+        Motor_Action_Go_Full_Speed();
+        }
+
+  }  // end of statements for == 5
+
+
+
+  // Based on the settings above the Mower will continue to mow with the following actions
   if (Loop_Cycle_Mowing > 5) {
-      if (Compass_Heading_Locked == 0) {
-        lcd.setCursor(0, 1);
-        lcd.print("Mowing..        ");
-        Serial.print(F("C-Lock:OFF"));
-        Serial.print("|");
-        Motor_Action_Go_Full_Speed();
-        }
-      if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1)) {            // if the Mower is tracking using the compass steer here
-        Get_Compass_Reading(); 
-        Calculate_Compass_Wheel_Compensation();
-        Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
-        Print_LCD_Compass_Mowing();
-        Serial.print(F("C-Lock:ON_"));
-        Serial.print("|");
+      
+      if (Pattern_Mow == 0) {
+         if (Compass_Heading_Locked == 0) {
+           lcd.setCursor(0, 1);  
+           Serial.print(F("C-Lock:OFF"));
+           Serial.print(F("|"));
+           lcd.print("Mowing          ");
+           Motor_Action_Go_Full_Speed();
+           }
+        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1)) {            // if the Mower is tracking using the compass steer here
+          if ( (Loop_Cycle_Mowing % 2) == 0 ) {
+          Get_Compass_Reading(); 
+          Calculate_Compass_Wheel_Compensation();
+          Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
+          Print_LCD_Compass_Mowing();
+          Serial.print(F("C-Lock:ON_"));
+          Serial.print("|");
+          }
         }
       }
+        
+        
+       if (Pattern_Mow == 1) {
+           Pattern_Mow_Parallel();
+           }
+           
+       if (Pattern_Mow == 2) {
+          Pattern_Mow_Spirals();                                // For pattern mow = 2 i.e. circular motion.
+          }
 
- if (Loop_Cycle_Mowing > Max_Cycles) {                    // 150 the max length for my garden. Adjust accordingly
-      Serial.println("");
-      Serial.println("Loop Cycle at Max");
-      Serial.println("");
-      Motor_Action_Stop_Spin_Blades();                    // Stop the blades from spinning
-      Manouver_Turn_Around();                             // Turn around the mower
-      Loop_Cycle_Mowing = 0;                              // Restes the loop cycle to start again.
-      lcd.clear();
+    
       }
 
-}
+  // Max Cycles logic decides how far the Mower should run before turning around
+  // This is useful is the mower gets hooked on soemthing and the wire and sonar sensors dont react.
+  // The logic is now dependant on the type of mowing selected.  For Spiral mowing the max cycles are increased as the spiral mowing requires
+  // more cycles to complete a decent sized spiral pattern, followed by a straight line connection leg to the next spiral
+  
+  int Max_Cycles_Active;                                                                        // define a veriable to hold the max cycles
+  if (Pattern_Mow != 2 ) Max_Cycles_Active                        = Max_Cycles_Straight;        // if normal straight line mowing is slected
+  if ((Pattern_Mow == 2 ) && (Spiral_Mow == 3)) Max_Cycles_Active = Max_Cycles_Straight;        // if spiral is selected but its a straight line leg 
+  if ((Pattern_Mow == 2 ) && (Spiral_Mow < 3)) Max_Cycles_Active  = Max_Cycles_Spirals;         // if spiral is selected and its a LH or RH spiral
+  
+  if (Loop_Cycle_Mowing > Max_Cycles_Active) {                    // 150 the max length (Max_Cycles) for my garden. Adjust accordingly in the setup
+     Serial.println("");
+     Serial.println("Loop Cycle at Max");
+     Serial.println("");
+     Motor_Action_Stop_Spin_Blades();                    // Stop the blades from spinning
+     Manouver_Turn_Around();                             // Turn around the mower
+     Loop_Cycle_Mowing = 0;                              // Restes the loop cycle to start again.
+     lcd.clear();
+     }
+ }
+ 
+ 
 
 
 
@@ -257,7 +331,7 @@ void Manouver_Find_Wire_Track()  {
   // Spins the mower over the wire in the driection of tracking
   while (( inside == false)  && (Abort_Wire_Find == 0) && (No_Wire_Found_Fwd == 0) && (Mower_Parked ==0) && (Spin_Attempts < Max_Spin_Attempts )) {
         while (( inside != true) && (Spin_Attempts < Max_Spin_Attempts )) {                                                             // Do this loop until mower is back  the wire fence
-        Serial.print("Spin Attempts");
+        Serial.print(F("Spin Attempts"));
         Serial.print(Spin_Attempts);
         lcd.setCursor(0,1);
         lcd.print(Spin_Attempts);
@@ -310,31 +384,36 @@ void Manouver_Find_Wire_Track()  {
 
     
 
-
-
-
+// Turn Around defines how the mower should react when a wire or sonar sensor is activated.
+// Now with the spiral pattern mowing is also decides the logic of which Spiral shape will be next
 
 void Manouver_Turn_Around() {
-  if (Pattern_Mow == 0) {
     Motor_Action_Stop_Motors(); 
     delay(500);
     SetPins_ToGoBackwards();
     Motor_Action_Go_Full_Speed();
     delay(Mower_Reverse_Delay);
     Motor_Action_Stop_Motors(); 
-  
+
+    // Randomly decide if the mower should turn left or right depending on if the loop cycle is odd or even
     if ( (Loop_Cycle_Mowing % 2) == 0 ) {
      SetPins_ToTurnRight(); 
     }
     else SetPins_ToTurnLeft();
-  
+
+    // Randomly turns the mower to a new heading depending on the delay Min or Delay Max from the settings
     Motor_Action_Turn_Speed();
     delay (random(Mower_Turn_Delay_Min, Mower_Turn_Delay_Max));
-    }
+    Serial.println("");
+    Serial.println("Mower Turned Around");
+    Serial.println("");
 
-  if ((Pattern_Mow == 1) && (Compass_Activate == 1)) {
-    Run_Pattern_Mow_Code();
+    // Advances the type of movement in Pattern Spiral Mode from : 1 RH Spiral | 2 LH Spiral | 3 Straight line.
+    if (Pattern_Mow == 2) {
+    Spiral_Mow = (Spiral_Mow + 1);
+    if (Spiral_Mow > 3) Spiral_Mow = 1;
     }
+    //Spiral (random(1,3));  Activate this to make a true random pattern.
 
     Motor_Action_Stop_Motors();
     TestforBoundaryWire();                                                   
@@ -410,6 +489,7 @@ void Manouver_Start_Mower() {
   Manuel_Mode           = 0;
   Wire_Refind_Tries     = 0;
   Turn_On_Relay();
+  Y_Tilt = 0;
 
   }
 
@@ -603,7 +683,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
      delay(500);
      distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0);
      delay(500);
-     Serial.print("Distance measured from sonar :");
+     Serial.print(F("Distance measured from sonar :"));
      Serial.println(distance_blockage);
      
      // if the sonar is measuring an opening as the distance is greater than 300cm then move forward in that direction.
