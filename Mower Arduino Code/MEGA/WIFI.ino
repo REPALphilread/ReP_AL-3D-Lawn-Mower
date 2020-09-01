@@ -132,7 +132,7 @@ delay(30);
    
    }
 
-// STOP Button in Blynk App
+// STOP / Cancel Button in Blynk App
  if (val_WIFI == 11)  {    
    Serial.println("");
    Serial.print("WIFI Command: "); 

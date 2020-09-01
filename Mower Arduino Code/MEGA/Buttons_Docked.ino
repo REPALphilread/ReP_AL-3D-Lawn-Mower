@@ -1,3 +1,6 @@
+// BUTTONS DOCKED MENU
+
+
 // Reads each of the membrane keys and detects if a key is pressed.
 void Read_Membrane_Keys(){
   Start_Key_X   = digitalRead(Start_Key);    
@@ -15,7 +18,7 @@ void Print_LCD_Menu_Docked(byte LCD_Menu_Docked) {
   if (LCD_Menu_Docked == 4) lcd.print("Trampoline Cut");
   if (LCD_Menu_Docked == 5) lcd.print("Mow the Line");
   if (LCD_Menu_Docked == 6) lcd.print("Test Menu");
-  if (LCD_Menu_Docked == 7) lcd.print("-- Spare 7 --");
+  if (LCD_Menu_Docked == 7) lcd.print("Setup Mower");
   if (LCD_Menu_Docked == 8) lcd.print("-- Spare 8 --");
   if (LCD_Menu_Docked == 9) lcd.print("-- Spare 9 --");
   if (LCD_Menu_Docked == 10) lcd.print("-- Spare 10 --");
@@ -266,7 +269,6 @@ void Check_Membrane_Switch_Input_Docked() {
              delay(100);
              }
         
-        
       delay(100);
       }
 
@@ -283,7 +285,7 @@ void Activate_Menu_Option_Docked() {
        Serial.println(F("Exit to Zone 1 - Free Mow"));
        delay(1000);
        lcd.clear();
-       Set_Mower_Time();
+       Print_Membrane_Switch_Input_Timing();
        Menu_Mode_Selection = 0;
        delay(1000);
        lcd.clear();
@@ -291,7 +293,7 @@ void Activate_Menu_Option_Docked() {
           //Enter here the code to go to zone 1 from dock
           Exit_Zone = 1;
           Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
-          Manouver_Exit_To_Zone_X();
+          Manouver_Exit_To_Zone_X();    
           }
      }
  
@@ -305,7 +307,7 @@ void Activate_Menu_Option_Docked() {
        lcd.print("Exit Dock Z2");
        delay(1000);
        lcd.clear();
-       Set_Mower_Time();
+       Print_Membrane_Switch_Input_Timing();                            // Changes the menu to select the mow time
        Menu_Mode_Selection = 0;
        delay(1000);
        lcd.clear();
@@ -319,8 +321,8 @@ void Activate_Menu_Option_Docked() {
      if (Menu_Mode_Selection == 3) {
         // Quick Start the Mower in the middle of the Garden;
         Serial.println("Quick Start Selected");
-        Manouver_Start_Mower();
-        Set_Mower_Time();
+        Print_Membrane_Switch_Input_Timing();                             // Changes the menu to select the mow time
+        Menu_Mode_Selection = 0;
         delay(1000);
         if (Mow_Time_Set == 1) Manouver_Start_Mower();
         lcd.clear();     
@@ -344,7 +346,7 @@ void Activate_Menu_Option_Docked() {
        lcd.print("Mow the Line");
        delay(1000);
        lcd.clear();
-       Set_Mower_Time();
+       Print_Membrane_Switch_Input_Timing();                             // Changes the menu to select the mow time
        if (Mow_Time_Set == 1) {
          Serial.println(F("Cutting the grass on the boundary wire"));
          Blade_Override = 1;
@@ -364,5 +366,17 @@ void Activate_Menu_Option_Docked() {
         lcd.clear();
         Print_Membrane_Switch_Input_Tests();
         }
+      if (Menu_Mode_Selection == 7) {
+        lcd.clear();
+        lcd.print("Mower Setup");
+        Serial.println(F("Mower Setup Selected"));
+        Menu_Mode_Selection = 0;
+        delay(1000);
+        lcd.clear();
+        Print_Membrane_Switch_Input_Settings();
+        }
+
+
+        
   
   }

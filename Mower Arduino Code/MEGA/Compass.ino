@@ -80,50 +80,70 @@ void Turn_To_Compass_Heading()  {
     lcd.setCursor(0,1);
     lcd.print("Now:");
     lcd.setCursor(0,4);
-    Heading_Lower_Limit_Compass = Compass_Target - 3;
-    Heading_Upper_Limit_Compass = Compass_Target + 3;
 
-    // Continue to turn the mower while the compass is measuring degrees outiside these points.
-    //while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass) && (Mower_Parked == 0)) {    
-    for (int i = 0; i <= 1; i++) {
-    while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass)) {    
+    Heading_Lower_Limit_Compass = Compass_Target - 5;
+    Heading_Upper_Limit_Compass = Compass_Target + 5;
+    delay(500);
+    int Cancel = 0;
+    while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass) && (Cancel < 40))  {    
+        
+
         Serial.print(F("Turning to Target:"));
         Serial.print(Compass_Target);
         Serial.print(F("|"));
         Get_Compass_Reading();
-        delay(5);
-        lcd.print("   ");
+
+        delay(50);
+        lcd.setCursor(0,0);
+        lcd.print("Degrees: ");
+
         lcd.print(Compass_Heading_Degrees);
         Serial.println("");
         float Compass_Error;
         Compass_Error = Compass_Heading_Degrees - Compass_Target;
-        Serial.print("Error:");
+
+        lcd.setCursor(0,1);
+        lcd.print("Error:");
+        lcd.print(Compass_Error);
+        Serial.print("Er:");
+
         Serial.print(Compass_Error);
         Serial.print(F("|"));        
         if ( Compass_Error < 0) {
           SetPins_ToTurnRight(); 
           Serial.print("Spin Right");
           Serial.print(F("|"));  
+
+          delay(100);
+
           }
         if ( Compass_Error > 0) {
           SetPins_ToTurnLeft(); 
           Serial.print("Spin Left");
-          Serial.print(F("|"));  
-        }
-        if (Compass_Error < 5)   Turn_Adjust = 100;
-        if (Compass_Error < 10)  Turn_Adjust = 90;
+          Serial.print(F("|")); 
+          delay(100); 
+          }
+        if (Compass_Error < 10)  Turn_Adjust = 120;
+        if (Compass_Error < 20)  Turn_Adjust = 100;
+
         if (Compass_Error < 50)  Turn_Adjust = 80;
         if (Compass_Error < 180) Turn_Adjust = 20;
         
         Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
-        //if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();
+
+        delay(100);
+        Cancel = Cancel + 1;
+        lcd.setCursor(12,1);
+        lcd.print(Cancel);
+
         }
     Get_Compass_Reading();
     delay(5);
     Get_Compass_Reading();
-    }
-
     
+
+   
+
    
     // Once the while loop is satisfied (compass measures a degree between Lower and Upper, stop the mower
     Motor_Action_Stop_Motors();

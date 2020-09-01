@@ -18,8 +18,10 @@ char auth[] = "Blynk Auth Code";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "Wifi Name";
-char pass[] = "Wifi Password";
+
+char ssid[] = "WLAN Name";
+char pass[] = "WLAN Password";
+
 
 int buttonState = 0;
 char  Version[16];

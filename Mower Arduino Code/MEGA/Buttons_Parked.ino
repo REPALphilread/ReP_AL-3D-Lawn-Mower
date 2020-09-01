@@ -1,3 +1,6 @@
+// BUTTONS PARKED MENU
+
+
 // Test to displyed on the LCD screen when using the membrane key menus
 void Print_LCD_Menu_Parked(byte LCD_Menu_Parked) {
   if (LCD_Menu_Parked == 1)   lcd.print("Mow Grass     ");
@@ -7,7 +10,8 @@ void Print_LCD_Menu_Parked(byte LCD_Menu_Parked) {
     }
   if (LCD_Menu_Parked == 3)   lcd.print("Trampoline Cut");
   if (LCD_Menu_Parked == 4)   lcd.print("Test Menu");
-  if (LCD_Menu_Parked == 5)   lcd.print("-- SPARE 5 ---");
+
+  if (LCD_Menu_Parked == 5)   lcd.print("Setup Mower");
   if (LCD_Menu_Parked == 6)   lcd.print("-- SPARE 6 ---");
   if (LCD_Menu_Parked == 7)   lcd.print("-- SPARE 7 ---");
   if (LCD_Menu_Parked == 8)   lcd.print("-- SPARE 8 ---");
@@ -268,6 +272,8 @@ void Activate_Menu_Option_Parked() {
      if (Menu_Mode_Selection == 1) {
       Menu_Mode_Selection = 0;
       lcd.clear();
+      Print_Membrane_Switch_Input_Timing();
+      lcd.clear();
       lcd.print("Mow Re-Starting");
       Serial.println(F("Mower Starting"));
       delay(2000);
@@ -320,12 +326,12 @@ void Activate_Menu_Option_Parked() {
 
       if (Menu_Mode_Selection == 5) {
         lcd.clear();
-        lcd.print("Slot 5 - Empty");
-        Serial.println(F("Slot 5 Selected"));
+        lcd.print("Setup Mower");
+        Serial.println(F("Mower Setup Selected"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
-        // Insert Function Here();
+        Print_Membrane_Switch_Input_Settings();
         }
 
       if (Menu_Mode_Selection == 6) {

@@ -1,7 +1,9 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V6.1   
+
+Code V6.31   
+
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
@@ -9,13 +11,18 @@ Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board
 
 
-Features of 6.1
+
+Features of 6.31
 ---------------
 
-- Menu options have been improved. Scrolling in both directions and easier coding.
-- More Test options have been added including a compass test and a volt amps test
-- First trials at compass mowing (very initial stages - not working well and not advised to use it yet)
-- Stabilised the heading hold by using compass degrees instead of heading.
+- EEPROM has been added.  Settings will be saved to EEPROM and reloaded when the mower is powered on.
+- EEPROM can also be cleared in the settings menu.
+- Please dont save the Compass to ON in EEPROM unless you have a compass fitted.  This could hang the program at the beginning.  If you do this by mistake you will need to adjust the code in the EEPROM tab so the compass setting is not loaded.
+- Clock can now be set in Settings (Time only not date).
+- Added PWM test to the wheel test routine.
+- Compass turn to home has been improved.  There is now a max amount of cycles before tehe headign is locked.  This prevents the mower dancing around looking for the correct heading.
+- Improved the cancellation of tracking and wire finding using the cancel button on the APP.  Now the mower goes into a parked mode as it should, before it got trapped in some loops in the code and the mower became locked.
+
 
 
 NodeMCU Board URL:

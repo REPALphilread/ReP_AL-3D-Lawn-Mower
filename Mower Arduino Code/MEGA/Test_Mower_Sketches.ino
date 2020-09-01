@@ -62,6 +62,7 @@ void Test_Wheel_Motors() {
   if (I == 1) {
 
   lcd.clear();
+  lcd.setCursor(0,0);
   lcd.print("Drive Wheel");
   lcd.setCursor(1,0);
   lcd.print("Test");
@@ -111,6 +112,122 @@ void Test_Wheel_Motors() {
   delay(1000);
   lcd.clear();
 
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Dynamic");
+  lcd.setCursor(0,1);
+  PWM_Left = 120;
+  PWM_Right = 120;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+
+  
+  lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 255;
+  PWM_Right = 0;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+
+  lcd.clear();
+  lcd.setCursor(0,1);
+  PWM_Left = 255;
+  PWM_Right = 0;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+
+
+  lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 150;
+  PWM_Right = 0;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+  
+  lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 255;
+  PWM_Right = 0;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+
+    lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 255;
+  PWM_Right = 0;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+
+  lcd.clear();
+  lcd.setCursor(0,1);
+  PWM_Left = 0;
+  PWM_Right = 255;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+
+
+  lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 0;
+  PWM_Right = 150;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+  
+  lcd.clear();
+  lcd.setCursor(0,1);  
+  PWM_Left = 0;
+  PWM_Right = 255;
+  lcd.print("L:");
+  lcd.print(PWM_Left);
+  lcd.print("  R:");
+  lcd.print(PWM_Right);
+  SetPins_ToGoForwards();
+  Motor_Action_Dynamic_PWM_Steering();
+  delay(2000);
+
+  
+  Motor_Action_Stop_Motors();  
+  delay(1000);
+
+  lcd.clear();
   lcd.print("Test Finished");
   delay(1000);
   lcd.clear();

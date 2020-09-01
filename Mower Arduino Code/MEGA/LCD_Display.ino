@@ -59,8 +59,20 @@ void Print_LCD_Wire()  {
     }
 
 void Print_LCD_Mowing() {
+     if (Alarm_Timed_Mow_ON == 0) {
        lcd.setCursor(0, 1);
-       lcd.print("Mowing..    ");   
+       lcd.print("Mowing..    ");
+       }
+     if (Alarm_Timed_Mow_ON == 1) {
+       lcd.setCursor(0,1);
+       lcd.print("Timer:");
+       lcd.print(Alarm_Timed_Mow_Hour);
+       lcd.print(":");
+       if (Alarm_Timed_Mow_Minute < 10) lcd.print("0");
+       lcd.print(Alarm_Timed_Mow_Minute);
+       Mow_Time_Set = 1;
+       }   
+       
      }
 
 void Print_LCD_Compass_Mowing() {
@@ -145,6 +157,8 @@ void Print_Time_On_LCD() {
       Time t = rtc.time();
       lcd.print(t.hr);
       lcd.print(":");
+      if (t.min < 10) lcd.print ("0");
+
       lcd.print(t.min);
       }
    }

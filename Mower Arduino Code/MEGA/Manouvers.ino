@@ -81,6 +81,7 @@ void Manouver_Mow_The_Grass() {
 
 void Manouver_Find_Wire_Track()  {
 
+  
   Serial.println(F("Find Wire Track Function Activated"));
   lcd.clear();
   lcd.print("Finding Wire...  ");
@@ -90,17 +91,20 @@ void Manouver_Find_Wire_Track()  {
   No_Wire_Found = 0;
   TestforBoundaryWire();                                                                    // Check to see that the wire is on.
 
+  
   for (int i = 0; i <= 1; i++) {
-    Serial.print(F("Position Try = "));
-    Serial.println(i);
-    ADCMan.run();
-    UpdateWireSensor();
-    delay(20);
-    ADCMan.run();
-    UpdateWireSensor();
-    delay(20);
-    Serial.println(F("before if loops start"));
-    PrintBoundaryWireStatus();
+    if (Mower_Parked == 0) {
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();
+      Serial.print(F("Position Try = "));  
+      Serial.println(i);
+      ADCMan.run();
+      UpdateWireSensor();
+      delay(20);
+      ADCMan.run();
+      UpdateWireSensor();
+      delay(20);
+      Serial.println(F("before if loops start"));
+      PrintBoundaryWireStatus();
 
     // First go backwards if the mower is outside the wire
     if (( inside == false) && (Abort_Wire_Find == 0) ) {                                    // If the mower is outside the wire then run the following code.
@@ -149,7 +153,7 @@ void Manouver_Find_Wire_Track()  {
         lcd.print("Finding Wire  ");
         delay(100);
         int cycle = 0;                                                                      // resets the cycles
-        while (( inside != false) && (No_Wire_Found == 0) ) {                               // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
+        while (( inside != false) && (No_Wire_Found == 0) && (Mower_Parked ==0) ) {                               // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
           cycle = cycle + 1;
           lcd.setCursor(0,1);
           lcd.print("Track -> Charge"); 
@@ -174,9 +178,10 @@ void Manouver_Find_Wire_Track()  {
   Motor_Action_Stop_Motors();
   delay(1000);
   }
+  }
 
   // Position the mower further over the wire so it has space to turn 90° onto the wire.
-  if ( (Abort_Wire_Find == 0) && (No_Wire_Found == 0) ) {
+  if ( (Abort_Wire_Find == 0) && (No_Wire_Found == 0) && (Mower_Parked == 0) ) {
     SetPins_ToGoForwards();                                           
     delay(100);
     Motor_Action_Go_Full_Speed();
@@ -187,7 +192,7 @@ void Manouver_Find_Wire_Track()  {
   // Sets the firection of spin depensing on if the mower is eciting or tracking home
 
   // Set pins to track home to charge.
-  if (Mower_Track_To_Charge == 1) {
+  if ((Mower_Track_To_Charge == 1) && (Mower_Parked == 0)) {
     lcd.setCursor(0,1);
     lcd.print("Track -> Charge"); 
     delay(1000);
@@ -202,7 +207,7 @@ void Manouver_Find_Wire_Track()  {
     }
 
   // Set pins to track to exit.
-  if (Mower_Track_To_Exit == 1) {
+  if ((Mower_Track_To_Exit == 1) && (Mower_Parked == 0)) {
     lcd.setCursor(0,1);
     lcd.print("Track -> Exit"); 
     delay(1000);
@@ -229,7 +234,7 @@ void Manouver_Find_Wire_Track()  {
 
   
   // Spins the mower over the wire in the driection of tracking
-  while (( inside == false)  && (Abort_Wire_Find == 0) && (No_Wire_Found == 0) ) {
+  while (( inside == false)  && (Abort_Wire_Find == 0) && (No_Wire_Found == 0) && (Mower_Parked ==0) ) {
         while ( inside != true) {                                                             // Do this loop until mower is back  the wire fence
         Motor_Action_Go_Full_Speed();                                                         // Go full speed (in the case turning as set by the previous logic)
         UpdateWireSensor();                                                                   // Read the wire sensor and see of the mower is now  or outside the wire
@@ -260,7 +265,9 @@ void Manouver_Find_Wire_Track()  {
     Serial.println("Re-starting wire find");
     SetPins_ToGoForwards();
     }
-}
+  
+  }
+
 
 
     
@@ -491,10 +498,8 @@ void Manouver_Dock_The_Mower() {
   Print_LCD_Info_Docked();
   Charge_Detected_MEGA = 0;
   
-  
-  //reset alarms...
-  Alarm_3_ON = 0;                                           // Turns off the 1 hr Alarm
-  Create_Alarms();
+  //Setup Alarms 
+  Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
  
 }
 
@@ -511,6 +516,7 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Manuel_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
+
 }
 
 
@@ -531,6 +537,11 @@ void Manouver_Park_The_Mower() {
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
+
+  Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
+  //if (Alarm_1_Repeat == 0) Alarm_1_ON = 0;
+  //if (Alarm_2_Repeat == 0) Alarm_2_ON = 0;
+  //if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
   }
 
 void Manouver_Hibernate_Mower() {
@@ -563,6 +574,7 @@ void Manouver_Go_To_Charging_Station() {
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
   No_Wire_Found         = 0;
+  Manage_Alarms();                                              // Switches on or off the Alarms depending on the setup
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
   delay(5);
   Motor_Action_Stop_Spin_Blades();
@@ -570,11 +582,18 @@ void Manouver_Go_To_Charging_Station() {
   delay(2000);
   Turn_On_Relay();
   delay(500);
-  if (Compass_Activate == 1)                            Compass_Turn_Mower_To_Home_Direction();
+
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  if ((Compass_Activate == 1) && (Mower_Parked ==0))    Compass_Turn_Mower_To_Home_Direction();
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
   if (Mower_Parked == 0)                                Manouver_Find_Wire_Track();
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
   if ((Mower_Parked == 0) && (No_Wire_Found == 0))      Track_Perimeter_Wire_To_Dock();
-  if (Mower_Parked == 1)                                Manouver_Park_The_Mower();
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
   if (No_Wire_Found == 1)                               Manouver_Go_To_Charging_Station();
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
+
+
   }
 
 void Manouver_Exit_To_Zone_X() {
@@ -589,10 +608,16 @@ void Manouver_Exit_To_Zone_X() {
      TestforBoundaryWire();
      delay(50);
      if (Wire_Detected == 1) {
+       if (WIFI_Enabled == 1) Get_WIFI_Commands();
        Manouver_Find_Wire_Track();                                   // Located the boundary wire
+       if (WIFI_Enabled == 1) Get_WIFI_Commands();
        if (Mower_Parked == 0) Track_Wire_From_Dock_to_Zone_X();
+       if (WIFI_Enabled == 1) Get_WIFI_Commands();
        if (Mower_Parked == 0) Special_Move_Into_Garden_Zone_X();
+       if (WIFI_Enabled == 1) Get_WIFI_Commands();
        if (Mower_Parked == 0) Manouver_Start_Mower();
+       if (WIFI_Enabled == 1) Get_WIFI_Commands();
+       if (Mower_Parked == 1) Manouver_Park_The_Mower();
      }
     if (Wire_Detected == 0) {
         TestforBoundaryWire();                                      // Test again for the boundary wire
@@ -631,6 +656,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
      ADCMan.run();
      UpdateWireSensor();
      PrintBoundaryWireStatus();
+     //Check_Wire_In_Out();
      delay(500);
      distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0);
      delay(500);
@@ -648,6 +674,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
         PrintBoundaryWireStatus();
         distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0); 
         delay(10);
+        //Check_Wire_In_Out();
       }
      Motor_Action_Stop_Motors;
      ADCMan.run();
