@@ -72,7 +72,7 @@ void Track_Wire_From_Dock_to_Zone_X() {
       if (CCW_Tracking_To_Start == 1) {
       if (MAG_Error > 0) {                                                  // If the MAG_Error > 0 then turn right for CCW Tracking. PWM_left is set to max to turn right.
         // TURN RIGHT
-        PWM_Left = 255;                                                     // sets the PWM to the max possible for the wheel
+        PWM_Left = PWM_MaxSpeed_LH;                                                     // sets the PWM to the max possible for the wheel
         PWM_Right = PWM_MaxSpeed_RH - (MAG_Error * P);                      // Mag_Error * P is the value reduced from the max value set PWM and sent to the PWM
         if (PWM_Right > 255)  PWM_Right = 255;                              // PWM_Right capped to Max PWM of 255.
         if (PWM_Right >= 0) {
@@ -102,7 +102,7 @@ void Track_Wire_From_Dock_to_Zone_X() {
       }
       if (MAG_Error <= 0) {                                                 // If the MAG_Error < 0 then turn left for CCW Tracking
         // TURN LEFT
-        PWM_Right = 255;                                                    // PWM_Right set to max to rotate the mower to the left.
+        PWM_Right = PWM_MaxSpeed_RH;                                                    // PWM_Right set to max to rotate the mower to the left.
         PWM_Left = PWM_MaxSpeed_LH + (MAG_Error * P);                       // + as mag_error is negative to adjust PWM
         if (PWM_Left > 255) PWM_Left = 255;                                 // PWM_Left capped to mex PWM of 255
         if (PWM_Left >= 0) {
@@ -114,7 +114,7 @@ void Track_Wire_From_Dock_to_Zone_X() {
 
         if (PWM_Left < 0) {                                                 // sets the mower to sharp turn to the left (wheels spin opposite) if the Error to the wire is large enough.
           PWM_Left = (-1 * PWM_Left) + 220 ;
-          if (PWM_Left > 255) PWM_Left = 255;
+          if (PWM_Left > 255) PWM_Left =255;
           SetPins_ToTurnLeft();
           delay(5);
           lcd.setCursor(15, 0);
@@ -170,6 +170,7 @@ void Track_Perimeter_Wire_To_Dock()  {
   Serial.print(D);
   Serial.println(F(""));
 
+  I = 0;
   MAG_Now = 0;                                                              // Reset Values
   MAG_Start = 0;
   MAG_Error = 0;
@@ -248,10 +249,18 @@ void Track_Perimeter_Wire_To_Dock()  {
           Tracking_Restart_Blocked_Path();
         }
       }
+      I = I + 1;
       Serial.print(F(" : MAG_Error="));
       Serial.print(MAG_Error);
-      Check_if_Charging();
-      Check_if_Docked();
+      Serial.print("|");
+      Serial.print(F("I:"));
+      Serial.print(I);
+      Serial.print("|");      
+      if (I > 50) {
+        Check_if_Charging();
+        Check_if_Docked();
+        }
+    Serial.println("");
     }
   }
 
@@ -330,10 +339,18 @@ void Track_Perimeter_Wire_To_Dock()  {
         }
 
       }
+      I = I + 1;
       Serial.print(F(" : MAG_Error="));
       Serial.print(MAG_Error);
-      Check_if_Charging();
-      Check_if_Docked();
+      Serial.print("|");
+      Serial.print(F("I:"));
+      Serial.print(I);
+      Serial.print("|");
+      if (I > 10) {                           // Gives time for the wheels to turn and everything to "settle"
+        Check_if_Charging();
+        Check_if_Docked();
+        }
+     Serial.println("");
     }
   }
 }
@@ -355,7 +372,10 @@ void Tracking_Restart_Blocked_Path() {
   delay(2000);
   Tracking_Turn_Left = 0;                                       // Resets the tracking error counters
   Tracking_Turn_Right = 0;                                      // Resets the tracking error counters
+  Compass_Turn_Mower_To_Home_Direction();
+  Manouver_Find_Wire_Track();
+  Track_Perimeter_Wire_To_Dock();
 
-  //Culd be better to do a compass home function here.
-  Manouver_Find_Wire_Track();                                              // Refind the wire with the find wire function.
+  // if restart > lost mower
+
 }

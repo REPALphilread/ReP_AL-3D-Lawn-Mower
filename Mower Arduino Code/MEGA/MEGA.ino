@@ -217,7 +217,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V5.8";
+  char Version[16] = "V5.9";
 
   bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 0;                          // Activates the WIFI Fucntions
@@ -230,13 +230,11 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool CW_Tracking_To_Start       = 0;                          // Clock-Wise         tracking around the boundary wire when tracking to the start position
   bool CCW_Tracking_To_Start      = 1;                          // Counter-Clock-Wise tracking around the boundary wire to the charging station
 
-  byte Docked_Filter_Hits            = 2;
-  
   int Track_Wire_Zone_1_Cycles    = 1700;                       // Zone 1 - Number of Itterations the PID function does before the mower exits the wire track
   int Track_Wire_Zone_2_Cycles    = 3700;                       // Zone 2 - Therefore how long the mower is tracking the wire can be set = distance tracked.
 
-  byte Max_Tracking_Turn_Right    = 250;                        // The maximum number of turn right commands during wire tracking before a renewed wire find function is called
-  byte Max_Tracking_Turn_Left     = 250;                        // This helps to re-find the wire should the mower loose the wire for any reason.
+  int Max_Tracking_Turn_Right    = 250;                         // The maximum number of turn right commands during wire tracking before a renewed wire find function is called
+  int Max_Tracking_Turn_Left     = 250;                         // This helps to re-find the wire should the mower loose the wire for any reason.
 
   //Compass Module
   bool Compass_Activate               = 1;                      // Turns on the Compass (needs to be 1 to activate further compass features)
@@ -307,7 +305,8 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
     int InMid = -700;
     int InMax = -1500;                                            // the maximum received signal value  the wire
     /*General Setup PID numbers for wire tracking*/
-    float P               = 0.12;                                 // Multiplication factor to the error measured to the wire center.  if jerky movement when tracking reduce number
+    float P               = 0.08;                                 // Multiplication factor to the error measured to the wire center.  if jerky movement when tracking reduce number
+                                                                  // Higher powered 30RPM motors generally has a lower P value Try P=0.08   and P=0.12 for normal 30RPM
     float D               = 10;                                   // Dampening value to avoid the mower snaking on the wire.  
     byte Scale            = 36;                                   // Serial Monitor Line Tracking Print Scale
   
@@ -387,7 +386,7 @@ if (Mower_Running == 1)                                                         
 if (Mower_Running == 1)                                                                             Process_Volt_Information();         // Take action based on the voltage readings
 if (Mower_Running == 1)                                                                             Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
 if (Mower_Running == 1)                                                                             Check_Membrane_Switch_Input_Parked();
-if (Mower_Running == 1)                                                                             TestforBoundaryWire();              // Test is the boundary wire is live
+if (Mower_Running == 1)                                                                             TestforBoundaryWire();              // Test if the boundary wire is live
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                   Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                            Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))        Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 

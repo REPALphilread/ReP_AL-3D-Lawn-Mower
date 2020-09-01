@@ -257,6 +257,7 @@ void Manouver_Move_Into_Garden_Zone_X() {
 
 
 
+
 void Manouver_Turn_Around() {
   Motor_Action_Stop_Motors(); 
   delay(500);
@@ -264,7 +265,12 @@ void Manouver_Turn_Around() {
   Motor_Action_Go_Full_Speed();
   delay(Mower_Reverse_Delay);
   Motor_Action_Stop_Motors(); 
-  SetPins_ToTurnLeft();
+  
+  if ( (Loop_Cycle_Mowing % 2) == 0 ) {
+   SetPins_ToTurnRight(); 
+  }
+  else SetPins_ToTurnLeft();
+  
   Motor_Action_Turn_Speed();
   delay(Mower_Turn_Delay_Left);
   Motor_Action_Stop_Motors();
@@ -407,7 +413,6 @@ void Manouver_Go_To_Charging_Station() {
   Turn_On_Relay();
   delay(500);
   Compass_Turn_Mower_To_Home_Direction();
-  
   Manouver_Find_Wire_Track();
   Track_Perimeter_Wire_To_Dock();
   }
@@ -420,6 +425,7 @@ void Manouver_Exit_To_Zone_X() {
    Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
    Mower_Track_To_Exit = 1;
    TestforBoundaryWire();
+   delay(50);
    if (Wire_Detected == 1) {
      Manouver_Find_Wire_Track();                                   // Located the boundary wire
      Track_Wire_From_Dock_to_Zone_X();

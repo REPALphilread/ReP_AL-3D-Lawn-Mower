@@ -7,7 +7,7 @@ SoftwareSerial mySerial(10, 11);  // RX, TX
 int RawValueAmp= 0;
 int RawValueVolt = 0;
 int Raining = 5;
-bool Charging;
+int Charging = 0;
 
 
 // Transmission of the raw sensor values to the Arduino MEGA
@@ -98,7 +98,7 @@ void loop(){
  Calculate_Volt_Amp();
 
  if (AmpsTX < 0.4) Charging = 0;
- if (AmpsTX > 0.4) Charging = 1;
+ if (AmpsTX > 0.4) Charging = 4;
  Serial.print("Charging = ");  
  Serial.print(Charging);
  Serial.print("|");
