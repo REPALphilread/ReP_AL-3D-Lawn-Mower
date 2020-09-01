@@ -6,13 +6,8 @@ void Motor_Action_Go_Full_Speed()     {
 
 void Motor_Action_GoFullSpeed_Out_Garage()     {
   //Speeds can be changed to give the mower a slight curve when exiting the Garage.
-  
-  PWM_MaxSpeed_LH = PWM_MaxSpeed_LH + 20;                          
-  if (PWM_MaxSpeed_LH > 255)  PWM_MaxSpeed_LH = 255;
-  if (PWM_MaxSpeed_RH > 255)  PWM_MaxSpeed_RH = 255;
-  
   analogWrite(ENAPin, PWM_MaxSpeed_RH);                                       // Speed = 0-255  (255 is max speed). Speed is set in the settings
-  analogWrite(ENBPin, PWM_MaxSpeed_LH);   
+  analogWrite(ENBPin, PWM_MaxSpeed_LH);                                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
   Serial.print(F("Wheel:FULL|"));
   }
 
@@ -83,7 +78,7 @@ void Motor_Action_Spin_Blades()  {
     delay(20);
     analogWrite(RPWM, PWM_Blade_Speed);
     delay(20);
-    Serial.print(F("Blades:ON_|"));
+    Serial.print("Blades:ON_|");
    }                 
 
   if (Cutting_Blades_Activate == 0) {                                     // Blades are turn off in settings and will not spin!
@@ -97,17 +92,17 @@ void Motor_Action_Stop_Spin_Blades()  {
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
   delay(20);
-  Serial.print(F("Blades:0FF|"));
+  Serial.print("Blades:0FF|");
 }
 
 //Steers the Mower depending on the PID input from the Algorythm
 void Motor_Action_Dynamic_PWM_Steering() {
       analogWrite(ENAPin, PWM_Right);                             // ENA low = Right Swerve   ENB low = Left Swerve
       analogWrite(ENBPin, PWM_Left);
-      Serial.print(F("PWM_R:"));
+      Serial.print("PWM_R:");
       Serial.print(PWM_Right);
-      Serial.print(F("|"));
-      Serial.print(F("PWM_L:"));
+      Serial.print("|");
+      Serial.print("PWM_L:");
       Serial.print(PWM_Left);
-      Serial.print(F("|"));
+      Serial.print("|");
 }

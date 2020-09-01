@@ -15,13 +15,13 @@
   }
 
   /* Prints Values to the Serial Monitor of mag, smag and signal quality.  */
-  Serial.print(F("Inside (1) or Outside (0):  "));
+  Serial.print("Inside (1) or Outside (0):  ");
   Serial.print((perimeter.isInside(0)));
-  Serial.print(F("     MAG: "));
+  Serial.print("     MAG: ");
   Serial.print((int)perimeter.getMagnitude(0));
-  Serial.print(F("    smag: "));
+  Serial.print("    smag: ");
   Serial.print((int)perimeter.getSmoothMagnitude(0));
-  Serial.print(F("     qaulity: "));
+  Serial.print("     qaulity: ");
   Serial.println((perimeter.getFilterQuality(0)));
 
 
@@ -62,7 +62,6 @@ void Test_Wheel_Motors() {
   if (I == 1) {
 
   lcd.clear();
-  lcd.setCursor(0,0);
   lcd.print("Drive Wheel");
   lcd.setCursor(1,0);
   lcd.print("Test");
@@ -112,122 +111,6 @@ void Test_Wheel_Motors() {
   delay(1000);
   lcd.clear();
 
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Dynamic");
-  lcd.setCursor(0,1);
-  PWM_Left = 120;
-  PWM_Right = 120;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-
-  
-  lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 255;
-  PWM_Right = 0;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-
-  lcd.clear();
-  lcd.setCursor(0,1);
-  PWM_Left = 255;
-  PWM_Right = 0;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-
-
-  lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 150;
-  PWM_Right = 0;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-  
-  lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 255;
-  PWM_Right = 0;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-
-    lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 255;
-  PWM_Right = 0;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-
-  lcd.clear();
-  lcd.setCursor(0,1);
-  PWM_Left = 0;
-  PWM_Right = 255;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-
-
-  lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 0;
-  PWM_Right = 150;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-  
-  lcd.clear();
-  lcd.setCursor(0,1);  
-  PWM_Left = 0;
-  PWM_Right = 255;
-  lcd.print("L:");
-  lcd.print(PWM_Left);
-  lcd.print("  R:");
-  lcd.print(PWM_Right);
-  SetPins_ToGoForwards();
-  Motor_Action_Dynamic_PWM_Steering();
-  delay(2000);
-
-  
-  Motor_Action_Stop_Motors();  
-  delay(1000);
-
-  lcd.clear();
   lcd.print("Test Finished");
   delay(1000);
   lcd.clear();
@@ -336,18 +219,18 @@ int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int so
     distance is then set to 999cm so the missed ping is not seen as an object detected.*/
   if (distanceY == 0) {
     distanceY = 999;
-    Serial.print(F("SONAR "));
+    Serial.print("SONAR ");
     Serial.print(sonarY);
     Serial.print(": ");
-    Serial.println(F("NO PING ERROR REMOVED"));
+    Serial.println("NO PING ERROR REMOVED");
   }
 
   /*Prints the Sonar letter and distance measured on the serial Monitor*/
-  Serial.print(F("SONAR "));
+  Serial.print("SONAR ");
   Serial.print(sonarY);
   Serial.print(": ");
   Serial.print(distanceY);
-  Serial.println(F(" cm"));
+  Serial.println(" cm");
   //Serial.println(maxdistancesonar);
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/

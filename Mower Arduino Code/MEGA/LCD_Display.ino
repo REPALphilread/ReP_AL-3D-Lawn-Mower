@@ -20,19 +20,13 @@ void Setup_Run_LCD_Intro () {
 void Print_Mower_Error() {
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print(F("Mower Error"));
+  lcd.print("Mower Error");
   if (Wire_Off > 5) {
     lcd.setCursor(0,1);
     lcd.print("Wire Off");
-    }
-  if (Wire_Refind_Tries > 4) {
-    lcd.setCursor(0,1);
-    lcd.print(F("Cant Refind Wire"));
   }
   
-  }
-  
-
+}
 
 void Print_LCD_Volt_Info() {
     lcd.setCursor(10, 0);
@@ -65,79 +59,20 @@ void Print_LCD_Wire()  {
     }
 
 void Print_LCD_Mowing() {
-     if (Alarm_Timed_Mow_ON == 0) {
        lcd.setCursor(0, 1);
-       lcd.print("Mowing..    ");
-       }
-     if (Alarm_Timed_Mow_ON == 1) {
-       lcd.setCursor(0,1);
-       lcd.print("Timer:");
-       lcd.print(Alarm_Timed_Mow_Hour);
-       lcd.print(":");
-       if (Alarm_Timed_Mow_Minute < 10) lcd.print("0");
-       lcd.print(Alarm_Timed_Mow_Minute);
-       Mow_Time_Set = 1;
-       }   
-       
+       lcd.print("Mowing..    ");   
      }
 
-void Print_LCD_Spiral() {
-     if (Alarm_Timed_Mow_ON == 0) {
-       lcd.setCursor(0, 1);
-       lcd.print("Spiral.. ");
-       }
-     if (Alarm_Timed_Mow_ON == 1) {
-       lcd.setCursor(0,1);
-       lcd.print("Timer:");
-       lcd.print(Alarm_Timed_Mow_Hour);
-       lcd.print(":");
-       if (Alarm_Timed_Mow_Minute < 10) lcd.print("0");
-       lcd.print(Alarm_Timed_Mow_Minute);
-       Mow_Time_Set = 1;
-       }   
-       
-     }
-
-void Print_LCD_Parallel() {
-     if (Alarm_Timed_Mow_ON == 0) {
-       lcd.setCursor(0, 1);
-       lcd.print("Parallel");
-       }
-     if (Alarm_Timed_Mow_ON == 1) {
-       lcd.setCursor(0,1);
-       lcd.print("Timer:");
-       lcd.print(Alarm_Timed_Mow_Hour);
-       lcd.print(":");
-       if (Alarm_Timed_Mow_Minute < 10) lcd.print("0");
-       lcd.print(Alarm_Timed_Mow_Minute);
-       Mow_Time_Set = 1;
-       }   
-       
-     }
-     
 void Print_LCD_Compass_Mowing() {
      if (Compass_Heading_Locked == 1) {
          lcd.setCursor(0, 1);
-         if (PWM_Right > PWM_Left)  lcd.print("<Mow   ");      
-         if (PWM_Left > PWM_Right)  lcd.print(" Mow>  "); 
-         if (PWM_Left == PWM_Right) lcd.print("|Mow|  ");
+         if (PWM_Right > PWM_Left)  lcd.print("<H-Lock Mow ");      
+         if (PWM_Left > PWM_Right)  lcd.print(" H-Lock Mow>"); 
+         if (PWM_Left == PWM_Right) lcd.print("|H-Lock Mow|");
          }
      if (Compass_Heading_Locked == 0) {
          lcd.setCursor(0, 1);
-         lcd.print("           ");      
-         }
-     }
-
-void Print_LCD_Parallel_Mowing() {
-     if (Compass_Heading_Locked == 1) {
-         lcd.setCursor(0, 1);
-         if (PWM_Right > PWM_Left)  lcd.print("< P Mow   ");      
-         if (PWM_Left > PWM_Right)  lcd.print(" P Mow >  "); 
-         if (PWM_Left == PWM_Right) lcd.print("| P Mow | ");
-         }
-     if (Compass_Heading_Locked == 0) {
-         lcd.setCursor(0, 1);
-         lcd.print(" Parllel ");      
+         lcd.print("            ");      
          }
      }
 
@@ -197,6 +132,11 @@ void Print_LCD_Compass_Home() {
     }
 }
 
+void Print_LCD_Heading_for_Home() {
+  lcd.setCursor(0,1);
+  lcd.print("Target:");
+  lcd.print( ((Heading_Lower_Limit_Compass - Heading_Lower_Limit_Compass) / 2 ) + Heading_Lower_Limit_Compass);
+  }
 
 
 void Print_Time_On_LCD() {
@@ -205,7 +145,6 @@ void Print_Time_On_LCD() {
       Time t = rtc.time();
       lcd.print(t.hr);
       lcd.print(":");
-      if (t.min < 10) lcd.print ("0");
       lcd.print(t.min);
       }
    }
