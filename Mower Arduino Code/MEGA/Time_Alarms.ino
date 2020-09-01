@@ -15,7 +15,7 @@ void DisplayTime()   {
 
   // Print the formatted string to serial so we can see the time.
   Serial.println(buf);
-  
+ 
   }
 
 void Set_Mower_Time ()     {
@@ -138,10 +138,10 @@ void Display_Next_Alarm()  {
 }
 
 void Set_Time_On_RTC(){
-   // Uncomment the next 4 lines to reset the time on the clock
+   // Set_Time to 1 in the setting menu to set time.  Load the sketch then immediatley Set_Time = 0 and reload the sketch.
         rtc.writeProtect(false);
         rtc.halt(false);
-        Time t(2019, 04, 27, 00, 01, 00, Time::kSaturday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
+        Time t(2019, 06, 23, 13, 30, 00, Time::kSunday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
         rtc.time(t);    
         delay(10);
    }

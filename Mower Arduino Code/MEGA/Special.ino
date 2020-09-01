@@ -11,7 +11,7 @@ void Special_Move_Into_Garden_Zone_X() {
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors
     SetPins_ToTurnLeft();                                           // Turn left
     Motor_Action_Go_Full_Speed();                                       
-    delay(700);                                                     // Turn left for 0.7seconds
+    delay(1400);                                                     // Turn left for 0.7seconds
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors.
     SetPins_ToGoForwards();                                         // Get ready to move off
     }

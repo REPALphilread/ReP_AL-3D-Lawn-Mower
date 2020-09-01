@@ -1,4 +1,12 @@
 
+// ReP_AL Lawn Mower Arduino Code
+// Please make sure you have installed all the library files to the Arduino libraries folder
+// You will need to unzip all the libraries from the GitHuB site.
+// Instructions onnhow to do this are available on my webpage
+// www.repalmkaershop.com
+
+
+
 //Libraries for Perimeter Wire Receiver
 #include <Arduino.h>
 #include <Wire.h>
@@ -13,8 +21,8 @@
 
 //Libraries for ic2 Liquid Crystal
 #include <LiquidCrystal_I2C.h>
-//LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //Mower 1 Test
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    //Mower 2
+//LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);    
 
 //Libraries for the Mowing Calendar Function
 #include <TimeLib.h>
@@ -115,7 +123,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Mower_Parked;
   bool Mower_Running;
   bool Mower_Parked_Low_Batt;
-  bool Mower_Lost;
+  bool Mower_Error;
   bool Manuel_Mode;
 
   //Membrane Key Variables
@@ -125,6 +133,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   byte  Stop_Key_X;
   bool  Menu_Complete;
   byte  Menu_Mode_Selection;
+  int   Menu_View;
   int   Mow_Time_Set;
 
   //Serial Communication
@@ -183,6 +192,8 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int MAG_Last;
   byte Outside_Wire_Count = 0;
   int Tracking_Wire = 0;
+  bool Wire_ON_Printed;
+  int Wire_Off;
 
   byte Tracking_Turn_Left;
   byte Tracking_Turn_Right;
@@ -192,22 +203,25 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Abort_Wire_Find;
   bool No_Wire_Found;
 
-  int PWM_Right;
-  int PWM_Left;
-  int MAG_Goal;
-  int MAG_Error;
-  int MAG_Start;
+  int  PWM_Right;
+  int  PWM_Left;
+  int  MAG_Goal;
+  int  MAG_Error;
+  int  MAG_Start;
   byte PWM_Blade_Speed_Min;
   byte PWM_Blade_Speed_Max;
   bool Blade_Override = 0;
 
   //Compass Variables
-  float Compass_Heading_Degrees;
-  float Heading;
-  bool  Compass_Heading_Locked = 0;
-  float Heading_Lock;
-  int   Heading_Upper_Limit_Compass;
-  int   Heading_Lower_Limit_Compass;
+  float   Compass_Heading_Degrees;
+  float   Heading;
+  bool    Compass_Heading_Locked = 0;
+  float   Heading_Lock;
+  int     Heading_Upper_Limit_Compass;
+  int     Heading_Lower_Limit_Compass;
+  int     Compass_Target;
+  int     Compass_Leg = 0;
+  int     Turn_Adjust = 0;
 
   //Wire Track Printer
   int PrintInMax;
@@ -233,7 +247,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.03";
+  char Version[16] = "V6.1";
 
   bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;                          // Activates the WIFI Fucntions
@@ -254,11 +268,13 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   byte Max_Tracking_Turn_Left     = 250;                        // This helps to re-find the wire should the mower loose the wire for any reason.
   int  Max_Cycle_Wire_Find        = 320;                        // MAximum number of forward tracking cycles before the mower restarts a compass turn and wire find.
 
-  //Compass Module
+  //Compass Settings
   bool Compass_Activate               = 1;                      // Turns on the Compass (needs to be 1 to activate further compass features)
   bool Compass_Heading_Hold_Enabled   = 1;                      // Activates the compass heading hold function to keep the mower straight
   int  Home_Wire_Compass_Heading      = 110;                    // Heading the Mower will search for the wire once the mowing is completed.
-  int  CPower                         = 2;                    // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
+  int  CPower                         = 2;                      // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
+  bool Pattern_Mow                    = 0;  //*** Not Working yet  // Activate pattern mowing instead of random mowing direction
+  int  Compass_Mow_Direction          = 110;                    // Mow Direction of line when pattern mow is activated
 
   //Rain sensor 
   bool Rain_Sensor_Installed          = 1;                      // 1 for Rain sensor installed    0 for no sensor installed.
@@ -277,18 +293,18 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int  Max_Sonar_Hit              = 3;                          // Maximum number of Sonar hits before object is discovered
   long maxdistancesonar           = 30;                         // distance in cm from the mower that the sonar will activate at.
 
-  //Wheel Motor Setup
+  //Wheel Motors Setup
   byte Max_Cycles                 = 150;
-  byte PWM_MaxSpeed_LH            = 210;                        // Straight line speed LH Wheel (Looking from back of mower)
+  byte PWM_MaxSpeed_LH            = 220;                        // Straight line speed LH Wheel (Looking from back of mower) 210
   byte PWM_MaxSpeed_RH            = 255;                        // Straight line speed RH Wheel - adjust to keep mower tracking straight.
-  int Mower_Turn_Delay_Min        = 1500;                       // Min Max Turn time of the Mower after it reverses at the wire.
+  int Mower_Turn_Delay_Min        = 1000;                       // Min Max Turn time of the Mower after it reverses at the wire.
   int Mower_Turn_Delay_Max        = 2500;                       // A random turn time between these numbers is selected by the software
-  int Mower_Reverse_Delay         = 2500;                       // Time the mower revreses at the wire
+  int Mower_Reverse_Delay         = 1800;                       // Time the mower revreses at the wire
 
       
 
   //Blade Motor Setup
-  byte PWM_Blade_Speed            = 252;                        // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
+  byte PWM_Blade_Speed            = 250;                        // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
 
   // Alarm Setup
   bool Set_Time                   = 0;                          // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
@@ -324,7 +340,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
     int InMid = -700;
     int InMax = -1500;                                            // the maximum received signal value  the wire
     /*General Setup PID numbers for wire tracking*/
-    float P               = 0.08;                                 // Multiplication factor to the error measured to the wire center.  if jerky movement when tracking reduce number
+    float P               = 0.09;                                 // Multiplication factor to the error measured to the wire center.  if jerky movement when tracking reduce number
     float D               = 10;                                   // Dampening value to avoid the mower snaking on the wire.  
     byte Scale            = 36;                                   // Serial Monitor Line Tracking Print Scale
   
@@ -334,7 +350,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
     int OutMax = 1500;                                            // the maximum received signal value outside the wire
 
     int Outside_Wire_Count_Max          = 10;                      // If the mower is outside the wire this many times the mower is stopped
-    int Action_On_Over_Wire_Count_Max   = 2;                      // Set 1 to hibernate mower (Power Off and Stop)   Set 2 to refind garden using sonar and wire detect function
+    int Action_On_Over_Wire_Count_Max   = 2;                      // Set 1 to hibernate mower (Power Off and Stop)   Set 2 to refind garden using sonar and wire detect functio
 
     bool Show_TX_Data                   = 0;                      // Show the values recieved from the Nano / ModeMCU in the serial monitor
 
@@ -349,13 +365,17 @@ void setup() {
   if (WIFI_Enabled == true) Serial2.begin(9600);					// If WIFI is on open Serial port 2 for the NodeMCU communication
   Serial.println(" ");
   Serial.println(" ");  
-  Serial.print("ReP_AL Robot");
+  Serial.print("ReP_AL Robot :");
   Serial.println(Version);  
   Serial.println("===================");
   Serial.println("");
   Serial.println("Starting Mower Setup");
   Serial.println("===================");
-  if (Set_Time == 1 ) Set_Time_On_RTC();
+  
+  if (Set_Time == 1 ) {
+    Serial.print("Setting Time");
+    Set_Time_On_RTC();
+  }
   DisplayTime();
   Create_Alarms();
   Prepare_Mower_from_Settings();
@@ -370,15 +390,15 @@ void setup() {
 void loop() {
 
 // Read the Serial Ports for Data
-Read_Serial1_Nano ();									// Read the Serial data from the nano
+Read_Serial1_Nano();									// Read the Serial data from the nano
 Print_Mower_Status();                                                                	// Update the Serial monitor with the current mower status.
 
 // Mower is docked waiting for a command to leave and mow.
 if (Mower_Docked == 1)          Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
 if (Mower_Docked == 1)          Check_if_Charging();
-if (Mower_Docked == 1)          Check_if_Raining_From_Nano ();  
+if (Mower_Docked == 1)          Check_if_Raining_From_Nano();  
 if (Mower_Docked == 1)          Print_LCD_Info_Docked();                                // Print information to the LCD screen
-//if (Mower_Docked == 1)          Print_Time_On_LCD(); 
+if (Mower_Docked == 1)          Print_Time_On_LCD(); 
 if (Mower_Docked == 1)          Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
 if (Mower_Docked == 1)          TestforBoundaryWire();                                  // Test is the boundary wire is live                                 
 if (Mower_Docked == 1)          Manouver_Dock_The_Mower();
@@ -398,19 +418,22 @@ if (Mower_Parked_Low_Batt == 1) Print_Recharge_LCD();                           
 if (Mower_Parked_Low_Batt == 1) Check_Membrane_Switch_Input_Parked();
 
 // Lost mower is put into standby mode
-if (Mower_Lost == 1) Print_Mower_Lost();                                                // Safety mode incase the mower is lost
+if (Mower_Error == 1) Print_Mower_Error();                                                // Safety mode incase the mower is lostor in an error state
+if (Mower_Error == 1) Check_Membrane_Switch_Input_Parked();
+
 
 // Mower is running cutting the grass.
 if (Mower_Running == 1)                                                                             Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
 if (Mower_Running == 1)                                                                             Process_Volt_Information();         // Take action based on the voltage readings
 if (Mower_Running == 1)                                                                             Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
-if (Mower_Running == 1)                                                                             Check_Membrane_Switch_Input_Parked();
+if (Mower_Running == 1)                                                                             Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
 if (Mower_Running == 1)                                                                             TestforBoundaryWire();              // Test is the boundary wire is live
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                   Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                            Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))        Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 1) && (Loop_Cycle_Mowing > 0)) Manouver_Turn_Around();             // If outside the wire turn around
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))        Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
+
 
 // WIFI Commands from and to APP
 if (Manuel_Mode == 1) Receive_WIFI_Manuel_Commands();

@@ -1,6 +1,7 @@
 // Infornation to be printed to the Mower LCD screen
 
 void Setup_Run_LCD_Intro () {
+  Serial.println("Setup LCD");
   lcd.begin(16, 2);
   lcd.clear();
   lcd.print("ReP_AL Robot");
@@ -10,17 +11,20 @@ void Setup_Run_LCD_Intro () {
     lcd.setCursor(7,1);
     lcd.print("WIFI ON");
     }
-  delay(2000);
+  delay(1000);
   lcd.clear();
+  Serial.println("LCD Setup OK");
   }
 
 
-void Print_Mower_Lost() {
+void Print_Mower_Error() {
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print("Mower Lost");
-  lcd.setCursor(0,1);
-  lcd.print("Reset Mower");
+  lcd.print("Mower Error");
+  if (Wire_Off > 5) {
+    lcd.setCursor(0,1);
+    lcd.print("Wire Off");
+  }
   
 }
 
@@ -91,10 +95,25 @@ void Print_LCD_NO_Wire() {
     if ( (Mower_Docked == 1) || (Mower_Parked == 1) ) {
       lcd.setCursor(7,1);
       lcd.print(":WIRE OFF");  
+      Wire_ON_Printed = 0;
       }
     if ( (Mower_Docked == 0) && (Mower_Parked == 0) ) {
       lcd.setCursor(0,1);
-      lcd.print("WIRE OFF        ");      
+      lcd.print(":WIRE OFF        ");      
+      Wire_ON_Printed = 0;
+      }
+}
+
+void Print_LCD_Wire_ON() {
+    if ( (Mower_Docked == 1) || (Mower_Parked == 1)  && (Wire_ON_Printed = 0)) {
+      lcd.setCursor(7,1);
+      lcd.print(":               ");  
+      Wire_ON_Printed = 1; 
+      }
+    if ( (Mower_Docked == 0) && (Mower_Parked == 0) && (Wire_ON_Printed = 0) ) {
+      lcd.setCursor(0,1);
+      lcd.print(":               ");   
+      Wire_ON_Printed = 1;    
       }
 }
 
@@ -121,17 +140,11 @@ void Print_LCD_Heading_for_Home() {
 
 
 void Print_Time_On_LCD() {
-    lcd.setCursor(0,0);            // Spaces to the right & down
-    if ((hour()) < 10) {                //moves the cursor to the right otherwise the first hour number from before is left behind on the LCD.
-      lcd.print("0");
-      lcd.setCursor(1,0);
+    if ((Charge_Detected_MEGA == 0) && (Mower_Running == 0) && (Rain_Detected == 0)) {
+      lcd.setCursor(0,0);            // Spaces to the right & down
+      Time t = rtc.time();
+      lcd.print(t.hr);
+      lcd.print(":");
+      lcd.print(t.min);
       }
-    lcd.print(hour());
-    lcd.print(":");
-
- 
-  if ((minute()) < 10) {
-      lcd.print("0");
-      }
-   //lcd.print(minute());
-  }
+   }

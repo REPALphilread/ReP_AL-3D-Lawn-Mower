@@ -17,7 +17,7 @@ void Check_Wire_In_Out() {
     }
 
   // Options are set in the Mower Setup
-  if (Outside_Wire_Count >= Outside_Wire_Count_Max)  {
+  if (Outside_Wire_Count >= Outside_Wire_Count_Max) {
     if  (Action_On_Over_Wire_Count_Max == 1) Manouver_Hibernate_Mower();                  // Put the mower to sleep and wait
     if  (Action_On_Over_Wire_Count_Max == 2) Manouver_Outside_Wire_ReFind_Function();     // re-find Garden using Sonar 1 and wire detect
   }
@@ -39,6 +39,8 @@ void TestforBoundaryWire()  {
     if ( (MAG_Now > -20 ) && (MAG_Now < 20 )  ) {
       Wire_Detected = 0;
       Print_LCD_NO_Wire();
+      Wire_Off = Wire_Off + 1;
+      if ((Wire_Off > 5) && (Mower_Docked == 0)) Manouver_Hibernate_Mower();
       }
 
     //Checks to see that the boundary fence is turned ON.
@@ -46,6 +48,8 @@ void TestforBoundaryWire()  {
     if (   (MAG_Now < -50 ) || (MAG_Now > 50 )  ) {
       Wire_Detected = 1;
       Mower_Running = 1;
+      Print_LCD_Wire_ON();
+      Wire_Off = 0;
       }
 
     Serial.print(F("Wire"));
