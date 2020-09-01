@@ -143,25 +143,78 @@ delay(30);
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
-// Manuel Button in Blynk App
+// Manual Button in Blynk App
  if (val_WIFI == 15)  {    
    Serial.println("");
    Serial.print(F("WIFI Command: ")); 
    Serial.print(val_WIFI);
-   Serial.println(F("|Manuel Mode"));
+   Serial.println(F("|Manual Mode"));
+   Manouver_Park_The_Mower(); 
+   delay(1000);
    Manouver_Manuel_Mode(); 
    Turn_On_Relay(); 
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
-// Automatic Button in Blynk App
+// Automatic RANDOM Button in Blynk App
  if (val_WIFI == 16)  {    
    Serial.println("");
    Serial.print(F("WIFI Command: ")); 
    Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode"));
-   Manouver_Park_The_Mower(); 
-   Turn_On_Relay(); 
+   Serial.println(F("|Automatic Mode RANDOM"));
+   lcd.clear();
+   lcd.print("Auto Random");
+   lcd.setCursor(0,1);
+   lcd.print("Pattern");
+   delay(200);
+   lcd.clear();
+   if (Mower_Running == 0) {
+    Manouver_Park_The_Mower(); 
+    Turn_On_Relay(); 
+    }
+   Pattern_Mow = 0;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+
+// Automatic SPIRAL Button in Blynk App
+ if (val_WIFI == 21)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Automatic Mode SPIRAL"));
+   lcd.clear();
+   lcd.print("Auto Spiral");
+   lcd.setCursor(0,1);
+   lcd.print("Pattern");
+   delay(200);
+   lcd.clear();
+   if (Mower_Running == 0) {
+    Manouver_Park_The_Mower(); 
+    Turn_On_Relay(); 
+    }
+   Pattern_Mow = 2;
+
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+
+// Automatic SPIRAL Button in Blynk App
+ if (val_WIFI == 22)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Automatic Mode PARALLEL"));
+   lcd.clear();
+   lcd.print("Auto Parallel");
+   lcd.setCursor(0,1);
+   lcd.print("Pattern");
+   delay(200);
+   lcd.clear();
+   if (Mower_Running == 0) {
+    Manouver_Park_The_Mower(); 
+    Turn_On_Relay(); 
+    }
+   Pattern_Mow = 1;
+
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
