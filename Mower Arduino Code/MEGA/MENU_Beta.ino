@@ -3,9 +3,9 @@
 
 // Test to displyed on the LCD screen when using the membrane key menus
 void Print_LCD_Menu_BETA(byte LCD_Menu_BETA) {
-  if (LCD_Menu_BETA == 1) lcd.print(F("BETA Tip Sensor"));
-  if (LCD_Menu_BETA == 2) lcd.print(F("BETA Test Tip"));
-  if (LCD_Menu_BETA == 3) lcd.print(F("BETA 3"));          // needs writing
+  if (LCD_Menu_BETA == 1) lcd.print(F("Tilt Test"));
+  if (LCD_Menu_BETA == 2) lcd.print(F("Test"));
+  if (LCD_Menu_BETA == 3) lcd.print(F("Test"));          // needs writing
   Max_Options_BETA = 3;
   }
 
@@ -91,79 +91,26 @@ void Print_Membrane_Switch_Input_BETA() {
 // Defines the actions when that option is selected with the keypad.
 void Activate_Menu_Option_BETA() {
 
-  if (Menu_Mode_Selection == 1) {
-       // Tip Safety ** Experimental**
-       lcd.clear();
-       lcd.setCursor(0,0);
-       lcd.print(F("Tip Safety"));
-       lcd.setCursor(0,1);
-       lcd.print(F("Mode"));
-       delay(1000);
-       lcd.clear();
-       Menu_Mode_Selection = 0;
-       lcd.clear();
-       lcd.setCursor(0,0);
-       lcd.print(F("Tip ON/OFF"));
-       lcd.setCursor(0,1);
-       lcd.print("Status : ");
-       if (Tip_Safety == 1) lcd.print(F("ON "));
-       if (Tip_Safety == 0) lcd.print(F("OFF"));
-       
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
-          Read_Membrane_Keys();
-          delay(100);
-          //Enter Code Here to Cycle until stop key is pressed.
-             if(!Start_Key_X){
-               Serial.println(F("Tip Settings Saved"));
-               Menu_Complete = true;
-               lcd.clear();
-               lcd.setCursor(0,0);
-               lcd.print("Tip Set Saved");
-               Serial.print(F("Tip Safety:"));
-               Serial.println(Tip_Safety);
-               delay(2000);
-               lcd.clear();          
-               EEPROM.write(29 , 1);
-               EEPROM.write(30 , Tip_Safety);
-               Menu_Mode_Selection = 0;
-               
-               }
-             if (!Plus_Key_X) {
-               lcd.setCursor(0,1);
-               lcd.print("Status : ");
-               Tip_Safety = 1;
-               lcd.print("ON ");
-               Serial.print(F("Tip Safety:"));
-               Serial.println(Tip_Safety);
-               delay(100);
-               }
-             if (!Minus_Key_X) {
-               lcd.setCursor(0,1);
-               lcd.print("Status : ");
-               Tip_Safety = 0;
-               lcd.print("OFF");
-               Serial.print(F("Tip Safety:"));
-               Serial.println(Tip_Safety);
-               delay(100);
-               }
-     }
-     }
 
-      if (Menu_Mode_Selection == 2) {
+      
+      
+      
+      
+      
+      if (Menu_Mode_Selection == 3) {
         lcd.clear();
         lcd.print("Tilt Test");
         Serial.println(F("Tilt Test Selected"));
         Menu_Mode_Selection = 0;
         delay(2000);
         lcd.clear();
-        Calibrate_Compass_Angle();
+        //Calibrate_Compass_Angle();
         Menu_Complete = false;
           delay(100);
           while (Menu_Complete == false) {
           // insert Test Code Here
           Read_Membrane_Keys();
-          Test_Compass_Check_Tip_Angle();
+          Check_Tilt_Tip_Angle();
           
              if(!Stop_Key_X){
              Serial.println(F("Stop key is pressed"));

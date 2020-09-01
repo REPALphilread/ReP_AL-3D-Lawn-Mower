@@ -115,10 +115,7 @@ void Pattern_Mow_Spirals() {
 
 void Pattern_Mow_Parallel() {
   
-  int Turn_90_Delay_LH        = 1150;      // adjust this number so the mower turns 90° Left
-  int Turn_90_Delay_RH        = 1250;      // adjust this number so the mower turns 90° Right
-  int Move_to_next_line_delay = 1000;      // distance between lines
-  int Line_Length_Cycles      = 25;        // length of the line mowed
+
   int Parallel_Compass_Assist = 1;         // compass tries to keep the mowed line straight
   int Turning_Compass_Assist  = 0;         // compass assists to turn the mower 90° at each corner - DOESNT WORK YET!!!
        
@@ -137,7 +134,7 @@ void Pattern_Mow_Parallel() {
            Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
            Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
            Compass_Last = Heading_Lock;
-           Motor_Action_Go_Full_Speed();
+           Motor_Action_Go_Mowing_Speed();
            }
         }
     
@@ -157,7 +154,7 @@ void Pattern_Mow_Parallel() {
      
     // No use of compass assist
     if (Parallel_Compass_Assist == 0) {
-        Motor_Action_Go_Full_Speed();
+        Motor_Action_Go_Mowing_Speed();
         Serial.println("Compass not activated in the settings");
        }
     }

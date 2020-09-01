@@ -10,11 +10,10 @@ void Print_Mower_Status() {
 }
 
 
-void Setup_Tip_Safety() {
-  if (Tip_Safety == 1) {
-    Calibrate_Compass_Angle();
-    }
-}
+void Setup_Tilt_Tip_Safety() {
+  if (Angle_Sensor_Enabled == 1)     pinMode(Tilt_Angle, INPUT);//define Data input pin input pin
+  if (Tip_Over_Sensor_Enabled == 1)  pinMode(Tilt_Orientation, INPUT);//define Data input pin input
+  }
 
 void Prepare_Mower_from_Settings() {
 
@@ -36,6 +35,8 @@ if (Use_Charging_Station == 0) {
 void Setup_Compass() {
  
   if (Compass_Activate == 1) {
+
+    
   /*Setup Compass
   *************************************************************************/
   lcd.clear();
@@ -43,51 +44,66 @@ void Setup_Compass() {
   lcd.setCursor(0, 1);
   lcd.print(F("Setup"));
 
-    //HMC5883 Compass
-    while (!compass.begin()){
-      Serial.println(F("Could not find a valid QMC5883 sensor, check wiring!"));
-      delay(500);
-      }
-    if (compass.isHMC()) {
-      Serial.println(F("Initialize DF Robot HMC5883 Compass"));
-      lcd.setCursor(6,0);
-      lcd.print(F(": HMC5883"));
-      delay(500);
-      compass.setRange(HMC5883L_RANGE_1_3GA);
-      compass.setMeasurementMode(HMC5883L_CONTINOUS);
-      compass.setDataRate(HMC5883L_DATARATE_15HZ);
-      compass.setSamples(HMC5883L_SAMPLES_8);
-      }
-   //QMC5883 Compass
-    else if (compass.isQMC()) {
-        Serial.println(F("Initialising DF Robot QMC5883 Compass"));
-        lcd.setCursor(6,0);
-        lcd.print(F(": QMC5883"));
-        delay(500);
-        compass.setRange(QMC5883_RANGE_2GA);
-        //compass.setRange(QMC5883_RANGE_8GA);
-        compass.setMeasurementMode(QMC5883_CONTINOUS);
-        if (Compass_QMC_Refresh_Setting == 1) compass.setDataRate(QMC5883_DATARATE_200HZ);
-        if (Compass_QMC_Refresh_Setting == 2) compass.setDataRate(QMC5883_DATARATE_100HZ);
-        if (Compass_QMC_Refresh_Setting == 3) compass.setDataRate(QMC5883_DATARATE_50HZ);
-        if (Compass_QMC_Refresh_Setting == 4) compass.setDataRate(QMC5883_DATARATE_10HZ);
+  int Compass_Attempt = 0;
+  int Compass_Found = 0;
+
+      if (Compass_Type == 1) {
+        //HMC5883 Compass
+        while ((!compass.begin()) && (Compass_Attempt <= 5)){
+          Serial.println(F("Could not find a valid QMC5883 sensor, check wiring!"));
+          delay(500);
+          Compass_Attempt = Compass_Attempt + 1;
+          }
+        if (compass.isHMC()) {
+          Serial.println(F("Initialize DF Robot HMC5883 Compass"));
+          lcd.setCursor(6,0);
+          lcd.print(F(": HMC5883"));
+          delay(500);
+          compass.setRange(HMC5883L_RANGE_1_3GA);
+          compass.setMeasurementMode(HMC5883L_CONTINOUS);
+          compass.setDataRate(HMC5883L_DATARATE_15HZ);
+          compass.setSamples(HMC5883L_SAMPLES_8);
+          Compass_Found = 1;
+          }
+       //QMC5883 Compass
+        else if (compass.isQMC()) {
+            Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+            lcd.setCursor(6,0);
+            lcd.print(F(": QMC5883"));
+            delay(500);
+            compass.setRange(QMC5883_RANGE_2GA);
+            compass.setMeasurementMode(QMC5883_CONTINOUS); 
+            compass.setDataRate(QMC5883_DATARATE_50HZ);
+            compass.setSamples(QMC5883_SAMPLES_8);
+            Compass_Found = 1;
+            }
+      
     
-        if (Compass_QMC_Sample_Setting == 1) compass.setSamples(QMC5883_SAMPLES_2);
-        if (Compass_QMC_Sample_Setting == 1) compass.setSamples(QMC5883_SAMPLES_4);
-        if (Compass_QMC_Sample_Setting == 2) compass.setSamples(QMC5883_SAMPLES_8);
+      if ((Compass_Attempt > 5) && (Compass_Found == 0)) {
+        Serial.println("No Valid Compass Found");
+        Compass_Activate = 0;
+        Serial.println("Compass Deactivated");
+        delay(3000);
       }
+      lcd.setCursor(0,1); 
+      lcd.print(F("Done!             "));
+      delay(500);
+      lcd.clear();
+    }
   
-
-
-  lcd.setCursor(0,1); 
-  lcd.print(F("Done!             "));
-  delay(500);
-  lcd.clear();
-}
-
-if (Compass_Activate == 0) {
-  Serial.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
+  if (Compass_Type == 2) {
+        Serial.println("Compass Selected GY-521");
+        Wire.begin();
+        Wire.beginTransmission(MPU_addr);
+        Wire.write(0x6B);
+        Wire.write(0);
+        Wire.endTransmission(true);  
   }
+
+  if (Compass_Activate == 0) {
+      Serial.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
+      }
+ }
 }
 
 

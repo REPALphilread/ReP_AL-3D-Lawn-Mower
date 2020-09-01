@@ -13,9 +13,11 @@ void Print_LCD_Menu_Sensors(byte LCD_Menu_Sensors) {
   if (LCD_Menu_Sensors == 8)  lcd.print(F("Rain Sensitivity"));
   if (LCD_Menu_Sensors == 9)  lcd.print(F("WIFI ON/OFF"));
   if (LCD_Menu_Sensors == 10)  lcd.print(F("Bumper ON/OFF"));
-  if (LCD_Menu_Sensors == 11) lcd.print(F(""));
+  if (LCD_Menu_Sensors == 11) lcd.print(F("ANGLE ON/OFF"));
+  if (LCD_Menu_Sensors == 12)  lcd.print(F("TIP ON/OFF"));
+  if (LCD_Menu_Sensors == 13) lcd.print(F(""));
   
-  Max_Options_Sensors = 11;
+  Max_Options_Sensors = 13;
   }
 
 
@@ -836,6 +838,126 @@ void Activate_Menu_Option_Sensors() {
                }
      }
      }
+
+
+  if (Menu_Mode_Selection == 11) {
+       // Angle Safety Sensor ON/OFF
+       lcd.clear();
+       lcd.setCursor(0,0);
+       lcd.print(F("Angle ON/OFF"));
+       lcd.setCursor(0,1);
+       lcd.print(F("Mode"));
+       delay(1000);
+       lcd.clear();
+       Menu_Mode_Selection = 0;
+       lcd.clear();
+       lcd.setCursor(0,0);
+       lcd.print(F("Angle ON/OFF"));
+       lcd.setCursor(0,1);
+       lcd.print("Status : ");
+       if (Angle_Sensor_Enabled == 1) lcd.print(F("ON "));
+       if (Angle_Sensor_Enabled == 0) lcd.print(F("OFF"));
+       
+       Menu_Complete = false;
+       while (Menu_Complete == false) {
+          Read_Membrane_Keys();
+          delay(100);
+          //Enter Code Here to Cycle until stop key is pressed.
+             if(!Start_Key_X){
+               Serial.println(F("Tip Settings Saved"));
+               Menu_Complete = true;
+               lcd.clear();
+               lcd.setCursor(0,0);
+               lcd.print("Angle Sensor");
+               lcd.setCursor(0,1);
+               if (Angle_Sensor_Enabled == 0) lcd.print("OFF");
+               if (Angle_Sensor_Enabled == 1) lcd.print("ON"); 
+               Serial.print(F("Angle Sensor ON/OFF: "));
+               Serial.println(Angle_Sensor_Enabled);
+               delay(2000);
+               lcd.clear();          
+               EEPROM.write(29 , 1);
+               EEPROM.write(30 , Angle_Sensor_Enabled);
+               Menu_Mode_Selection = 0;
+               
+               }
+             if (!Plus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print("Status : ");
+               Angle_Sensor_Enabled = 1;
+               lcd.print("ON ");
+               Serial.print(F("Angle Enabled:"));
+               Serial.println(Angle_Sensor_Enabled);
+               delay(100);
+               }
+             if (!Minus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print("Status : ");
+               Angle_Sensor_Enabled = 0;
+               lcd.print("OFF");
+               Serial.print(F("Angle Enabled:"));
+               Serial.println(Angle_Sensor_Enabled);
+               delay(100);
+               }
+     }
+     }
+
+      
+   if (Menu_Mode_Selection == 12) {
+       // Tip Safety Sensor ON/OFF
+       lcd.clear();
+       delay(500);
+       Menu_Mode_Selection = 0;
+       lcd.setCursor(0,0);
+       lcd.print(F("Tip Over Sensor"));
+       lcd.setCursor(0,1);
+       lcd.print(F("Status : "));
+       if (Tip_Over_Sensor_Enabled == 1) lcd.print(F("ON "));
+       if (Tip_Over_Sensor_Enabled == 0) lcd.print(F("OFF"));
+       
+       Menu_Complete = false;
+       while (Menu_Complete == false) {
+          Read_Membrane_Keys();
+          delay(100);
+          //Enter Code Here to Cycle until stop key is pressed.
+             if(!Start_Key_X){
+               Serial.println(F("Tip Settings Saved"));
+               Menu_Complete = true;
+               lcd.clear();
+               lcd.setCursor(0,0);
+               lcd.print("Tip Over Sensor");
+               lcd.setCursor(0,1);
+               if (Tip_Over_Sensor_Enabled == 0) lcd.print("OFF");
+               if (Tip_Over_Sensor_Enabled == 1) lcd.print("ON"); 
+               Serial.print(F("Tip Over Sensor:"));
+               Serial.println(Tip_Over_Sensor_Enabled);
+               delay(2000);
+               lcd.clear();          
+               EEPROM.write(92 , 1);
+               EEPROM.write(93 , Tip_Over_Sensor_Enabled);
+               Menu_Mode_Selection = 0;
+               
+               }
+             if (!Plus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print("Status : ");
+               Tip_Over_Sensor_Enabled = 1;
+               lcd.print("ON ");
+               Serial.print(F("Tip Over Enabled:"));
+               Serial.println(Tip_Over_Sensor_Enabled);
+               delay(100);
+               }
+             if (!Minus_Key_X) {
+               lcd.setCursor(0,1);
+               lcd.print("Status : ");
+               Tip_Over_Sensor_Enabled = 0;
+               lcd.print("OFF");
+               Serial.print(F("Tip Over Enabled:"));
+               Serial.println(Tip_Over_Sensor_Enabled);
+               delay(100);
+               }
+     }
+     }     
 
 
 if (Menu_Complete_Sensors = true) Print_Membrane_Switch_Input_Sensors();

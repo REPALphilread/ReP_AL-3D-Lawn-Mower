@@ -1,7 +1,7 @@
 // digital clock display of the time
 void DisplayTime()   {
   Serial.print(F("Time:"));
-  Time t = rtc.time();
+  Time t = rtc.time();  
  
   // Name the day of the week.
   const String day = dayAsString(t.day);
@@ -18,7 +18,7 @@ void DisplayTime()   {
  
   }
 
-void Print_Time_On_Serial() {
+void Print_Time_On_Serial_Monitor() {
       Serial.print(F("Time:"));
       Time t = rtc.time();
       Serial.print(t.hr);
@@ -126,7 +126,7 @@ void Display_Next_Alarm()  {
   Serial.print(Alarm_1_Minute);
   Serial.print("|");
   }
-  if (Alarm_1_ON == 0) Serial.print("|Alarm 1 OFF");
+  if (Alarm_1_ON == 0) Serial.print("|A1 OFF");
  
   if (Alarm_2_ON == 1) {
   Serial.print(F("|Alarm 2:"));
@@ -136,7 +136,7 @@ void Display_Next_Alarm()  {
   Serial.print(Alarm_2_Minute);
   Serial.print("|");
   }
-  if (Alarm_2_ON == 0) Serial.print("|Alarm 2 OFF");
+  if (Alarm_2_ON == 0) Serial.print("|A2 OFF");
   
   if (Alarm_3_ON == 1) {
   Serial.print(F("|Alarm 3:"));
@@ -146,7 +146,7 @@ void Display_Next_Alarm()  {
   Serial.print(Alarm_3_Minute);
   Serial.print("|");
   }
-  if (Alarm_3_ON == 0) Serial.print("|Alarm 3 OFF");
+  if (Alarm_3_ON == 0) Serial.print("|A3 OFF");
 
    
 }

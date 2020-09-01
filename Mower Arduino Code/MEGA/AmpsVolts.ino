@@ -11,7 +11,10 @@ void Process_Volt_Information()   {
       Serial.print(F("|"));
       if (Low_Battery_Detected > Low_Battery_Instances_Chg) {
          Serial.println(F("Low Battery Detected"));
-         if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
+         if (Use_Charging_Station == 1) {
+          // need to add a low batt code... to TFT
+          Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
+          }
          if (Use_Charging_Station == 0) Manouver_Park_The_Mower_Low_Batt();                      // Parks the mower with a low battery warning
          }
       }
@@ -79,6 +82,13 @@ void Check_if_Docked() {
         lcd.print(F("Charging Station"));                                // Prints info to LCD display
         delay(2000);
         Mower_Docked = 1;
+        // Update the TFT Screen
+        if (TFT_Screen_Menu == 1) {
+            //Send_Mower_Docking_Data();
+            Turn_To_Home = 0;
+            Find_Wire_Track = 0;
+            Go_To_Charging_Station = 0;
+            }
         Manouver_Dock_The_Mower();                                    // Shuts down the Mower ready for charging and mowing again.
         lcd.clear();
         }
@@ -117,7 +127,7 @@ if (Show_TX_Data == 1) {
 
  if (RawValueVolt > 100)  {
  float vout = 0.0;
- float R1 = 30000;      // Mower 330 = 3000    Mower LAM = 30000
+ float R1 = 30000;      // Mower 330 = 3000    Mower LAM = 3000
  float R2 = 7000;       // Mower 330 = 7000     
  //float R2 = 6500;       // Mower LAM = 6500
  vout = (RawValueVolt * 5.0) / 1024.0; // see text

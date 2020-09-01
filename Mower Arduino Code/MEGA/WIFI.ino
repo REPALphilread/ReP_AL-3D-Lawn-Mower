@@ -79,7 +79,14 @@ delay(30);
 
 // Exit Dock to Zone 1
  if (val_WIFI == 14) {
-   if (Mower_Docked == 1)   {   
+   if (Mower_Docked == 1)   {  
+
+   // Update the TFT Display
+   Serial.println(F("Updating TFT of WIFI Command to Exit dock"));
+   Exiting_Dock = 1;
+   Mower_Error_Value = 0;
+   Send_Mower_Docked_Data();                                   // Send the Docked TX Data package to the mower.
+     
    Serial.println("");
    Serial.print(F("WIFI Command: ")); 
    Serial.print(val_WIFI);
@@ -110,7 +117,10 @@ delay(30);
    if (Mower_Docked == 0) { 
      Manouver_Start_Mower();
      lcd.clear();    
+     if (TFT_Screen_Menu == 1) Send_Mower_Docked_Data();    // Send the Docked TX Data package to the mower.
      }
+
+     
    else Serial.println(F("Mower Docked - Quick Start not possible"));   
    }
 

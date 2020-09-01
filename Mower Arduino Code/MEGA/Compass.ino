@@ -1,16 +1,51 @@
 // COMPASS FUNCTIONS
 //*****************************************************************************
 
+
 /* Calculates the compass heading as heading & degrees of the onboard compass */
 void Get_Compass_Reading() {
   
   // displays a star on the LCD to show compass is being used.
-  lcd.setCursor(7, 1);
+  lcd.setCursor(7, 0);
   lcd.print("*");
-  Vector norm = compass.readNormalize();
-  delay(30);
-  Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
-  lcd.setCursor(7, 1);
+
+
+  if (Compass_Type == 1)  {
+    Vector norm = compass.readNormalize();
+    delay(30);
+    Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
+    }
+  
+  if (Compass_Type == 2)  {
+     Wire.beginTransmission(MPU_addr);
+     Wire.write(0x3B);
+     Wire.endTransmission(false);
+     Wire.requestFrom(MPU_addr,14,true);
+     AcX=Wire.read()<<8|Wire.read();
+     AcY=Wire.read()<<8|Wire.read();
+     AcZ=Wire.read()<<8|Wire.read();
+     int xAng = map(AcX,minVal,maxVal,-90,90);
+     int yAng = map(AcY,minVal,maxVal,-90,90);
+     int zAng = map(AcZ,minVal,maxVal,-90,90);
+      
+        int Xaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
+        int Yaxis_GY501 = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
+        int Zaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
+
+        Heading = atan2(yAng, xAng);
+        
+        Serial.print("AngleX= ");
+        Serial.println(Xaxis_GY501);
+        Serial.print("AngleY= ");
+        Serial.println(Yaxis_GY501);
+      
+        Serial.print("AngleZ= ");
+        Serial.println(Zaxis_GY501);
+        Serial.println("-----------------------------------------");
+        delay(400);
+      }    
+
+  lcd.setCursor(7, 0);
   lcd.print("/");
 
   // Set declination angle. Find your location declination on: http://magnetic-declination.com/
@@ -32,11 +67,10 @@ void Get_Compass_Reading() {
   Serial.print(Compass_Heading_Degrees);
   Serial.print("|");
   delay(5);
-  lcd.setCursor(7, 1);
+  lcd.setCursor(7, 0);
   lcd.print(" ");
   delay(100);
 }
-
 
 
 
@@ -309,23 +343,69 @@ void Calculate_Compass_Wheel_Compensation() {
 
   float Compass_Error = Compass_Heading_Degrees - Heading_Lock;        // Calculates the error in compass heading from the saved lock heading
   
-  if (Compass_Error > 180) Compass_Error = Compass_Error * -1 ;
-  if (Compass_Error < -180) Compass_Error = Compass_Error * -1 ;
+  if (Compass_Error > 180) Compass_Error = Compass_Error * - 1 ;
+  if (Compass_Error < -180) Compass_Error = Compass_Error * - 1 ;
   Serial.print(F("C_Err:"));
   Serial.print(Compass_Error);
   Serial.print(F("|"));
  
   if (Compass_Error < 0) {                                             // Steer left
      Serial.print(F("SR|"));
-    PWM_Right = PWM_MaxSpeed_RH + (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
-    if (PWM_Right < 0) PWM_Right = PWM_MaxSpeed_RH - 50;
-    PWM_Left = PWM_MaxSpeed_LH;                                        // Keep the Right wheel at full power calibrated to go straight
+    
+    
+    // With no adjustment of wheel speed according to MAG Level    
+    if (MAG_Speed_Adjustment == 0) {
+      PWM_Left = PWM_MaxSpeed_LH;         
+      PWM_Right = PWM_MaxSpeed_RH + (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+      if (PWM_Right < 0) PWM_Right = PWM_MaxSpeed_RH - 50;
+      }
+    
+    if (MAG_Speed_Adjustment == 1) {
+      // MAX MAG Speed Left Hand Wheel
+      if (MAG_Now >= Slow_Speed_MAG)  {
+        PWM_Left = PWM_MaxSpeed_LH;
+        PWM_Right = PWM_MaxSpeed_RH + (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+        if (PWM_Right < 0) PWM_Right = PWM_MaxSpeed_RH - 50; 
+      }
+      if (MAG_Now < Slow_Speed_MAG)   {
+        PWM_Left = PWM_Slow_Speed_LH;
+        PWM_Right = PWM_Slow_Speed_RH + ((CPower/2) * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+        if (PWM_Right < 0) PWM_Right = PWM_Slow_Speed_RH - 20; 
+      }
+    
+      }
+    Compass_Steering_Status = 2;
     } 
+
+
+
+
+    
   if (Compass_Error >= 0) {  
     Serial.print(F("SL|"));
-    PWM_Right = PWM_MaxSpeed_RH;                                       // Keep the Left wheel at full power calibrated to go straight             
-    PWM_Left = PWM_MaxSpeed_LH -  (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
-    if (PWM_Left < 0) PWM_Left = PWM_MaxSpeed_LH - 50;
+
+    // With no adjustment of wheel speed according to MAG Level
+    if (MAG_Speed_Adjustment == 0) {
+      PWM_Right = PWM_MaxSpeed_RH; 
+      PWM_Left = PWM_MaxSpeed_LH -  (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+      if (PWM_Left < 0) PWM_Left = PWM_MaxSpeed_LH - 50;
+      }
+    
+    if (MAG_Speed_Adjustment == 1) {
+      // MAX MAG Speed Right Hand Wheel
+      if (MAG_Now >= Slow_Speed_MAG)  {
+        PWM_Right = PWM_MaxSpeed_RH; 
+        PWM_Left = PWM_MaxSpeed_LH -  (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+        if (PWM_Left < 0) PWM_Left = PWM_MaxSpeed_LH - 50;
+        }
+      if (MAG_Now < Slow_Speed_MAG)   {
+        PWM_Right = PWM_Slow_Speed_RH;
+        PWM_Left = PWM_Slow_Speed_LH -  ((CPower/2) * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+        if (PWM_Left < 0) PWM_Left = PWM_Slow_Speed_LH - 20;
+      }
+    
+      }
+    Compass_Steering_Status = 3;
     }
 
 }

@@ -17,7 +17,7 @@ void Print_LCD_Menu_Tests(byte LCD_Menu_Tests) {
   if (LCD_Menu_Tests == 12) lcd.print(F("Spare 12"));  
   if (LCD_Menu_Tests == 13) lcd.print(F("Spare 13"));  
   if (LCD_Menu_Tests == 14) lcd.print(F("BETA"));  
-  if (LCD_Menu_Tests == 15) lcd.print(F("Spare 15"));  
+  if (LCD_Menu_Tests == 15) lcd.print(F("Spare 15")); 
   if (LCD_Menu_Tests == 16) lcd.print("");   // Leave Blank
   Max_Options_Test = 16;
   }
