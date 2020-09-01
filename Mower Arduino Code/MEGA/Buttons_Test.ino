@@ -12,7 +12,7 @@ void Print_LCD_Menu_Tests(byte LCD_Menu_Tests) {
   if (LCD_Menu_Tests == 7) lcd.print(F("Volt Amp Test"));
   if (LCD_Menu_Tests == 8) lcd.print(F("Compass Test"));
   if (LCD_Menu_Tests == 9) lcd.print(F("Tilt Test"));
-  if (LCD_Menu_Tests == 10) lcd.print(F("Spare 10"));
+  if (LCD_Menu_Tests == 10) lcd.print(F("Go Home Test"));
   if (LCD_Menu_Tests == 11) lcd.print(F("Spare 11"));  
   if (LCD_Menu_Tests == 12) lcd.print("");   // Leave Blank
   }
@@ -437,6 +437,7 @@ void Activate_Menu_Option_Testing() {
           // insert Test Code Here
           Read_Membrane_Keys();
           Get_Compass_Reading();
+          delay(100);
           Serial.print(F("Heading:"));
           Serial.print(Heading);
           Serial.print("|");
@@ -490,14 +491,15 @@ void Activate_Menu_Option_Testing() {
         
 
 
-        
+      // Tests the compass direction finding of the mower when finding the wire.  
       if (Menu_Mode_Selection == 10) {
         lcd.clear();
-        lcd.print("Spare 10");
-        Serial.println(F("Slot 10 Selected"));
+        lcd.print("Go Home Test");
+        Serial.println(F("Test Compass Turn to Home Test and Follow Wire"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
+        Manouver_Go_To_Charging_Station();
         }
   
   }

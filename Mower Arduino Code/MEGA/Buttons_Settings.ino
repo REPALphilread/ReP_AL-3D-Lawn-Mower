@@ -1097,7 +1097,7 @@ if (Menu_Mode_Selection == 9) {
                if (set_hour > 23) set_hour = 0;
                lcd.clear();
                lcd.print(F("Time : "));
-               lcd.print(t.hr);
+               lcd.print(set_hour);
                lcd.print(":");
                if (set_min < 10) lcd.print ("0");
                lcd.print(set_min);

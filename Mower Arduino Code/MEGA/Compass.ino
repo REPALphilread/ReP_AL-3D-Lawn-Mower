@@ -7,11 +7,9 @@ void Get_Compass_Reading() {
   // displays a star on the LCD to show compass is being used.
   lcd.setCursor(7, 1);
   lcd.print("*");
-
   Vector norm = compass.readNormalize();
   delay(30);
   Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
-
   lcd.setCursor(7, 1);
   lcd.print("/");
 
@@ -36,6 +34,7 @@ void Get_Compass_Reading() {
   delay(5);
   lcd.setCursor(7, 1);
   lcd.print(" ");
+  delay(100);
 }
 
 
@@ -273,9 +272,9 @@ void Turn_To_Compass_Heading() {
     Serial.println(Compass_Target);
 
     Get_Compass_Reading();
-    delay(100);
+    delay(500);
     Get_Compass_Reading();
-    delay(100);
+    delay(500);
     
     while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass) && (Attemps_Compass_Turn < 40) && (Bad_Reading < 5))  { 
 
@@ -297,6 +296,7 @@ void Turn_To_Compass_Heading() {
           lcd.setCursor(15,1);
           lcd.print("x");
           Get_Compass_Reading;
+          delay(100);
           }
         else {
           lcd.setCursor(15,1);
@@ -368,7 +368,7 @@ if (Compass_Target >= 180) {
       delay(200);
       Get_Compass_Reading();
       
-      // Double check if the compass reading retunred is plausable.
+      // Double check if the compass reading returned is plausable.
       if (Attemps_Compass_Turn > 5) {
         if (Compass_Heading_Degrees - Compass_Last > 50){
           Serial.println("Bad Compass Reading");
@@ -376,6 +376,7 @@ if (Compass_Target >= 180) {
           lcd.setCursor(15,1);
           lcd.print("x");
           Get_Compass_Reading;
+          delay(100);
           }
         else {
           lcd.setCursor(15,1);
@@ -408,6 +409,7 @@ if (Compass_Target >= 180) {
       Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
       delay(100);
       Get_Compass_Reading;
+      delay(100);
       Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
       delay(100);
       Get_Compass_Reading;

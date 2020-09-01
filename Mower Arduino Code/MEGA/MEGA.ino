@@ -23,8 +23,8 @@
 
 //Libraries for ic2 Liquid Crystal
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  
-//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);      //test
+//LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LAM Mower
 
 //Libraries for the Mowing Calendar Function
 #include <TimeLib.h>
@@ -290,7 +290,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.7";
+  char Version[16] = "V6.8";
 
   bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;                          // Activates the WIFI Fucntions
