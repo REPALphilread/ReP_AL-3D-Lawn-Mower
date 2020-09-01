@@ -33,7 +33,7 @@ void Print_LCD_Volt_Info() {
 
 void Print_Charging_LCD()  {
   lcd.setCursor(0,0);
-  if (Charge_Detected == 1) lcd.print("Charging");
+  if (Charge_Detected == 4) lcd.print("Charging");
   if ((Rain_Detected == 0) && (Charge_Detected == 0) ) lcd.print("        ");
   }
 

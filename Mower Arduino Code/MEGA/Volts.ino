@@ -64,14 +64,15 @@ void Check_if_Charging () {
 
   Charge_Detected = Serial1.parseInt();
   
-  if(Serial1.read()== '\q') {
-      if ((Charge_Detected == 1) || (Charge_Detected == 0)){                            // If the value recieved is equal to 1 or 0 as expected then print the value to the serial monitor
+  if (Serial1.available() > 0) {
+    if(Serial1.read()== '\q') {
+      if ((Charge_Detected == 4) || (Charge_Detected == 0)){                            // If the value recieved is equal to 1 or 0 as expected then print the value to the serial monitor
         Serial.print("Charging:");
         Serial.print(Charge_Detected);
         Serial.print("|");
         Print_Charging_LCD();
         }
-      if ((Charge_Detected != 1) && (Charge_Detected !=0)) {
+      if ((Charge_Detected != 4) && (Charge_Detected !=0)) {
         Serial.print("Charging:");
         Serial.print(Charge_Detected);
         Serial.print("|");
@@ -79,18 +80,18 @@ void Check_if_Charging () {
       }
       
     }
+  }
   else {
     Serial.print("Charging:");
-    Serial.print("_|");  
+   // Serial.print("_|");  
+   Serial.print(Charge_Detected);
+   Serial.print("**|");
     }
 }
 
 void Check_if_Docked() {
   
-  if ((Charge_Detected == 1)){                                                // if Amps are between this there is a charge detected.  Amps above 4 are discounted as a miscommunication
-      Docked_Hits = (Docked_Hits + 1) ;                                       // Filters out the bad Amp sensor readings so no single bad sensor reading will interupt the tracking
-      
-      if (Docked_Hits == Docked_Filter_Hits) {
+  if (Charge_Detected == 4) {                                                // if Amps are between this there is a charge detected.  Amps above 4 are discounted as a miscommunication
         Motor_Action_Stop_Motors();    
         Serial.println(F("Charging Current detected"));
         Serial.println(F("Mower Docked"));
@@ -104,11 +105,5 @@ void Check_if_Docked() {
         Manouver_Dock_The_Mower();                                                   // Shuts down the Mower ready for charging and mowing again.
         lcd.clear();
         }
- }
- else {
-  Docked_Hits = 0;
+  }
  
- }
-
- 
-}
