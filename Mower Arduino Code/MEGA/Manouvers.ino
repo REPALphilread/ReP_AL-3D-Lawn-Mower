@@ -257,7 +257,6 @@ void Manouver_Move_Into_Garden_Zone_X() {
 
 
 
-
 void Manouver_Turn_Around() {
   Motor_Action_Stop_Motors(); 
   delay(500);
@@ -272,12 +271,13 @@ void Manouver_Turn_Around() {
   else SetPins_ToTurnLeft();
   
   Motor_Action_Turn_Speed();
-  delay(Mower_Turn_Delay_Left);
+  delay (random(Mower_Turn_Delay_Min, Mower_Turn_Delay_Max));
   Motor_Action_Stop_Motors();
   TestforBoundaryWire();                                                   
   Check_Wire_In_Out();
   Loop_Cycle_Mowing = 1;
   Sonar_Hit = 0;
+  Compass_Heading_Locked = 0;
   lcd.clear();
   }
 
@@ -294,7 +294,7 @@ void Manouver_Turn_Around_Sonar() {
       lcd.print("Go Right -->       ");
       SetPins_ToTurnRight();
       Motor_Action_Turn_Speed();
-      delay(Mower_Turn_Delay_Right);
+      delay(Mower_Turn_Delay_Max);
       }
 
   if (distance3 < maxdistancesonar) {
@@ -302,15 +302,31 @@ void Manouver_Turn_Around_Sonar() {
       lcd.print("<-- Go Left      ");
       SetPins_ToTurnLeft();
       Motor_Action_Turn_Speed();
-      delay(Mower_Turn_Delay_Left);
+      delay(Mower_Turn_Delay_Max);
       }
   
   Motor_Action_Stop_Motors();
+  Compass_Heading_Locked = 0;
   Sonar_Hit = 0;
   Loop_Cycle_Mowing = 0;
   
 }
 
+
+void Manouver_Manuel_Mode() {
+  Mower_Docked          = 0;
+  Mower_Parked          = 0;
+  Mower_Running         = 0;
+  Mower_Parked_Low_Batt = 0;
+  Mower_Track_To_Exit   = 0;
+  Mower_Track_To_Charge = 0;
+  Mower_Lost            = 0;
+  Manuel_Mode           = 1;
+  Loop_Cycle_Mowing     = 0;
+  Motor_Action_Stop_Motors();
+  Motor_Action_Stop_Spin_Blades();
+  
+}
 
 
 void Manouver_Start_Mower() {
@@ -321,18 +337,23 @@ void Manouver_Start_Mower() {
   Mower_Track_To_Charge = 0;
   Rain_Hit_Detected     = 0;
   Mower_Lost            = 0;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
   Turn_On_Relay();
 
   }
 
-void Manuel_Start_Mower_Exit_Zone1() {
+void Manouver_Mower_Exit_Dock() {
 
   Mower_Docked          = 0;
   Mower_Parked          = 0;
-  Mower_Running         = 1;
+  Mower_Running         = 0;
   Mower_Parked_Low_Batt = 0;
   Rain_Hit_Detected     = 0;
   Mower_Lost            = 0;
+  Manuel_Mode           = 0;
+  Tracking_Wire         = 0;  
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
   }
 
 void Manouver_Dock_The_Mower() {
@@ -343,10 +364,13 @@ void Manouver_Dock_The_Mower() {
   Mower_Track_To_Exit   = 0;
   Mower_Track_To_Charge = 0;
   Mower_Lost            = 0;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
   Print_LCD_Info_Docked();
+  Charge_Detected_MEGA = 0;
   
   
   //reset alarms...
@@ -364,6 +388,8 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Mower_Parked_Low_Batt = 1;
   Mower_Track_To_Charge = 0;
   Mower_Lost            = 0;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
 }
@@ -377,8 +403,11 @@ void Manouver_Park_The_Mower() {
   Mower_Running         = 0;
   Mower_Parked_Low_Batt = 0;
   Mower_Track_To_Charge = 0;
+  Tracking_Wire         = 0;
   Mower_Track_To_Exit   = 0;
   Mower_Lost            = 0;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
@@ -391,8 +420,11 @@ void Manouver_Hibernate_Mower() {
   Mower_Running         = 0;
   Mower_Parked_Low_Batt = 0;
   Mower_Track_To_Charge = 0;
+  Tracking_Wire         = 0;
   Mower_Track_To_Exit   = 0;
   Mower_Lost            = 1;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
@@ -405,8 +437,13 @@ void Manouver_Go_To_Charging_Station() {
   Mower_Running         = 0;
   Mower_Parked_Low_Batt = 0;
   Mower_Track_To_Charge = 1;
+  Tracking_Wire         = 1;
   Mower_Track_To_Exit   = 0;
   Mower_Lost            = 0;
+  Loop_Cycle_Mowing     = 0;
+  Manuel_Mode           = 0;
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  delay(5);
   Motor_Action_Stop_Spin_Blades();
   Motor_Action_Stop_Motors();
   delay(2000);
@@ -422,21 +459,30 @@ void Manouver_Exit_To_Zone_X() {
    // These values are then crried into the following functions.  
    Turn_On_Relay();
    delay(1000);
+   Manouver_Mower_Exit_Dock();
    Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
-   Mower_Track_To_Exit = 1;
-   TestforBoundaryWire();
-   delay(50);
-   if (Wire_Detected == 1) {
-     Manouver_Find_Wire_Track();                                   // Located the boundary wire
-     Track_Wire_From_Dock_to_Zone_X();
-     Manouver_Move_Into_Garden_Zone_X();
-     Manouver_Start_Mower();
-   }
-  if (Wire_Detected == 0) {
-      Manouver_Park_The_Mower();
+   if (Perimeter_Wire_Enabled == 1) {
+     Mower_Track_To_Exit = 1;
+     TestforBoundaryWire();
+     delay(50);
+     if (Wire_Detected == 1) {
+       Manouver_Find_Wire_Track();                                   // Located the boundary wire
+       Track_Wire_From_Dock_to_Zone_X();
+       Manouver_Move_Into_Garden_Zone_X();
+       Manouver_Start_Mower();
+     }
+    if (Wire_Detected == 0) {
+        Serial.println("");
+        Serial.println("Perimeter Wire not detected");
+        Manouver_Park_The_Mower();
+      }
     }
+  if (Perimeter_Wire_Enabled == 0) {
+       Serial.println("");
+       Serial.println("Perimeter Wire not activated in settings");
+       Manouver_Park_The_Mower();
   }
-
+}
 
 
 // Function to re-find the wire if the mower looses the wire while mowing
