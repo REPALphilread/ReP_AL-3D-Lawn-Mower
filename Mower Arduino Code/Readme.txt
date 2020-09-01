@@ -1,7 +1,7 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V6.8
+Code V6.9
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
@@ -9,12 +9,11 @@ Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 
 
-Features of 6.8
+Features of 6.9
 ---------------
 
-- Fixed error in Clock Setting
-- Improved the reliability of Compass Home
-- Added a test menu to Go Home to test the docking procedure.
+- Nearly all of the major Mower settings can now be set using the LCD screen and keypad
+- Settings are save dto EEPROM so they are transfered to later code updates.
 
 
 NodeMCU Board URL:

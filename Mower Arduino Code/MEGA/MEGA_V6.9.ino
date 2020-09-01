@@ -1,6 +1,5 @@
 
 
-
 // ReP_AL Lawn Mower Arduino Code
 // Please make sure you have installed all the library files to the Arduino libraries folder
 // You will need to unzip all the libraries from the GitHuB site.
@@ -23,8 +22,8 @@
 
 //Libraries for ic2 Liquid Crystal
 #include <LiquidCrystal_I2C.h>
-//LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LAM Mower
+LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
+
 
 //Libraries for the Mowing Calendar Function
 #include <TimeLib.h>
@@ -137,6 +136,17 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   byte  Menu_Mode_Selection;
   int   Menu_View;
   int   Mow_Time_Set;
+  int   Max_Options_Timing;
+  int   Max_Options_Docked;
+  int   Max_Options_Parked;
+  int   Max_Options_Settings;
+  int   Max_Options_Test;
+  int   Max_Options_Alarms;
+  int   Max_Options_Sensors;
+  int   Max_Options_Motion;
+  int   Max_Options_Tracking;
+  int   Max_Options_NAVI;
+  int   Max_Options_BETA;
 
   //Serial Communication
   float Volts;
@@ -264,17 +274,45 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   float val_WIFI;
 
   //EEPROM Saved Settings
-  int PWM_LEFT_EEPROM;
-  int PWM_RIGHT_EEPROM;
-  int PWM_BLADE_EEPROM;
-  int COMPASS_EEPROM;
-  float Traking_PID_P_EEPROM;
-  int Pattern_Mow_EEPROM;
+  int   PWM_LEFT_EEPROM;
+  int   PWM_RIGHT_EEPROM;
+  int   PWM_BLADE_EEPROM;
+  int   COMPASS_EEPROM;
+  float Tracking_PID_P_EEPROM;
+  int   Pattern_Mow_EEPROM;
   float Minimum_Volt_EEPROM;
-  int Compass_Home_EEPROM;
-  int Tip_Safety_EEPROM;
-  
+  int   Compass_Home_EEPROM;
+  int   Tip_Safety_EEPROM;
+  int   Mower_Turn_Delay_Min_EEPROM;
+  int   Mower_Turn_Delay_Max_EEPROM;
+  int   Mower_Reverse_Delay_EEPROM;
+  bool  Sonar_1_Activate_EEPROM;
+  bool  Sonar_2_Activate_EEPROM;
+  bool  Sonar_3_Activate_EEPROM;  
+  int   Track_Wire_Zone_1_Cycles_EEPROM;
+  int   Track_Wire_Zone_2_Cycles_EEPROM;
+  bool  Use_Charging_Station_EEPROM;
+  bool  CW_Tracking_To_Charge_EEPROM;
+  bool  CCW_Tracking_To_Charge_EEPROM;
+  bool  CW_Tracking_To_Start_EEPROM;
+  bool  CCW_Tracking_To_Start_EEPROM;
+  int   Max_Cycles_Straight_EEPROM;
+  bool  Compass_Heading_Hold_Enabled_EEPROM;
+  float CPower_EEPROM;
+  int   Max_Sonar_Hit_EEPROM;
+  long  maxdistancesonar_EEPROM;
+  bool  Perimeter_Wire_Enabled_EEPROM;
+  int   Max_Cycle_Wire_Find_EEPROM;
+  int   Max_Cycle_Wire_Find_Back_EEPROM;
+  int   Max_Tracking_Turn_Right_EEPROM;
+  int   Max_Tracking_Turn_Left_EEPROM;
+  bool  Rain_Sensor_Installed_EEPROM;
+  int   Rain_Total_Hits_Go_Home_EEPROM;
+  bool  WIFI_Enabled_EEPROM;
+  bool  Cutting_Blades_Activate_EEPROM;
+  int   Low_Battery_Instances_Chg_EEPROM;
 
+  
 /***********************************************************************************************
 
                    SETUP OF MOWER
@@ -283,94 +321,95 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   Turn on or off the settings to defien how you like the mower to behave.
   
   Settings marked with EEPROM can be adjusted using the mower LCD menu.  Once changes and saved
-  the settings will override the settings in this menu.  To clear these settings you need to clear
-  the EEPROM
+  the EEPROM settings will override the settings in this menu.  
+  
+  To clear these settings you need to clear the EEPROM
     
   1 = Turned ON      0 = Turned OFF       Value = Value set for variable.
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.8";
+  char Version[16] = "V6.9";
 
-  bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
-  bool WIFI_Enabled               = 1;                          // Activates the WIFI Fucntions
-  bool Perimeter_Wire_Enabled     = 1;                          // Activates use of the perimeter boundary wire
+  bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
+  bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
+  bool Perimeter_Wire_Enabled     = 1;     // EEPROM            // Activates use of the perimeter boundary wire
 
   //Docking Station
-  bool Use_Charging_Station       = 1;                          // 1 if you are using the docking/charging station     0 if not
-  bool CW_Tracking_To_Charge      = 1;                          // Clock-Wise         tracking around the boundary wire to the charging station
-  bool CCW_Tracking_To_Charge     = 0;                          // Counter-Clock-Wise tracking around the boundary wire to the charging station
-  bool CW_Tracking_To_Start       = 0;                          // Clock-Wise         tracking around the boundary wire when tracking to the start position
-  bool CCW_Tracking_To_Start      = 1;                          // Counter-Clock-Wise tracking around the boundary wire to the charging station
+  bool Use_Charging_Station       = 1;      //EEPROM            // 1 if you are using the docking/charging station     0 if not
+  bool CW_Tracking_To_Charge      = 1;      //EEPROM            // Clock-Wise         tracking around the boundary wire to the charging station
+  bool CCW_Tracking_To_Charge     = 0;      //EEPROM            // Counter-Clock-Wise tracking around the boundary wire to the charging station
+  bool CW_Tracking_To_Start       = 0;      //EEPROM            // Clock-Wise         tracking around the boundary wire when tracking to the start position
+  bool CCW_Tracking_To_Start      = 1;      //EEPORM            // Counter-Clock-Wise tracking around the boundary wire to the charging station
   byte Docked_Filter_Hits         = 1;                          // Number of charge signals to be detected before mower powers off
 
 
   // Wire Tracking
-  int Track_Wire_Zone_1_Cycles    = 1300;                       // Zone 1 - Number of Itterations the PID function does before the mower exits the wire track
-  int Track_Wire_Zone_2_Cycles    = 2200;                       // Zone 2 - Therefore how long the mower is tracking the wire can be set = distance tracked.
-  int  Max_Tracking_Turn_Right    = 270;                        // The maximum number of turn right commands during wire tracking before a renewed wire find function is called (wheel spins)
-  int  Max_Tracking_Turn_Left     = 270;                        // a re-find the wire sub-routine is called if this value is reached.
-  int  Max_Cycle_Wire_Find        = 320;                        // Maximum number of forward tracking cycles in finding wire before the mower restarts a compass turn and wire find.
-  int  Max_Cycle_Wire_Find_Back   = 50;                         // Maximum number of Backward tracking cycles in finding wire before the mower restarts a compass turn and wire find.  
+  int Track_Wire_Zone_1_Cycles    = 1300;   //EEPROM            // Zone 1 - Number of Itterations the PID function does before the mower exits the wire track
+  int Track_Wire_Zone_2_Cycles    = 2200;   //EEPROM            // Zone 2 - Therefore how long the mower is tracking the wire can be set = distance tracked.
+  int  Max_Tracking_Turn_Right    = 270;    //EEPROM            // The maximum number of turn right commands during wire tracking before a renewed wire find function is called (wheel spins)
+  int  Max_Tracking_Turn_Left     = 270;    //EEPROM            // a re-find the wire sub-routine is called if this value is reached.
+  int  Max_Cycle_Wire_Find        = 320;    //EEPROM            // Maximum number of forward tracking cycles in finding wire before the mower restarts a compass turn and wire find.
+  int  Max_Cycle_Wire_Find_Back   = 50;     //EEPROM            // Maximum number of Backward tracking cycles in finding wire before the mower restarts a compass turn and wire find.  
 
   //Compass Settings
-  bool Compass_Activate               = 0;                      // Turns on the Compass (needs to be 1 to activate further compass features)
-  bool Compass_Heading_Hold_Enabled   = 1;                      // Activates the compass heading hold function to keep the mower straight
-  int  Home_Wire_Compass_Heading      = 110;                    // Heading the Mower will search for the wire once the mowing is completed.
-  int  CPower                         = 2;                      // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
+  bool Compass_Activate               = 0;       //EEPROM       // Turns on the Compass (needs to be 1 to activate further compass features)
+  bool Compass_Heading_Hold_Enabled   = 1;       //EEPROM       // Activates the compass heading hold function to keep the mower straight
+  int  Home_Wire_Compass_Heading      = 110;     //EEPROM       // Heading the Mower will search for the wire once the mowing is completed.
+  float CPower                        = 2;       //EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
 
   // Pattern Mow
   int  Pattern_Mow                    = 0;       //EEPROM       // 0 = OFF |  1 = Parallel (not working!!) | 3 = Sprials |
   int  Max_Cycles_Spirals             = 500;                    // Overrides the Max_Cycles for straught line mowing as the spirals requires more loops to complete
   float  Compass_Mow_Direction        = 110;                    // Mow Direction of line when pattern mow is activated
 
-  // Safety Tilt Feature
-  int  Tip_Safety                     = 0;        //EEPROM      // Experimental and not working yet!! - Stops all motors if the mower overturns or is picked up.
-  int  Max_Tilt                       = 4000;
-  int  Min_Tilt                       = -4000;
+  // Safety Tilt Feature - EXPERIMENTAL!
+  int  Tip_Safety                     = 0;       //EEPROM      // Experimental and not working yet!! - Stops all motors if the mower overturns or is picked up.
+  int  Max_Tilt                       = 1800;
+  int  Min_Tilt                       = -1800;
   int  Max_Tilt_Hits                  = 5;
 
   //Compass alternative settings if the QMC Compass is freezing
-  int  Compass_QMC_Refresh_Setting    = 4;                      // 1 = 200HZ and 2 = 100Hz and 3 = 50HZ (Standard) 4 = 10Hz if compass is freezing try a different refresh rate. 
+  int  Compass_QMC_Refresh_Setting    = 3;                      // 1 = 200HZ and 2 = 100Hz and 3 = 50HZ (Standard) 4 = 10Hz if compass is freezing try a different refresh rate. 
   int  Compass_QMC_Sample_Setting     = 3;                      // Number of samples per call to the Compass | 1 = 2 | 2 = 4 | 3 = 8 (Standard) |.
 
   //Rain sensor 
-  bool Rain_Sensor_Installed          = 1;                      // 1  = Rain sensor installed    0 = no sensor installed.
-  byte Rain_Total_Hits_Go_Home        = 10;                     // This sensor only makes sense in combination with a mower docking station
+  bool Rain_Sensor_Installed          = 1;  //EEPROM            // 1  = Rain sensor installed    0 = no sensor installed.
+  int  Rain_Total_Hits_Go_Home        = 10; //EEPROM            // This sensor only makes sense in combination with a mower docking station
                                                                 // as the mower is sent there to get out of the rain.
   //Battery Settings
   float Battery_Max               = 12.6;                       // Max battery volts in Volts. 3S = 12.6V
-  float Battery_Min               = 11.4;     //EEPROM          // Lower Limit of battery charge before re-charge required.
+  float Battery_Min               = 11.4;   //EEPROM            // Lower Limit of battery charge before re-charge required.
   byte  Low_Battery_Detected      = 0;                          // Always set to 0
-  byte  Low_Battery_Instances_Chg = 14;                         // Instances of low battery detected before a re-charge is called..
+  byte  Low_Battery_Instances_Chg = 14;     //EEPROM            // Instances of low battery detected before a re-charge is called..
 
   //Sonar Modules
-  bool Sonar_1_Activate           = 1;                          // Activate (1) Deactivate (0) Sonar 1
-  bool Sonar_2_Activate           = 1;                          // Activate (1) Deactivate (0) Sonar 2
-  bool Sonar_3_Activate           = 1;                          // Activate (1) Deactivate (0) Sonar 3
-  int  Max_Sonar_Hit              = 3;                          // Maximum number of Sonar hits before object is discovered
-  long maxdistancesonar           = 30;                         // distance in cm from the mower that the sonar will activate at.
+  bool Sonar_1_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 1
+  bool Sonar_2_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 2
+  bool Sonar_3_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 3
+  int  Max_Sonar_Hit              = 3;      //EEPROM            // Maximum number of Sonar hits before object is discovered
+  long maxdistancesonar           = 30;     //EEPROM            // distance in cm from the mower that the sonar will activate at.
 
   //Wheel Motors Setup
-  int Max_Cycles_Straight        = 150;                         // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
+  int Max_Cycles_Straight        = 150;     //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
   int PWM_MaxSpeed_LH            = 240;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
   int PWM_MaxSpeed_RH            = 255;     //EEPROM            // Straight line speed RH Wheel - adjust to keep mower tracking straight.  Will be overridden if saved in EEPROM
 
   int Max_Motor_PWM_LH           = 255;
   int Max_Motor_PWM_RH           = 255;
-  int Mower_Turn_Delay_Min       = 1000;                       // Min Max Turn time of the Mower after it reverses at the wire.
-  int Mower_Turn_Delay_Max       = 2500;                       // A random turn time between these numbers is selected by the software
-  int Mower_Reverse_Delay        = 1800;                       // Time the mower reverses before making a turn.
+  int Mower_Turn_Delay_Min       = 1000;    //EEPROM            // Min Max Turn time of the Mower after it reverses at the wire. 1000 = 1 second
+  int Mower_Turn_Delay_Max       = 2500;    //EEPROM            // A random turn time between these numbers is selected by the software
+  int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
 
       
 
   //Blade Motor Setup
   //Blade Speed can be modified in the settings menu and will be written to EEPROM
   //The number below will then be overidden
-  byte PWM_Blade_Speed            = 250;      //EEPROM          // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
+  byte PWM_Blade_Speed            = 250;     //EEPROM           // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
 
   // Alarm Setup
-  bool Set_Time                   = 0;                          // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
+  bool Set_Time                   = 0;       //EEPROM           // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
 
 
   // If the Alarm is changed in settings it will be written to EEPROM and the settings below will be overriden.
