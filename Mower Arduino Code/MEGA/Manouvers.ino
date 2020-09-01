@@ -582,6 +582,7 @@ void Manouver_Go_To_Charging_Station() {
   delay(2000);
   Turn_On_Relay();
   delay(500);
+
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
   if ((Compass_Activate == 1) && (Mower_Parked ==0))    Compass_Turn_Mower_To_Home_Direction();
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
@@ -591,6 +592,7 @@ void Manouver_Go_To_Charging_Station() {
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
   if (No_Wire_Found == 1)                               Manouver_Go_To_Charging_Station();
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
+
 
   }
 

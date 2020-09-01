@@ -14,7 +14,9 @@ void DisplayTime()   {
            t.hr, t.min, t.sec);
 
   // Print the formatted string to serial so we can see the time.
+
   Serial.print(buf);
+
  
   }
 
@@ -134,7 +136,9 @@ void Set_Time_On_RTC(){
    // Set_Time to 1 in the setting menu to set time.  Load the sketch then immediatley Set_Time = 0 and reload the sketch.
         rtc.writeProtect(false);
         rtc.halt(false);
+
         Time t(2019, 07, 12, 15, 8, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
+
         rtc.time(t);    
         delay(10);
    }

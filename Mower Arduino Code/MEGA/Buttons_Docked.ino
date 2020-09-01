@@ -269,7 +269,6 @@ void Check_Membrane_Switch_Input_Docked() {
              delay(100);
              }
         
-        
       delay(100);
       }
 

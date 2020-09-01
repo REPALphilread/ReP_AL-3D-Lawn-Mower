@@ -158,6 +158,7 @@ void Print_Time_On_LCD() {
       lcd.print(t.hr);
       lcd.print(":");
       if (t.min < 10) lcd.print ("0");
+
       lcd.print(t.min);
       }
    }

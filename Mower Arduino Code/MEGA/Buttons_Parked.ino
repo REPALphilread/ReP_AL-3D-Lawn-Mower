@@ -10,6 +10,7 @@ void Print_LCD_Menu_Parked(byte LCD_Menu_Parked) {
     }
   if (LCD_Menu_Parked == 3)   lcd.print("Trampoline Cut");
   if (LCD_Menu_Parked == 4)   lcd.print("Test Menu");
+
   if (LCD_Menu_Parked == 5)   lcd.print("Setup Mower");
   if (LCD_Menu_Parked == 6)   lcd.print("-- SPARE 6 ---");
   if (LCD_Menu_Parked == 7)   lcd.print("-- SPARE 7 ---");
