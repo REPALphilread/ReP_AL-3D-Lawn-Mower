@@ -1,8 +1,32 @@
+
+void Motor_Action_Go_Mowing_Speed() {
+  
+  // No Mag speed adjustment active just go full speed
+  if (MAG_Speed_Adjustment == 0) Motor_Action_Go_Full_Speed();  
+  
+  // Adjust wheel speed according to the MAG level
+  if (MAG_Speed_Adjustment == 1) {
+          if (MAG_Now >= Slow_Speed_MAG) {
+            Motor_Action_Go_Full_Speed(); 
+            }
+        
+          if (MAG_Now < Slow_Speed_MAG)  {
+            Motor_Action_Go_Slow_Speed(); 
+            }
+    }
+}
+
 void Motor_Action_Go_Full_Speed()     {
       analogWrite(ENAPin, PWM_MaxSpeed_RH);                       // Speed = 0-255  (255 is max speed). Speed is set in the settings                        
       analogWrite(ENBPin, PWM_MaxSpeed_LH);                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
       Serial.print(F("Wheel:FULL|"));
-      }
+      }  
+
+void Motor_Action_Go_Slow_Speed()     {
+      analogWrite(ENAPin,  PWM_Slow_Speed_RH);                       // Speed = 0-255  (255 is max speed). Speed is set in the settings                        
+      analogWrite(ENBPin,  PWM_Slow_Speed_LH);                       // Anaolgwirte sends PWM signals Speed = 0-255  (255 is max speed)
+      Serial.print(F("Wheel:SLOW|"));
+      }  
 
 void Motor_Action_GoFullSpeed_Out_Garage()     {
   //Speeds can be changed to give the mower a slight curve when exiting the Garage.

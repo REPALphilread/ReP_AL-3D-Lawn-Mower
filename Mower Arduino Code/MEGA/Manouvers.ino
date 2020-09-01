@@ -25,8 +25,9 @@ void Manouver_Mow_The_Grass() {
     Serial.print(F("|"));
     Print_LCD_Mowing();
     if (Compass_Activate == 1) Get_Compass_Reading();
-    Motor_Action_Go_Full_Speed();
+    Motor_Action_Go_Mowing_Speed();
     Compass_Heading_Locked = 0;                           // Turn off the compass heading lock for the new cycles
+    Compass_Steering_Status = 0;
     }
 
   // On the 5th Mowing cycle options are chosen how to Mow based on the settings of pattern mow
@@ -42,7 +43,7 @@ void Manouver_Mow_The_Grass() {
           Serial.print(F("C-Lock:OFF"));
           Serial.print(F("|"));
           Print_LCD_Compass_Mowing();
-          Motor_Action_Go_Full_Speed();
+          Motor_Action_Go_Mowing_Speed();
           Compass_Heading_Locked = 0;
           }          
 
@@ -51,16 +52,16 @@ void Manouver_Mow_The_Grass() {
            Get_Compass_Reading();                                                      // Gets the latest compass reading
            Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
            Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
-           Motor_Action_Go_Full_Speed();
+           Motor_Action_Go_Mowing_Speed();
            }
         else {
-          Motor_Action_Go_Full_Speed();
+          Motor_Action_Go_Mowing_Speed();
           Serial.println("Compass not activated in the settings");
           }
       }
 
     if (Pattern_Mow == 1)  {                                  
-        Motor_Action_Go_Full_Speed();
+        Motor_Action_Go_Mowing_Speed();
         Print_LCD_Parallel();
         Serial.print("Parallel:ON");
         Serial.print(F("|"));
@@ -69,10 +70,10 @@ void Manouver_Mow_The_Grass() {
            Get_Compass_Reading();                                                      // Gets the latest compass reading
            Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
            Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
-           Motor_Action_Go_Full_Speed();
+           Motor_Action_Go_Mowing_Speed();
            }
         else {
-          Motor_Action_Go_Full_Speed();                                                 // if the compass is not activated
+          Motor_Action_Go_Mowing_Speed();                                                // if the compass is not activated
           Serial.println("Compass not activated in the settings");
           }
         
@@ -84,7 +85,7 @@ void Manouver_Mow_The_Grass() {
         Print_LCD_Spiral();
         Serial.print("Spiral:ON");
         Serial.print(F("|"));
-        Motor_Action_Go_Full_Speed();
+        Motor_Action_Go_Mowing_Speed();
         }
 
   }  // end of statements for == 5
@@ -100,11 +101,13 @@ void Manouver_Mow_The_Grass() {
            Serial.print(F("C-Lock:OFF"));
            Serial.print(F("|"));
            lcd.print("Mowing          ");
-           Motor_Action_Go_Full_Speed();
+           Motor_Action_Go_Mowing_Speed();
+           Compass_Steering_Status = 0;
            }
         if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1)) {            // if the Mower is tracking using the compass steer here
           if ( (Loop_Cycle_Mowing % 2) == 0 ) {
           Get_Compass_Reading(); 
+          Compass_Steering_Status = 1;        
           Calculate_Compass_Wheel_Compensation();
           Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
           Print_LCD_Compass_Mowing();
@@ -248,6 +251,7 @@ void Manouver_Find_Wire_Track()  {
           lcd.setCursor(0,1);
           lcd.print("Track -> Charge"); 
           Motor_Action_Go_Full_Speed();                                                         // Go full speed (in this case forwards)
+          Check_Bumper();                                                                       // Check if the bumper is hit
           UpdateWireSensor();                                                                   // Read the wire sensor and see of the mower is now  or outside the wire
           ADCMan.run();
           PrintBoundaryWireStatus();                                                            // Prints of the status of the wire sensor readings.
@@ -257,6 +261,17 @@ void Manouver_Find_Wire_Track()  {
             Serial.println("Abort Wire Find");
             Abort_Wire_Find = 1;
             }
+          if (Bumper == true) {
+            Motor_Action_Stop_Motors();
+            SetPins_ToGoBackwards();
+            Motor_Action_Go_Full_Speed();
+            delay(Mower_Reverse_Delay);
+            Motor_Action_Stop_Motors();
+            Bumper = false; 
+            delay(4000);
+            cycle = Max_Cycle_Wire_Find;
+            }
+          
           if (cycle > Max_Cycle_Wire_Find) {                                                    // Track forwards for Max_Cycle_Wire_Find_Fwd cycles
             No_Wire_Found_Fwd = 1;                                                              // if mower is still tracking after Max_Cycle_Wire_Find_Fwd cycles then cancel the find.
             Serial.println("Max Forward Cycles reached");
@@ -423,6 +438,12 @@ void Manouver_Turn_Around() {
     Check_Wire_In_Out();
     Loop_Cycle_Mowing = 1;
     Sonar_Hit = 0;  
+    distance1 = 999;
+    distance2 = 999;
+    distance3 = 999;
+    Sonar_Hit_1_Total = 0;
+    Sonar_Hit_2_Total = 0;
+    Sonar_Hit_3_Total = 0;
     Compass_Heading_Locked = 0;
     lcd.clear();
 }
@@ -430,6 +451,8 @@ void Manouver_Turn_Around() {
   
 
 void Manouver_Turn_Around_Sonar() {
+  Sonar_Status = 1;
+  Send_Mower_Running_Data();  
   Motor_Action_Stop_Motors(); 
   delay(500);
   SetPins_ToGoBackwards();
@@ -457,8 +480,9 @@ void Manouver_Turn_Around_Sonar() {
   Compass_Heading_Locked = 0;
   Sonar_Hit = 0;
   Loop_Cycle_Mowing = 0;
-  
-}
+  Sonar_Status = 0;
+  Send_Mower_Running_Data();  
+  }
 
 
 void Manouver_Manuel_Mode() {
@@ -468,7 +492,8 @@ void Manouver_Manuel_Mode() {
   Mower_Parked_Low_Batt = 0;
   Mower_Track_To_Exit   = 0;
   Mower_Track_To_Charge = 0;
-  Mower_Error            = 0;
+  Exiting_Dock          = 0;
+  Mower_Error           = 0;
   Manuel_Mode           = 1;
   Loop_Cycle_Mowing     = 0;
   Motor_Action_Stop_Motors();
@@ -478,6 +503,16 @@ void Manouver_Manuel_Mode() {
 
 
 void Manouver_Start_Mower() {
+  
+  if ((Mower_Track_To_Exit == 1) && (TFT_Screen_Menu == 1)) {
+    Mower_Track_To_Exit   = 0;
+    Exiting_Dock          = 0;
+    Mower_Running         = 1;
+    Calculate_TFT_Mower_Status_Value(); 
+    Send_Mower_Tracking_Data();
+    }
+
+ 
   Mower_Docked          = 0;
   Mower_Parked          = 0;
   Mower_Running         = 1;
@@ -485,9 +520,11 @@ void Manouver_Start_Mower() {
   Mower_Track_To_Charge = 0;
   Rain_Hit_Detected     = 0;
   Mower_Error           = 0;
+  Exiting_Dock          = 0;
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
   Wire_Refind_Tries     = 0;
+  Calculate_TFT_Mower_Status_Value(); 
   Turn_On_Relay();
   Y_Tilt = 0;
 
@@ -502,11 +539,29 @@ void Manouver_Mower_Exit_Dock() {
   Rain_Hit_Detected     = 0;
   Mower_Error           = 0;
   Manuel_Mode           = 0;
-  Tracking_Wire         = 0;  
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  Tracking_Wire         = 0;
+  Exiting_Dock          = 1;  
+  Mower_Status_Value    = 9;
+  //Calculate_TFT_Mower_Status_Value();    // Mower Status Value is already given in above line.
+  
+  Serial.println(F("Updating TFT with Exit Dock Information"));
+  Send_Mower_Tracking_Data();         // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.
+  Serial.println(F(""));// Send Command to the TFT
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();   // Command WIFI
   }
 
 void Manouver_Dock_The_Mower() {
+  if (TFT_Screen_Menu == 1) {
+    Turn_To_Home              = 0;
+    Find_Wire_Track           = 0;
+    Go_To_Charging_Station    = 0;
+    Mower_Docked              = 1;
+    Tracking_Wire             = 0;
+    Mower_Track_To_Charge     = 0;
+    Calculate_TFT_Mower_Status_Value();
+    Send_Mower_Tracking_Data();
+    }
+  
   Mower_Docked          = 1;
   Mower_Parked          = 0;
   Mower_Running         = 0;
@@ -516,12 +571,12 @@ void Manouver_Dock_The_Mower() {
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
+  Exiting_Dock          = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
   Print_LCD_Info_Docked();
   Charge_Detected_MEGA = 0;
-  
   //Setup Alarms 
   Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
  
@@ -529,15 +584,33 @@ void Manouver_Dock_The_Mower() {
 
 // Mower is a parked position and needs manual charging
 void Manouver_Park_The_Mower_Low_Batt() {
+ 
+  if ((Exiting_Dock == 1) && (TFT_Screen_Menu == 1))  {
+        Serial.println(F("Sending TFT Tracking Data"));
+        Mower_Parked_Low_Batt = 1;
+        Mower_Error           = 1;
+        Exiting_Dock          = 0;
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Send_Mower_Tracking_Data();
+        }
+  if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
+        Serial.println(F("Sending TFT Running Data"));
+        Mower_Parked_Low_Batt = 1;
+        Mower_Error           = 1;
+        Mower_Running         = 0;
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Send_Mower_Running_Data();
+        }
   
+  Mower_Parked_Low_Batt = 1;
   Mower_Docked          = 0;
   Mower_Parked          = 0;
   Mower_Running         = 0;
-  Mower_Parked_Low_Batt = 1;
   Mower_Track_To_Charge = 0;
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
+
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
 
@@ -548,6 +621,15 @@ void Manouver_Park_The_Mower_Low_Batt() {
 void Manouver_Park_The_Mower() {
 
   if (Mower_Parked == 0 ) lcd.clear();
+  if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
+        Serial.println(F("Sending TFT Running Data"));
+        Mower_Parked          = 1;
+        Mower_Error           = 0;
+        Mower_Running         = 0;
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Send_Mower_Running_Data();
+        }
+  
   Mower_Docked          = 0;
   Mower_Parked          = 1;
   Mower_Running         = 0;
@@ -568,18 +650,59 @@ void Manouver_Park_The_Mower() {
   //if (Alarm_3_Repeat == 0) Alarm_3_ON = 0;
   }
 
-void Manouver_Hibernate_Mower() {
 
-  Mower_Docked          = 0;
-  Mower_Parked          = 0;
-  Mower_Running         = 0;
-  Mower_Parked_Low_Batt = 0;
-  Mower_Track_To_Charge = 0;
-  Tracking_Wire         = 0;
-  Mower_Track_To_Exit   = 0;
-  Mower_Error           = 1;
-  Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+// Puts the mower to sleep - normally due to an error being found 
+void Manouver_Hibernate_Mower() {
+ 
+  // This function requires 2 different strategies to send the correct information to the TFT based on if the mower 
+  // is running or exiting the dock.  The Error function is therefore transmitted diffrently depending on the expected
+  // Package of daat the TFT is waiting for.  i.e. in Exit Dock Mode the TFT expects the Exit Dock TFT Data Package
+  // and will hang if it recieves the running data package.
+
+  Serial.println(F("Hibernate Mower"));
+  
+  if ((Exiting_Dock == 1) && (TFT_Screen_Menu == 1))  {
+        Serial.println(F("Sending TFT Tracking Data"));
+        Mower_Error           = 1;
+        Exiting_Dock          = 0;
+        Mower_Parked          = 0;  
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Send_Mower_Tracking_Data();
+        }
+  if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
+        Serial.println(F("Sending TFT Running Data"));        
+        Mower_Error           = 1;
+        Mower_Running         = 0;
+        if (Tilt_Orientation_Sensed == 1)  {
+          Serial.println("Tilt Used");
+          Mower_Error           = 3;
+          Mower_Running         = 0;
+          }
+        Serial.print(F("Mower Error before calc="));
+        Serial.println(Mower_Error);  
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Serial.print(F("Mower Error after calc="));
+        Serial.println(Mower_Error);  
+        Send_Mower_Running_Data();
+        }
+
+  if ((Mower_Parked == 1) &&  (TFT_Screen_Menu == 1) && (Tilt_Orientation_Sensed == 0)) {
+        Serial.println(F("Sending TFT Parked Data"));
+        Mower_Error           = 1;
+        Mower_Parked          = 1;
+        Calculate_TFT_Mower_Status_Value();               // Updates the Mower status Value
+        Send_Mower_Docked_Data();
+        }
+
+        Mower_Docked          = 0;  
+        Mower_Parked_Low_Batt = 0;
+        Mower_Track_To_Charge = 0;
+        Tracking_Wire         = 0;
+        Mower_Track_To_Exit   = 0;
+        Loop_Cycle_Mowing     = 0;
+        Manuel_Mode           = 0;
+ 
+  // Powers down the mower motors and cuts the main power via the relay. 
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
@@ -587,6 +710,29 @@ void Manouver_Hibernate_Mower() {
 
 // Mower is sent to the charging station after low volts are detected or mebrane key input.
 void Manouver_Go_To_Charging_Station() {
+
+  if ((TFT_Screen_Menu == 1) && (Mower_Parked = 1)) {
+      Mower_Docked          = 0;
+      Mower_Parked          = 0;
+      Mower_Track_To_Charge = 1;
+      Tracking_Wire         = 1;
+      Serial.println(F("Updating TFT with Exit Dock Information"));
+      Calculate_TFT_Mower_Status_Value();
+      Send_Mower_Docked_Data();         // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.
+      delay(4000);  
+      }  
+
+  if ((TFT_Screen_Menu == 1) && (Mower_Running ==1)) {
+      Mower_Running         = 0;
+      Mower_Track_To_Charge = 1;
+      Tracking_Wire         = 1;
+      Serial.println(F("Updating TFT with Exit Dock Information"));
+      Calculate_TFT_Mower_Status_Value();
+      Send_Mower_Running_Data();         // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.
+      delay(4000);  
+      }
+
+  
   Mower_Docked          = 0;
   Mower_Parked          = 0;
   Mower_Running         = 0;
@@ -600,21 +746,55 @@ void Manouver_Go_To_Charging_Station() {
   No_Wire_Found_Fwd     = 0;
   No_Wire_Found_Bck     = 0;
   Manage_Alarms();                                              // Switches on or off the Alarms depending on the setup
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();
-  delay(5);
+
   Motor_Action_Stop_Spin_Blades();
   Motor_Action_Stop_Motors();
+
+ 
+  if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  delay(5);
   delay(2000);
   Turn_On_Relay();
   delay(500);
+  
+  
+  
+  // Turns the Mower in the Home Compass Direction and send the info to the TFT and WIFI
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  if (TFT_Screen_Menu == 1) {                                     // send Commands to the TFT;
+    Turn_To_Home = 1;
+    Find_Wire_Track = 0;
+    Go_To_Charging_Station = 0;
+    Send_Mower_Tracking_Data();
+    }
   if ((Compass_Activate == 1) && (Mower_Parked ==0))    Compass_Turn_Mower_To_Home_Direction();
+  
+  
+  // Find the Wire and send the info to the TFT and WIFI
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  if (TFT_Screen_Menu == 1) {
+    Turn_To_Home = 0;
+    Find_Wire_Track = 1;
+    Go_To_Charging_Station = 0;
+    Send_Mower_Tracking_Data();
+    }
   if (Mower_Parked == 0)                                Manouver_Find_Wire_Track();
+  
+   // Track the Wire and send the info to the TFT and WIFI
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  if (TFT_Screen_Menu == 1) {
+    Turn_To_Home = 0;
+    Find_Wire_Track = 0;
+    Go_To_Charging_Station = 1;
+    Send_Mower_Tracking_Data();
+    }
   if ((Mower_Parked == 0) && (No_Wire_Found_Fwd == 0))      Track_Perimeter_Wire_To_Dock();
+  
+  // Restarts the process if no wire is found,
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
+  if (TFT_Screen_Menu == 1) Send_Mower_Tracking_Data();
   if (No_Wire_Found_Fwd == 1)                               Manouver_Go_To_Charging_Station();
+  
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
 
   }
@@ -624,12 +804,18 @@ void Manouver_Exit_To_Zone_X() {
    // These values are then crried into the following functions.  
    Turn_On_Relay();
    delay(1000);
-   Manouver_Mower_Exit_Dock();
-   Special_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
+   Serial.println(F("Sending Tracking Data in Exit To Zone X"));
+   Mower_Status_Value = 9;                                      // 9 = Exiting Dock
+   Send_Mower_Tracking_Data();                                  // Send the tracking TX Data package to the mower.   
+   Manouver_Mower_Exit_Dock();                                  // Carry out the Exit Dock Manouver
+   
+   _Docking_Station();                         // Move the Mower into position backing out of the docking station
    if (Perimeter_Wire_Enabled == 1) {
      Mower_Track_To_Exit = 1;
      TestforBoundaryWire();
      delay(50);
+
+     // If the boundary wire is on then carry on
      if (Wire_Detected == 1) {
        if (WIFI_Enabled == 1) Get_WIFI_Commands();
        Manouver_Find_Wire_Track();                                   // Located the boundary wire
@@ -642,15 +828,24 @@ void Manouver_Exit_To_Zone_X() {
        if (WIFI_Enabled == 1) Get_WIFI_Commands();
        if (Mower_Parked == 1) Manouver_Park_The_Mower();
      }
-    if (Wire_Detected == 0) {
-        TestforBoundaryWire();                                      // Test again for the boundary wire
-          if (Wire_Detected == 0) {                                 // if its still saying the wire is off then park the mower.
-          Serial.println("");
-          Serial.println("Perimeter Wire not detected");
-          Manouver_Park_The_Mower();
-          }
-        }   
+    
+    // If the boundary wire is turned off / not detected
+    // Then the test boundary wire function will already put the mower into hibernate mode.
+    
+//    if (Wire_Detected == 0) {
+//        TestforBoundaryWire();                                      // Test again for the boundary wire
+//          if (Wire_Detected == 0) {                                 // if its still saying the wire is off then park the mower.
+//          Serial.println("");
+//          Serial.println("Perimeter Wire not detected");
+//          Manouver_Park_The_Mower();
+//          Mower_Status_Value = 4;         // Sends the mower status value to the TFT Screen 4 = Error Status.
+//          Mower_Error_Value = 1;          // Describes the error 1 = No Wire, 
+//          Serial.println(F("Sending Tracking Data in Wire detect = 0"));
+//          Send_Mower_Tracking_Data();
+//          }
+//        }   
     }
+    
   if (Perimeter_Wire_Enabled == 0) {
        Serial.println("");
        Serial.println("Perimeter Wire not activated in settings");
