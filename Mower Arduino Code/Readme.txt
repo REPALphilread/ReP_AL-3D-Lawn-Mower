@@ -1,18 +1,19 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V5.3.2    - BETA (in  test)
+Code V5.8    - BETA 
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 
 
-Features of 5.2
+Features of 5.8
 ---------------
 
-- BETA for tracking to home (please test)
-  All the charge detection has been moved to the Nano
-  Enter the Nano amp limits in the NANO code for your charger to send a charge = 1 signal to the MEGA when the charger is detected.
-- Improved the Serial output visual for easier overview of what the mower is doing.
-
+- Code layout and logic is changed - I needed to simplify it all to make the WIFI possible in the future
+- Test sketches intgrated into the main program.  Choose Tests on the menu options and select the test
+- Rain sensor added - turn on and off in the settings
+- Improved Serial communication between the NANO and the MEGA.
+- Reverse motors option removed. You need to get the cables correct. Its too complicasted to cater for all cabling variations
+- 

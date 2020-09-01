@@ -1,4 +1,6 @@
-void Ping_Sonars()   {
+void Check_Sonar_Sensors() {
+  
+  // Ping Sonar sensors
 
   //Clears the Trig Pin
   digitalWrite(trigPin1, LOW);
@@ -7,113 +9,15 @@ void Ping_Sonars()   {
   delayMicroseconds(5);
   digitalWrite(trigPin3, LOW);
 
+ // Pings each sonar at a 15ms interval
 
-  /*Fires all Sonars to detect objects ahead...
-   * Sonars are not fired in order to avoid reflections of sonar in the next sensor.
-     distance# reurned (trigpin#, echopin#, distance#, duration#, Sonar#, LCDColumn#, LCD Row#)
-   *********************************************************************************************/
+ if (Sonar_2_Activate == 1) distance2 = PingSonarX(trigPin2, echoPin2, 2, 2, 2, 0, 0);         //SONAR2
+ if (Sonar_1_Activate == 1) distance1 = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 1, 0);         //SONAR1
+ if (Sonar_3_Activate == 1) distance3 = PingSonarX(trigPin3, echoPin3, 3, 3, 3, 2, 0);         //SONAR3
 
-  if ((Error == 0 ) && (Mower_Docked == 0)) {                                        // If no error is in effect then use the Sonars
-    delay(15);
-    if (Sonar_1_Activate == 1) distance1 = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 1, 0);          //SONAR1
-    delay(15);
-
-    if (Sonar_2_Activate == 1) distance2 = PingSonarX(trigPin2, echoPin2, 2, 2, 2, 0, 0);         //SONAR2
-    delay(15);
-
-    if (Sonar_3_Activate == 1) distance3 = PingSonarX(trigPin3, echoPin3, 3, 3, 3, 2, 0);          //SONAR3
-    delay(15);
-
-  }
-
-
-  if ((Error > 0) || (Mower_Docked == 1) ) {             // when an Error code is in effect, this stops the mower from moving due to the sonars being triggered
-    distance1 = 999;                                  // distances are just set to a high number so they are not triggered in the motion control
-    distance2 = 999;
-    distance3 = 999;
-
-  }
-
-
-  /*********************************************************************************************************************
-      Collision control logic based on the Sonar readings
-      Runs Logic to manouver away from the object
-      if Error is >= 5 i.e. Batt Low etc, then this section is skipped otherwise the mower would start if a sonar is triggered
-
-   *********************************************************************************************************************/
-
-  /* Makes sure that sporadic objects are not registered.  */
-  if (  (distance1 < maxdistancesonar) ||  (distance2 < maxdistancesonar)  ||  (distance3 < maxdistancesonar)  ) {
-    ObjectRegistered = ObjectRegistered + 1;
-    //Serial.print(F("SONAR:XX"));
-   }
-   else  {
-    ObjectRegistered = 0;
-  }
-
-  /* Prints the number of objects to the Serial printer and LCD.  If 2 objects are consecztivley detected the mower is stopped and turns. */
-  Serial.print(F("S-Obj"));
-  Serial.print(ObjectRegistered);
-  Serial.print(F("|"));
-  if (ObjectRegistered > 0) {
-      lcd.setCursor(5, 0);
-      lcd.print(ObjectRegistered);
-      }
-  else {
-      lcd.setCursor(5, 0);
-      lcd.print(" ");
-      }
+ }
   
 
-
-  if (ObjectRegistered >= 2) {
-
-    if ( distance1 < maxdistancesonar ||  distance2 < maxdistancesonar  ||  distance3 < maxdistancesonar && Error == 0 ) {
-      lcd.setCursor(0, 1);
-      lcd.print("Object:          ");
-      Motion_StopMotors();
-      delay(2000);
-      lcd.setCursor(0, 8);
-      lcd.print("Reversing");
-      SetPins_ToGoBackwards();
-      Motion_GoFullSpeed();
-      delay (Mower_Reverse_Delay);                                                                               // Time given to Reverse  the Mower
-      Motion_StopMotors();
-      if ( distance1 < maxdistancesonar ||  distance2 < maxdistancesonar ) {
-        //Serial.println(F("Turning Left to avoid Object"));
-        lcd.setCursor(0, 8);
-        lcd.print("Go Right -->       ");
-        SetPins_ToTurnRight(); Serial.println(F(""));                                                  // Calls the motor function turn Left
-        delay(200);
-        Motion_TurnSpeed();                                                                     // Sets the speed of the turning motion
-        delay(Mower_Turn_Delay_Right);                                                                     // Time motors on to Turn the Mower Left
-        Motion_StopMotors();
-        delay(50);
-        SetPins_ToGoForwards();
-        MowerMotionStatus = 3;
-
-        //set the other Sonar distances to high so the second logic loop is not included.
-        distance3 = 700;
-      }
-
-      if (distance3 < maxdistancesonar) {
-        //Serial.println(F("Turning Right to avoid Object"));
-        lcd.setCursor(0, 8);
-        lcd.print("<-- Go Left      ");
-        SetPins_ToTurnLeft(); Serial.println(F(""));                                                                          // Calls the motor funstion turn right
-        delay(200);
-        Motion_TurnSpeed();
-        delay(Mower_Turn_Delay_Left);                                                                          // Time to Turn the Mower Right
-        Motion_StopMotors();
-        delay(50);
-        SetPins_ToGoForwards();
-        MowerMotionStatus = 3;
-      
-      }
-    }
-    ObjectRegistered = 0;
-  }
-}
 
 /* SONAR Function
 ************************************************************************************/
@@ -155,7 +59,6 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
   Serial.print(distanceX);
   Serial.print(F("cm"));
   Serial.print(F("/"));
-  //Serial.println(maxdistancesonar);
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/
   if (distanceX <= maxdistancesonar ) {
@@ -163,7 +66,26 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     lcd.setCursor(LCDRow, LCDColumn);                //sets location for text to be written
     lcd.print("X");
     delay(10);
-  }
+    if (sonarX == 1) {
+        Sonar_Hit_1_Total = (Sonar_Hit_1_Total + 1);
+        Serial.print(Sonar_Hit_1_Total);
+        }
+      if (sonarX == 2) {
+        Sonar_Hit_2_Total = (Sonar_Hit_2_Total + 1);
+        Serial.print(Sonar_Hit_2_Total);
+        }
+      if (sonarX == 3) {
+        Sonar_Hit_3_Total = (Sonar_Hit_3_Total + 1);
+        Serial.print(Sonar_Hit_3_Total);
+        }      
+    if ( (Sonar_Hit_1_Total == Max_Sonar_Hit) || (Sonar_Hit_2_Total == Max_Sonar_Hit) || (Sonar_Hit_3_Total == Max_Sonar_Hit) ) {
+      Sonar_Hit = 1;  
+      Print_Sonar_Hit();
+      Serial.println("");
+      Serial.println("Sonar Hit Detected");
+      }
+    
+    }
 
   /*If sonar distance is greater than maximum distance then no object is registered to avoid*/
   if (distanceX > maxdistancesonar) {
@@ -171,9 +93,24 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     lcd.setCursor(LCDRow, LCDColumn);                 //sets location for text to be written
     lcd.print("_");
     delay(10);
-  }
+    if (sonarX == 1) {
+        Sonar_Hit_1_Total = 0;
+        Serial.print(Sonar_Hit_1_Total);
+        }
+      if (sonarX == 2) {
+        Sonar_Hit_2_Total = 0;
+        Serial.print(Sonar_Hit_2_Total);
+        }
+      if (sonarX == 3) {
+        Sonar_Hit_3_Total = 0;
+        Serial.print(Sonar_Hit_3_Total);
+        }   
+    }
+   
 
   return distanceX;
   return sonarX;
+
+
 
 }
