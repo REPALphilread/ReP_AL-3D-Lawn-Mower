@@ -1,20 +1,23 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V5.9   
+Code V6.01   
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
+Upload the NodeMCU code to the NodeMCU Board
 
 
-Features of 5.9
----------------
+Features of 6.01
+----------------
 
-- Changed the Code LOOP structure to make future upgrades easier to integrate
+- WIFI connectivity implemented.
 - Improved the docking detection by amp sensor
-- Test sketches intgrated into the main program.  Choose Tests on the menu options and select the test
-- Rain sensor added
-- Improved Serial communication between the NANO and the MEGA.
-- Reverse motors option removed. You need to get the cables correct. Its too complicasted to cater for all cabling variations
+- Improved Serial communication between the NANO and the MEGA.  (Thanks to Adam Kaczmarzyk)
+
+NodeMCU Board URL:
+http://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+
  

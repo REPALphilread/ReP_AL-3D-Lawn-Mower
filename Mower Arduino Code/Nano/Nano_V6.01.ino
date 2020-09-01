@@ -60,8 +60,18 @@ void TX_Volts()  {
   Serial.print("|");
 }
 
+void TX_Raw_Value_Volts()  {  
+  mySerial.print(RawValueVolt);
+  mySerial.println("\j");
+}
+
 void TX_Charge()  {
   mySerial.print(Charging);
+  mySerial.println("\q");
+}
+
+void TX_Raw_Value_Charge()  {
+  mySerial.print(RawValueAmp);
   mySerial.println("\q");
 }
 
@@ -97,17 +107,19 @@ void loop(){
 
  Calculate_Volt_Amp();
 
+ Serial.print("VoltsTX = ");
+ Serial.print(VoltsTX);
+ Serial.print("|");
+
  if (AmpsTX < 0.4) Charging = 0;
  if (AmpsTX > 0.4) Charging = 4;
  Serial.print("Charging = ");  
  Serial.print(Charging);
  Serial.print("|");
 
-
  Serial.print("AmpsTX = ");
  Serial.print (AmpsTX);
  Serial.print("|");
-
 
  Serial.print("Rain Sensor Raw = ");
  Serial.print (Raining);
@@ -123,11 +135,13 @@ Serial.print("|");
 
  Serial.println("");
  
- 
- TX_Volts();
+ //TX_Charge();
+ TX_Raw_Value_Charge(); 
+ delay(5); 
+ //TX_Volts();
+ TX_Raw_Value_Volts(); 
  delay(5);
- TX_Charge();
- delay(5);
+
  TX_Raining();
 
     

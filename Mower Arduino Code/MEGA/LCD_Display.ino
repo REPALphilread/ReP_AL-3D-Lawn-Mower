@@ -28,20 +28,20 @@ void Print_LCD_Volt_Info() {
     lcd.setCursor(10, 0);
     lcd.print("V:");
     lcd.setCursor(12, 0);    
-    lcd.print(VoltsTX);  
+    lcd.print(Volts);  
     }
 
 void Print_Charging_LCD()  {
   lcd.setCursor(0,0);
-  if (Charge_Detected == 4) lcd.print("Charging");
-  if ((Rain_Detected == 0) && (Charge_Detected == 0) ) lcd.print("        ");
+  if (Charge_Detected_MEGA == 1)  lcd.print("Charging");
+  if ((Rain_Detected == 0) && (Charge_Detected_MEGA != 1) ) lcd.print("        ");
   }
 
 void Print_Raining_LCD()  {
   lcd.setCursor(4,0);
   if (Rain_Detected == 1) lcd.print("Rain");
   // See raining and charging clause if this is not displying correctly.
-    if ((Rain_Detected == 0) && (Charge_Detected == 0) ) lcd.print("    ");
+    if ((Rain_Detected == 0) && (Charging == 0) ) lcd.print("    ");
   }
 
 void Print_Recharge_LCD() {
@@ -75,6 +75,11 @@ void Print_LCD_Compass_Mowing() {
 void Print_LCD_Info_Parked() {
     lcd.setCursor(0,1);
     lcd.print("Parked");
+    }
+
+void Print_LCD_Info_Manuel() {
+    lcd.setCursor(0,1);
+    lcd.print("Manuel");
     }
 
 void Print_LCD_Info_Docked() {
