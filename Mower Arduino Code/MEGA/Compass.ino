@@ -20,9 +20,9 @@ void Get_Compass_Reading() {
     }
 
   Compass_Heading_Degrees = Heading * 180 / M_PI;                 // Convert to degrees
-  Serial.print(F("Comp H:"));
-  Serial.print(Heading);
-  Serial.print(F(" D:"));
+  //Serial.print(F("Comp H:"));
+  //Serial.print(Heading);
+  Serial.print(F("Comp°:"));
   Serial.print(Compass_Heading_Degrees);
   Serial.print("|");
   delay(5);
@@ -84,7 +84,7 @@ void Turn_To_Compass_Heading()  {
     // Step turns the mower to the left while the heading is outside the home tolerance
     // Once the heading is found. the mower stops and can then activate the find wire function
     SetPins_ToTurnLeft(); 
-    while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass)) {    
+    while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass) && (Mower_Parked == 0)) {    
         Serial.println(F("Turning to Home"));
         Get_Compass_Reading();
         lcd.setCursor(0,0);
@@ -99,6 +99,7 @@ void Turn_To_Compass_Heading()  {
         Serial.print(Compass_Heading_Degrees);
         Serial.print("|");
         Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
+        if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();
         }
     Motor_Action_Stop_Motors();
     SetPins_ToGoForwards();
@@ -118,26 +119,25 @@ void Display_Compass_Current_Heading_on_LCD() {
 
 void Calculate_Compass_Wheel_Compensation() {
 
-  float diff = Heading - Heading_Lock;                        // Calculates the error in compass heading from the saved lock heading
+  float Compass_Error = Compass_Heading_Degrees - Heading_Lock;        // Calculates the error in compass heading from the saved lock heading
   
-   if (diff > 180) {                                          // Make adjustments for the 360 degree system
-      diff = -360 + diff;
-      }
-   else if (diff < -180) {
-      diff = 360 + diff;
-      }
+  if (Compass_Error > 180) Compass_Error = Compass_Error * -1 ;
+  if (Compass_Error < -180) Compass_Error = Compass_Error * -1 ;
+  Serial.print(F("C_Err:"));
+  Serial.print(Compass_Error);
+  Serial.print("|");
  
-  if (diff < 0) {                                             // Steer left
+  if (Compass_Error < 0) {                                             // Steer left
      Serial.print("Steer_Right|");
-    PWM_Right = PWM_MaxSpeed_RH + (CPower * diff);            // Multiply the difference by D to increase the power then subtract from the PWM
-    if (PWM_Right < 0) PWM_Right = 50;
-    PWM_Left = PWM_MaxSpeed_LH;                               // Keep the Right wheel at full power calibrated to go straight
+    PWM_Right = PWM_MaxSpeed_RH + (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+    if (PWM_Right < 0) PWM_Right = 180;
+    PWM_Left = PWM_MaxSpeed_LH;                                        // Keep the Right wheel at full power calibrated to go straight
     } 
-  if (diff >= 0) {  
+  if (Compass_Error >= 0) {  
     Serial.print("Steer_Left|");
-    PWM_Right = PWM_MaxSpeed_RH;                              // Keep the Left wheel at full power calibrated to go straight             
-    PWM_Left = PWM_MaxSpeed_LH -  (CPower * diff);            // Multiply the difference by D to increase the power then subtract from the PWM
-    if (PWM_Left < 0) PWM_Left = 50;
+    PWM_Right = PWM_MaxSpeed_RH;                                       // Keep the Left wheel at full power calibrated to go straight             
+    PWM_Left = PWM_MaxSpeed_LH -  (CPower * Compass_Error);            // Multiply the difference by D to increase the power then subtract from the PWM
+    if (PWM_Left < 0) PWM_Left = 180;
     }
 
 }

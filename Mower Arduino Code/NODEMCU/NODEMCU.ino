@@ -14,14 +14,12 @@ SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-//Mower 1 Test Platform
-char auth[] = "Blynk App Auth Code";
-
+char auth[] = "Blynk Auth Code";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "WiFi Name";
-char pass[] = "WiFi Password";
+char ssid[] = "WIFI Name";
+char pass[] = "WIFI Password";
 
 int buttonState = 0;
 char  Version[16];

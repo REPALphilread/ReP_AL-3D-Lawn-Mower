@@ -189,6 +189,9 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Mower_Track_To_Charge;
   bool Mower_Track_To_Exit;
 
+  bool Abort_Wire_Find;
+  bool No_Wire_Found;
+
   int PWM_Right;
   int PWM_Left;
   int MAG_Goal;
@@ -230,7 +233,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.01";
+  char Version[16] = "V6.03";
 
   bool Cutting_Blades_Activate    = 1;                          // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;                          // Activates the WIFI Fucntions
@@ -245,16 +248,17 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   byte Docked_Filter_Hits         = 1;                          // Number of charge signals to be detected before mower powers off
   
   int Track_Wire_Zone_1_Cycles    = 1700;                       // Zone 1 - Number of Itterations the PID function does before the mower exits the wire track
-  int Track_Wire_Zone_2_Cycles    = 3700;                       // Zone 2 - Therefore how long the mower is tracking the wire can be set = distance tracked.
+  int Track_Wire_Zone_2_Cycles    = 2500;                       // Zone 2 - Therefore how long the mower is tracking the wire can be set = distance tracked.
 
   byte Max_Tracking_Turn_Right    = 250;                        // The maximum number of turn right commands during wire tracking before a renewed wire find function is called
   byte Max_Tracking_Turn_Left     = 250;                        // This helps to re-find the wire should the mower loose the wire for any reason.
+  int  Max_Cycle_Wire_Find        = 320;                        // MAximum number of forward tracking cycles before the mower restarts a compass turn and wire find.
 
   //Compass Module
   bool Compass_Activate               = 1;                      // Turns on the Compass (needs to be 1 to activate further compass features)
   bool Compass_Heading_Hold_Enabled   = 1;                      // Activates the compass heading hold function to keep the mower straight
-  int  Home_Wire_Compass_Heading      = 120;                    // Heading the Mower will search for the wire once the mowing is completed.
-  int  CPower                         = 120;                    // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
+  int  Home_Wire_Compass_Heading      = 110;                    // Heading the Mower will search for the wire once the mowing is completed.
+  int  CPower                         = 2;                    // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
 
   //Rain sensor 
   bool Rain_Sensor_Installed          = 1;                      // 1 for Rain sensor installed    0 for no sensor installed.
@@ -275,19 +279,16 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
   //Wheel Motor Setup
   byte Max_Cycles                 = 150;
-  byte PWM_MaxSpeed_LH            = 200;                        // Straight line speed LH Wheel (Looking from back of mower)
+  byte PWM_MaxSpeed_LH            = 210;                        // Straight line speed LH Wheel (Looking from back of mower)
   byte PWM_MaxSpeed_RH            = 255;                        // Straight line speed RH Wheel - adjust to keep mower tracking straight.
-
   int Mower_Turn_Delay_Min        = 1500;                       // Min Max Turn time of the Mower after it reverses at the wire.
   int Mower_Turn_Delay_Max        = 2500;                       // A random turn time between these numbers is selected by the software
-
-
-  int Mower_Reverse_Delay         = 1500;                       // Time the mower revreses at the wire
+  int Mower_Reverse_Delay         = 2500;                       // Time the mower revreses at the wire
 
       
 
   //Blade Motor Setup
-  byte PWM_Blade_Speed            = 245;                        // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
+  byte PWM_Blade_Speed            = 252;                        // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
 
   // Alarm Setup
   bool Set_Time                   = 0;                          // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
@@ -332,7 +333,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
     int OutMid = 400;
     int OutMax = 1500;                                            // the maximum received signal value outside the wire
 
-    int Outside_Wire_Count_Max          = 6;                      // If the mower is outside the wire this many times the mower is stopped
+    int Outside_Wire_Count_Max          = 10;                      // If the mower is outside the wire this many times the mower is stopped
     int Action_On_Over_Wire_Count_Max   = 2;                      // Set 1 to hibernate mower (Power Off and Stop)   Set 2 to refind garden using sonar and wire detect function
 
     bool Show_TX_Data                   = 0;                      // Show the values recieved from the Nano / ModeMCU in the serial monitor
