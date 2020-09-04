@@ -1,14 +1,18 @@
+// ReP_AL Mower Project Touchscreen Control
+
+
+
 
 #include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
 MCUFRIEND_kbv tft;
 #include <TouchScreen.h>
-
 #include <SPI.h>             // f.k. for Arduino-1.5.2
 #define USE_SDFAT
 #include <SdFat.h>           // Use the SdFat library
 SdFatSoftSpi<12, 11, 13> SD; //Bit-Bang on the Shield pins
 #include <EEPROM.h>
+#include <ArduinoJson.h>
   
 #define MINPRESSURE 485             // if multiple buttons are pressing increase this value
 #define MAXPRESSURE 1000
@@ -55,7 +59,7 @@ Adafruit_GFX_Button up1_btn, down1_btn, up2_btn, down2_btn, up3_btn, down3_btn, 
                     Save_Track_Find_Wire_btn, Save_Track_PID_btn, Done_Navigation_btn, HeadHold_btn, PCompass_btn, GPS_btn, Alarm1_btn,
                     Alarm2_btn, Alarm3_btn, SetTime_btn, Done_Time_btn, Save_AlarmX_btn, Save_Set_Time_btn, Next_btn, TFT_btn, Done3_btn, 
                     Tests_btn, Test1_btn, Test2_btn, Test3_btn, Test4_btn, Test5_btn, Done4_btn, Cancel_QG_btn, Cancel_ED_btn, Clear_Error_btn,
-                    Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn;
+                    Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn, Create_Fence_btn, GPS_Enabled_ONOFF_btn, Save_GPS_Point_btn, Save_Fence_btn;
                     
 
 unsigned long time;
@@ -86,7 +90,7 @@ bool  Menu_Complete_Tracking;
 bool  Menu_Complete_Tracking_Exit;
 bool  Menu_Complete_Track_PID;
 bool  Menu_Complete_Find_Wire;
-bool  Menu_Complete_GPS;
+bool  Menu_Complete_GPS_Settings;
 bool  Menu_Complete_Navigation;
 bool  Menu_Complete_Time;
 bool  Menu_Complete_AlarmX;
@@ -104,6 +108,7 @@ bool  Menu_Complete_Quick_Start;
 bool  Menu_Complete_Exit_Dock;
 bool  Menu_Complete_Tip_Setup;
 bool  Menu_Complete_Pattern;
+bool  Menu_Complete_GPS_New_Fence;
 
 
 int  Mower_Status_Value = 1;
@@ -122,6 +127,7 @@ int Wire_Status;
 int Bumper_Status;
 int Loops;
 int Compass_Steering_Status;
+int GPS_In_Out_TX = 1;
 
 // TX Selected Menu Transmission
 bool Quick_Go;
@@ -195,6 +201,8 @@ int LH_RH_Spacing;
   int Pos_Y3;
   int Pos_X4;
   int Pos_Y4;  
+  int Pos_X5;
+  int Pos_Y5;  
   int Button_X1;
   int Button_Y1;
   int Button_X2;
@@ -203,7 +211,8 @@ int LH_RH_Spacing;
   int Button_Y3;
   int Button_X4;
   int Button_Y4;
-
+  int Button_X5;
+  int Button_Y5;
   
 // Blade Menu
 bool Cutting_Blades_Activate;
@@ -245,7 +254,7 @@ int INOUT;
 int MAG;
 
 // Tilt Sensor
-bool Tilt_Angle_Sensed;
+bool Tilt_Angle_Sensed = 1;
 bool Tilt_Orientation_Sensed;
 int  Angle_Sensor_Enabled;
 int  Tip_Over_Sensor_Enabled;
@@ -345,7 +354,15 @@ int   Value_Y8;
   int  Time_Loop = 1;
 
 
-  int SPARE;
+  int Spare = 0;
+
+// GPS Menu
+
+  bool  GPS_Enabled;
+  int   GPS_Mode = 0;
+  int   Fence = 0;
+  int   Min_Sats = 0;
+  int   GPS_Lock_OK_TX;
 
 
 // Set the screen size, calibration
@@ -391,11 +408,13 @@ int  Battery_Display = 2;
 void setup(void){
 
     Serial.begin(115200);         // Start the serial monitor
-    Serial1.begin(9600);        // 1200 Start the serial for transmitting the commands to the main MEGA on the mower
+    Serial1.begin(9600);          // 9600 Start the serial for transmitting the commands to the main MEGA on the mower
+    Serial2.begin(9600);          // Start the serial to communicate with the GPS NodeMCU board
     uint16_t ID = tft.readID();
     Serial.print(F("TFT ID = 0x"));
     Serial.println(ID, HEX);
     Serial.println(F("ReP_AL Mower Touchscreen"));
+    Serial.println(F("Please Wait....."));
     if (ID == 0xD3D3) ID = 0x9486; // write-only shield
     tft.begin(ID);
     //tft.setRotation(1); 
@@ -406,8 +425,14 @@ void setup(void){
     bool good = SD.begin(SD_CS);
     if (!good) {
         Serial.print(F("cannot start SD"));
-        while (1);
+      tft.setTextSize(3); 
+      tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
+      tft.setCursor(50, 100); 
+      tft.println("SD Card Missing ?");
+      delay(2000);
+      while (1);
     }
+
 
 tft.setTextSize(2); 
 tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
@@ -421,6 +446,7 @@ tft.println(" ");
 bmpDraw("logo.bmp", 75, 80);
 delay(5000);
 Get_Initial_Values();
+
 delay(1200);
 tft.fillScreen(BLACK);
 
@@ -500,11 +526,11 @@ if (Mower_Status_Value == 5) {
     // Actions to continously monitor while mowing
     while (Menu_Complete_Mowing == false) { 
         Clear_TFT_Loop_Info_Mowing();                 // Clear the last Loop Value
-        Receive_Mower_Running_Data();      
-        //Print_Battery_Graphic();     
+        Receive_Mower_Running_Data();                 // Large update when mower is stopped
+        if (Battery > 8 ) Print_Battery_Graphic();             
         Update_TFT_Loop_Info_Mowing();                // Print the new Loop value
         Update_TFT_Mower_Messages_Mowing();  
-
+        //Receive_Mower_Running_Data_Fly();             // Small Update
         if ((Mower_Status_Value != 5) && (Mower_Status_Value != 0))  Menu_Complete_Mowing = true;
      
         // Give time for the touch screen to sense the STOP button being pressed

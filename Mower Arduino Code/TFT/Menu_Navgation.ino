@@ -6,7 +6,7 @@
 
 void Print_Navigation_Menu() {
 
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Compass.bmp", 250, 150);      //Draw the mower picture
     delay(100); 
 
@@ -20,7 +20,7 @@ void Print_Navigation_Menu() {
     int Button_H = 60;                // height of the button
     int Button_Spacing = 5;
 
-    int Menu_Spacing = 20;            // Distance between the Menu Items (bottom of the last button to the label of the next item)
+    int Menu_Spacing = 10;            // Distance between the Menu Items (bottom of the last button to the label of the next item)
     int Txt_Size_Main_Menu = 2;
     int Column_Spacing = 200; 
     int Offset_Btn = 25;
@@ -38,30 +38,42 @@ void Print_Navigation_Menu() {
     //Menu Navigation
     //------------------------------------------------------------
     
-    // GPS
+    // GPS Settings
     int Button_X = Pos_X1;
     int Button_Y = Pos_Y1;
    
     GPS_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, BLACK, YELLOW, "GPS >", 2);
     GPS_btn.drawButton(false);
 
-    //Compass ON OFF
+
+    //GPS ON OFF
     
     Pos_X2 = Pos_X1;
     Pos_Y2 = Button_Y + (Button_H + Menu_Spacing);    
     
-    if (Compass_Activate == 1) Compass_ONOFF_btn.initButton(&tft, Pos_X2, Pos_Y2, Button_W, Button_H, WHITE, GREEN, BLACK, "Comp ON", 2);
-    if (Compass_Activate == 0) Compass_ONOFF_btn.initButton(&tft, Pos_X2, Pos_Y2, Button_W, Button_H, WHITE, RED, WHITE, "Comp OFF", 2);
+    if (GPS_Enabled == 1) GPS_Enabled_ONOFF_btn.initButton(&tft, Pos_X2, Pos_Y2, Button_W, Button_H, WHITE, GREEN, BLACK, "GPS ON", 2);
+    if (GPS_Enabled == 0) GPS_Enabled_ONOFF_btn.initButton(&tft, Pos_X2, Pos_Y2, Button_W, Button_H, WHITE, RED, WHITE, "GPS OFF", 2);
+    
+    GPS_Enabled_ONOFF_btn.drawButton(false);
+
+
+    //Compass ON OFF
+    
+    Pos_X3 = Pos_X1;
+    Pos_Y3 = Pos_Y2 + (Button_H + Menu_Spacing);    
+    
+    if (Compass_Activate == 1) Compass_ONOFF_btn.initButton(&tft, Pos_X3, Pos_Y3, Button_W, Button_H, WHITE, GREEN, BLACK, "Comp ON", 2);
+    if (Compass_Activate == 0) Compass_ONOFF_btn.initButton(&tft, Pos_X3, Pos_Y3, Button_W, Button_H, WHITE, RED, WHITE, "Comp OFF", 2);
     
     Compass_ONOFF_btn.drawButton(false);
 
     //HEading Hold ONOFF
     
-    Pos_X3 = Pos_X1;
-    Pos_Y3 = Pos_Y2 + (Button_H + Menu_Spacing);    
+    Pos_X4 = Pos_X1;
+    Pos_Y4 = Pos_Y3 + (Button_H + Menu_Spacing);    
     
-    if (Compass_Heading_Hold_Enabled == 1) HeadHold_btn.initButton(&tft, Pos_X3, Pos_Y3, Button_W, Button_H, RED, GREEN, BLACK, "HHold ON", 2);
-    if (Compass_Heading_Hold_Enabled == 0) HeadHold_btn.initButton(&tft, Pos_X3, Pos_Y3, Button_W, Button_H, WHITE, RED, WHITE, "HHold OFF", 2);
+    if (Compass_Heading_Hold_Enabled == 1) HeadHold_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, RED, GREEN, BLACK, "HHold ON", 2);
+    if (Compass_Heading_Hold_Enabled == 0) HeadHold_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, RED, WHITE, "HHold OFF", 2);
     HeadHold_btn.drawButton(false);
 
 
@@ -69,8 +81,8 @@ void Print_Navigation_Menu() {
      //Compass PID Value
     //------------------------------------------------------------
     
-    Pos_X4     = 250;
-    Pos_Y4     = 55;
+    Pos_X5     = 250;
+    Pos_Y5     = 55;
     Button_W = 60;                // width of the button
     Button_H = 40;                // height of the button
     Button_Spacing = 5;           // Space between the -ve and +ve buttons
@@ -78,19 +90,19 @@ void Print_Navigation_Menu() {
     // Label
     tft.setTextSize(1); 
     tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
-    tft.setCursor(Pos_X4, Pos_Y4);            // Text Coordinates X, Y
+    tft.setCursor(Pos_X5, Pos_Y5);            // Text Coordinates X, Y
     tft.print(F("Compass Power | P = "));  
 
     // Value Number
-    Pos_Y4  = Pos_Y4 + Offset_Btn;           // Y Position of the item
+    Pos_Y5  = Pos_Y5 + Offset_Btn;           // Y Position of the item
     tft.setTextSize(2); 
     tft.setTextColor(RED, BLACK);                 //Text Colour/ Background Colour
-    tft.setCursor(Pos_X4, Pos_Y4);            // Text Coordinates X, Y
+    tft.setCursor(Pos_X5, Pos_Y5);            // Text Coordinates X, Y
     tft.print(CPower);    
 
     // Buttons
-    Button_X = Pos_X4 + Menu_Btn_Space;
-    Button_Y = Pos_Y4 + (0.2 * Button_H);
+    Button_X = Pos_X5 + Menu_Btn_Space;
+    Button_Y = Pos_Y5 + (0.2 * Button_H);
     up4_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "+", 2);
     down4_btn.initButton(&tft, (Button_X + (Button_W + Button_Spacing)), Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "-", 2);
     up4_btn.drawButton(false);
@@ -108,22 +120,52 @@ void React_to_Button_Press_Navigation() {
 
     // Action if GPS is pressed
     if (GPS_btn.justPressed()) {
-          Menu_Complete_GPS = false;
+          Menu_Complete_GPS_Settings = false;
           tft.fillScreen(BLACK);
           Serial.println(F("GPS Screen Selected"));
-          Menu_Active = 10;
-          Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
+          Menu_Active = 15;
+          Send_Menu_Selected_To_GPS_NodeMCU();         // Tell the Mower MEGA which menu on the TFT is selected
           Serial.println("RX GPS Values");
-          delay(Receive_Values_Delay + 600);
-          //Receive_GPS_Data();        
-          //Print_GPS_Menu();
+          delay(100);
+          Receive_GPS_Data();        
+          Print_GPS_Menu_Settings();
           
           // Sense for the settings buttons until the saved button is pressed.
-          while (Menu_Complete_GPS == false) {
-            //Sense_Button_Press_GPS();
-            //React_to_Button_Press_GPS();
+          while (Menu_Complete_GPS_Settings == false) {
+            Sense_Button_Press_GPS_Settings();
+            React_to_Button_Press_GPS_Settings();
             }
     }
+
+
+    // Action if GPS ONOFF is pressed
+    if (GPS_Enabled_ONOFF_btn.justPressed()) {
+        
+        bool Changed = 0;
+        int Button_W = 160;
+        int Button_H = 60;
+        int Menu_Spacing = 20; 
+        int Column_Spacing = 200; 
+     
+        int Button_X = Pos_X2;
+        int Button_Y = Pos_Y2;  
+      
+        if ((GPS_Enabled == 1) && (Changed == 0))  {
+          GPS_Enabled  = 0;
+          Changed = 1;
+          GPS_Enabled_ONOFF_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "GPS OFF", 2);
+          GPS_Enabled_ONOFF_btn.drawButton(false);
+          }
+        
+        if ((GPS_Enabled  == 0) && (Changed == 0)) {
+          GPS_Enabled  = 1;
+          Changed = 1;
+          GPS_Enabled_ONOFF_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLACK, GREEN, BLACK, "GPS ON", 2);
+          GPS_Enabled_ONOFF_btn.drawButton(false);
+        }          
+
+    }
+
           
     // Action if Compass ONOFF is pressed
     if (Compass_ONOFF_btn.justPressed()) {
@@ -134,8 +176,8 @@ void React_to_Button_Press_Navigation() {
         int Menu_Spacing = 20; 
         int Column_Spacing = 200; 
      
-        int Button_X = Pos_X2;
-        int Button_Y = Pos_Y2;  
+        int Button_X = Pos_X3;
+        int Button_Y = Pos_Y3;  
       
         if ((Compass_Activate == 1) && (Changed == 0))  {
           Compass_Activate  = 0;
@@ -165,8 +207,8 @@ void React_to_Button_Press_Navigation() {
         int Menu_Spacing = 20; 
         int Column_Spacing = 200; 
         
-        int Button_X = Pos_X3;
-        int Button_Y = Pos_Y3;  
+        int Button_X = Pos_X4;
+        int Button_Y = Pos_Y4;  
       
         if ((Compass_Heading_Hold_Enabled == 1) && (Changed == 0))  {
           Compass_Heading_Hold_Enabled  = 0;
@@ -190,8 +232,8 @@ void React_to_Button_Press_Navigation() {
  if ((up4_btn.justPressed() )  || (down4_btn.justPressed())) {
         
         Value_All_Float = CPower;
-        Value_X_All = Pos_X4;
-        Value_Y_All = Pos_Y4;
+        Value_X_All = Pos_X5;
+        Value_Y_All = Pos_Y5;
     
     // Actions if UP is pressed
     if (up4_btn.justPressed()) {
@@ -224,11 +266,10 @@ void React_to_Button_Press_Navigation() {
  // Action if Done is pressed
  if (Done_Navigation_btn.justPressed()) {
          Menu_Complete_Navigation = true;
-         tft.fillScreen(BLACK);
-         Serial.println(F("Settings Screen Selected"));
          Menu_Active = 99;
          Send_Menu_Selected_To_Mower_MEGA();
          Transmit_Navigation_Menu_Values();         
+         tft.fillScreen(BLACK);
          Print_Settings_Menu();
          delay(200);
          }
@@ -272,6 +313,7 @@ void Sense_Button_Press_Navigation() {
     PCompass_btn.press            (down && PCompass_btn.contains(pixel_x, pixel_y));
     up4_btn.press                 (down && up4_btn.contains(pixel_x, pixel_y));
     down4_btn.press               (down && down4_btn.contains(pixel_x, pixel_y));
+    GPS_Enabled_ONOFF_btn.press   (down && GPS_Enabled_ONOFF_btn.contains(pixel_x, pixel_y));
     Done_Navigation_btn.press     (down && Done_Navigation_btn.contains(pixel_x, pixel_y));
 
     if (GPS_btn.justReleased())               GPS_btn.drawButton();
@@ -280,6 +322,7 @@ void Sense_Button_Press_Navigation() {
     if (PCompass_btn.justReleased())          PCompass_btn.drawButton();
     if (up4_btn.justReleased())               up4_btn.drawButton();
     if (down4_btn.justReleased())             down4_btn.drawButton();
+    if (GPS_Enabled_ONOFF_btn.justReleased()) GPS_Enabled_ONOFF_btn.drawButton();    
     if (Done_Navigation_btn.justReleased())   Done_Navigation_btn.drawButton();
 
 }

@@ -1,34 +1,30 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V8.0  BETA    04.05.2020
+Code V8.2  24.06.2020
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 Upload the TFT Code to the TFT MEGA Shield
-Upload the BMP Files to the TFT SD Card (in the route folder of the SD card)
+Upload the ESP32_Rover Code to the ESP32 Board (GPS)
+Upload the BMP Files to the TFT SD Card
 
 
-Features of 8.0 BETA
---------------------
+Features of 8.2
+---------------
 
-- TFT Display is added (TFT_Screen_Menu = 1 in Settings to turn on TFT function
-			Ensure LCD_Scree_Keypad_Menu = 0 )
-- Bumper Bar is activated in finding wire function
-- Angle Stop Capability added
-- Tip Over Safety Stop Capability added
-
-Experimental
-- Slow at wire function - Slows the mower when it gets to the wire to ensure the wire is detected in time.
+- TFT Display functions improved
+- BETA version of GPS navigation (lots to improve)
 
 
-Known Issues of 8.0 BETA
-------------------------
-- With TFT longer reaction time than normal to detect wire (see slow at wire function to help)
-- TFT Some menus get stuck when returning to the home screen
-- TFT Test scripts dont always start correctly
+Known Issues of 8.2
+-------------------
+- Mower can sometimes stop due the miss-communication between MEGA mower and TFT.
+- GPS communication between ESP32 and TFT is unstable
+- Missing funtions for ESP32 communication (select fence etc.) - to be updated in the next release.
+
 
 
 
@@ -37,6 +33,11 @@ NodeMCU Board URL:
 Use this URL to add the NodeMCU board 1.0 to the boards menu.
 
 http://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+ESP32 Board URL:
+------------------
+Use this URL to add the ESP32 DOITDev1.0 board to the boards menu.
+https://dl.espressif.com/dl/package_esp32_index.json, http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 
  

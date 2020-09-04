@@ -1,5 +1,5 @@
 void Print_Battery_Menu() {  
-
+    tft.fillScreen(BLACK);
      if (Draw_Pictures == 1)   bmpDraw("Battery.bmp", 270, 60);      //Draw the mower picture
     delay(100);    
     
@@ -20,6 +20,7 @@ void Print_Battery_Menu() {
 
 
     // Main Menu Title
+
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(10, 10);            // Text Coordinates X, Y

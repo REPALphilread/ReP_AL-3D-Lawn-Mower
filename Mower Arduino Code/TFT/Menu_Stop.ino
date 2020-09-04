@@ -20,7 +20,7 @@ void Print_Stop_Menu_Graphic() {
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(20, 10);            // Text Coordinates X, Y
-    tft.print(F("ReP_AL Lawn Mower V8.0"));  
+    tft.print(F("ReP_AL Lawn Mower V8.2"));  
     
     
     
@@ -78,7 +78,7 @@ void React_to_Button_Press_Stop() {
       Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
       Transmit_Mower_Start_Conditions_Quick_Start();
       Menu_Complete_Stop = true;
-      Mower_Status_Value = 1;
+      Mower_Status_Value = 5;
       Menu_Complete_Mowing = false;
       Print_Confirmation_Text_Mower_Restarting();     
       Print_Mowing_Menu_Graphic();      

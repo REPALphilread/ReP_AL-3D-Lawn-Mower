@@ -3,7 +3,7 @@
 //*********************************
 
 void Print_Tests_Menu() {
-
+   tft.fillScreen(BLACK);
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
 
     int Start_X = 90;

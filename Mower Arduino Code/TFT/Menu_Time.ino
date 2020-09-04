@@ -6,6 +6,7 @@ void Print_Time_Menu() {
 
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
 
+    tft.fillScreen(BLACK);
     int Start_X = 100;
     int Start_Y = 80;
     int Menu_Btn_Space = 100;          // Space between the adjacent buttons

@@ -618,7 +618,7 @@ void Receive_Data_From_TFT()  {
   while (Serial3.available() > 0) {
     
     char recieved = Serial3.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d') {   
         Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
         } 
         else if (recieved == '\a') {
@@ -631,6 +631,10 @@ void Receive_Data_From_TFT()  {
           } 
        else if (recieved == '\c') {
           CPower = Serial3_RX_Value.toInt();                               
+          Serial3_RX_Value = "";
+          }
+       else if (recieved == '\d') {
+          GPS_Enabled = Serial3_RX_Value.toInt();                               
           Serial3_RX_Value = "";
           }
     
@@ -647,6 +651,11 @@ void Receive_Data_From_TFT()  {
       CPower = CPower / 10;
       Serial.println(CPower);
 
+      Serial.print(F("GPS Enabled = "));
+      Serial.println(GPS_Enabled);
+
+      if (GPS_Enabled == 1) Setup_ADCMan();
+
       Serial.println(" ");
       // EEPROM
       EEPROM.write(19 , 1);
@@ -655,6 +664,9 @@ void Receive_Data_From_TFT()  {
       EEPROM.write(60 , Compass_Heading_Hold_Enabled);
       EEPROM.write(61, 1);
       EEPROM.write(62, (CPower*100)); 
+      EEPROM.write(99 , 1);
+      EEPROM.write(100, GPS_Enabled);
+      
       Serial.println(F("Saved to EEPROM"));
       Serial.println(F(" "));
 

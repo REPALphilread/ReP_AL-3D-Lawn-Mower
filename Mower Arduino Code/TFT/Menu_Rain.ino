@@ -1,5 +1,6 @@
 void Print_Rain_Sensor_Menu() {  
 
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Rain.bmp", 270, 60);      //Draw the mower picture
     delay(100);    
    

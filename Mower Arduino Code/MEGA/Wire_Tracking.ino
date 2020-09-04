@@ -171,8 +171,76 @@ void Track_Wire_From_Dock_to_Zone_X() {
       // Add Code here for CW tracking to the exit zone.
       // Use the code above for CCW tracking to the docking station
       // as a template.
-    
+if (MAG_Error > 0) {                                      // if MAG_Error > 0 then Turn left in CW tracking                      
+        // Turn LEFT
+        PWM_Right = 255;                                        // Set the right wheel to max PWMto turn left
+        PWM_Left = 255 - (MAG_Error * P);
+        if (PWM_Left > 255) PWM_Left = 255;                     // 
+        if (PWM_Left >= 0) {
+          SetPins_ToGoForwards();                               // keep the mower moving forward
+          lcd.setCursor(15, 0);
+          lcd.print(" ");
+          }
+
+        
+        if (PWM_Left < 0) {
+          PWM_Left = (-1 * PWM_Left) + 220;
+          if (PWM_Left > 255) PWM_Left = 255;
+          lcd.setCursor(15, 0);
+          lcd.print("*");
+          SetPins_ToTurnLeft();
+          delay(5);
+          }
+        
+        Motor_Action_Dynamic_PWM_Steering();                          // send the PWM values to the motor driver.
+        Serial.print(F(" Turn Left "));
+        Tracking_Turn_Right = 0;
+        Tracking_Turn_Left = Tracking_Turn_Left + 1;
+        if (Tracking_Turn_Left > Max_Tracking_Turn_Left) {
+          Motor_Action_Stop_Motors();
+          Tracking_Restart_Blocked_Path();
+        }
+      }
+      if (MAG_Error <= 0) {                                     // Turn the Mower to the right to get back on the wire.
+        //Turn Right
+        PWM_Left = 255;
+        PWM_Right = 255 + (MAG_Error * P);          // + as mag_error is negative to adjust PWM
+        if (PWM_Right > 255) PWM_Right = 255;
+        if (PWM_Right >= 0) {
+          SetPins_ToGoForwards();
+          lcd.setCursor(15, 0);
+          lcd.print(" ");
+          }
+
+
+        if (PWM_Right < 0) {
+          PWM_Right = (-1 * PWM_Right) + 220 ;
+          if (PWM_Right > 255) PWM_Right = 255;
+          if (PWM_Right >= 0) SetPins_ToTurnRight();
+          lcd.setCursor(15, 0);
+          lcd.print("*");
+        }
+
+        Motor_Action_Dynamic_PWM_Steering();
+        Serial.print(F(" Turn Right "));
+        Tracking_Turn_Left = 0;
+        Tracking_Turn_Right = Tracking_Turn_Right + 1;
+        if (Tracking_Turn_Right > Max_Tracking_Turn_Right) {
+          Motor_Action_Stop_Motors();
+          Tracking_Restart_Blocked_Path();
+          } 
     }
+      Serial.print(F(" : MAG_Error="));
+      Serial.println(MAG_Error);
+      Dock_Cycles = Dock_Cycles + 1;
+      Loop_Cycle_Mowing = I;
+      if (Dock_Cycles > 10) {
+        Tracking_Wire = Tracking_Wire + 1;                            // Makes the wire tracking LED in the app blink.
+        if (Tracking_Wire > 1) Tracking_Wire = 0;
+        if (WIFI_Enabled == 1) Get_WIFI_Commands();
+        Dock_Cycles = 0;
+      }
+  }
   lcd.setCursor(10,1);
   lcd.print(I);
   }  

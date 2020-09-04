@@ -416,6 +416,14 @@ Serial.println("*** EEPROM Settings ***");
   }
 
 
+  int GPS_Enabled_EEPROM = EEPROM.read(99);
+  if (GPS_Enabled_EEPROM == 1) {
+    GPS_Enabled = EEPROM.read(100);  
+    Serial.print(F("GPS Enabled from EEPROM : "));
+    if (GPS_Enabled == 0) Serial.println(F("Disabled"));
+    if (GPS_Enabled == 1) Serial.println(F("Enabled"));
+  }
+
 Serial.println(F("*************************"));
  delay(500);
 
@@ -471,6 +479,7 @@ void Clear_EERPOM() {
   EEPROM.write(94,0);     // Wheel Slow Speed LH
   EEPROM.write(96,0);     // Wheel Slow Speed RH
   EEPROM.write(98,0);     // Slow MAG Point
+  EEPROM.write(100,0);     // GPS Enabled
   Serial.println(F("All EEPROM Settings Cleared"));
   delay(1000);
   

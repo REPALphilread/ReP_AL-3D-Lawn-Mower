@@ -14,12 +14,14 @@ SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "Blynk Token Number";
+
+//char auth[] = "Blynk Token Number";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "WIFI NAME";
-char pass[] = "WIFI Password";
+
+//char ssid[] = "WIFI NAME";
+//char pass[] = "WIFI Password";
 
 int buttonState = 0;
 char  Version[16];

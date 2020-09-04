@@ -308,12 +308,18 @@ void Transmit_Navigation_Menu_Values() {
       Serial1.println("\c");
       delay(200);  
 
+      Serial1.print(GPS_Enabled);
+      Serial1.println("\d");
+      delay(200);  
+
       Serial.print(F("Compass Activated = "));
       Serial.println(Compass_Activate);
       Serial.print(F("Heading Hold Enebaled = "));
       Serial.println(Compass_Heading_Hold_Enabled);          
       Serial.print(F("Compass Power = "));
       Serial.println(CPower);    
+      Serial.print(F("GPS Enabled = "));
+      Serial.println(GPS_Enabled);   
       }
 
 void Transmit_Save_Alarm1_Values() {
@@ -569,5 +575,27 @@ void Transmit_Saved_Tip_Sensor_Values() {
       Serial.println(Angle_Sensor_Enabled);
       Serial.print(F("Tip Over Sensor = "));
       Serial.println(Tip_Over_Sensor_Enabled);
+      Serial.println(F(" "));
+      }
+
+
+void Transmit_Saved_GPS_Values() {
+      Serial.println(F("TX GPS Settings to NodeMCU"));
+      
+      Serial2.print(Fence);
+      Serial2.println("\a");
+      delay(1000); 
+      Serial2.flush(); 
+
+      Serial2.print(Min_Sats);
+      Serial2.println("\b");
+      delay(1000); 
+      Serial2.flush();
+
+     
+      Serial.print(F("Fence = "));
+      Serial.println(Fence);
+      Serial.print(F("Min Sats = "));
+      Serial.println(Min_Sats);
       Serial.println(F(" "));
       }

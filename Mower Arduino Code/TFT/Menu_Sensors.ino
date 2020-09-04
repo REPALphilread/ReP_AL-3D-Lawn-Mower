@@ -5,7 +5,7 @@
 
 
 void Print_Sensors_Menu() {
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Sensors.bmp", 70, 20);      //Draw the mower picture
     delay(100); 
 
@@ -38,7 +38,7 @@ void Print_Sensors_Menu() {
     int Button_X = Start_X;
     int Button_Y = Start_Y;
    
-    Sonar_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, BLACK, YELLOW, "Sonar >", 2);
+    Sonar_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, YELLOW, BLACK, "Sonar >", 2);
     Sonar_btn.drawButton(false);
     
     //Battery
@@ -46,7 +46,7 @@ void Print_Sensors_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Battery_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "Battery >", 2);
+    Battery_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, WHITE, BLACK, "Battery >", 2);
     Battery_btn.drawButton(false);
 
     //Wire
@@ -64,7 +64,7 @@ void Print_Sensors_Menu() {
     Button_X = Start_X + (Button_W + Column_Spacing) ;
     Button_Y = Start_Y;    
     
-    Rain_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "Rain >", 2);
+    Rain_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, RED, WHITE, "Rain >", 2);
     Rain_btn.drawButton(false);
 
     //WIFI

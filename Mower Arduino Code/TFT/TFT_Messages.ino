@@ -168,7 +168,7 @@ void Update_TFT_Mower_Messages_Mowing() {
 
      if (Show_Update == 1) {
          tft.setTextSize(3);
-         tft.setCursor(30, 280);
+         tft.setCursor(20, 280);
          tft.print("W:");
          tft.print(Wire_Status);
          tft.print("  S:");
@@ -179,7 +179,30 @@ void Update_TFT_Mower_Messages_Mowing() {
          tft.print(Compass_Steering_Status);
          tft.print("  T:");
          tft.print(Tilt_Angle_Sensed);
+
+     if (GPS_Enabled == 1) {
+         if (GPS_In_Out_TX == 1) {
+          tft.setCursor(330, 50);
+          tft.setTextColor(BLACK, BLACK);
+          tft.print("GPS:OUT");
+          tft.setCursor(330, 50);
+          tft.setTextColor(GREEN, BLACK);
+          tft.print("GPS:IN");
+          }
+         
+         if (GPS_In_Out_TX == 0) {
+          tft.setCursor(330, 50);
+          tft.setTextColor(GREEN, BLACK);
+          tft.print("GPS:OUT");   
+          }
+         
+         tft.setCursor(330, 80);
+         tft.setTextColor(GREEN, BLACK);
+         tft.print("FIX:");
+         if (GPS_Lock_OK_TX == 1) tft.print("RTK");
+         if (GPS_Lock_OK_TX == 0) tft.print("FIX");
          }
+     }
      
      tft.setTextSize(8);
     
@@ -195,18 +218,20 @@ void Update_TFT_Mower_Messages_Mowing() {
        tft.print("SONAR");
        Skip_Message = 1;
        }
-
-     if ((Wire_Status == 0) && (Skip_Message == 0)) {
-       tft.setCursor(180,100); 
-       tft.setTextColor(BLACK, BLACK);      //Text Colour/ Background Colour 
-       tft.print("WIRE");       
-       }
-     if ((Wire_Status == 1)  && (Skip_Message == 0)){
-       tft.setCursor(180,100); 
-       tft.setTextColor(YELLOW, BLACK); 
-       tft.print("WIRE");
-       Skip_Message = 1;
-       }
+    
+     if (Perimeter_Wire_Enabled == 1) {
+         if ((Wire_Status == 0) && (Skip_Message == 0)) {
+           tft.setCursor(180,100); 
+           tft.setTextColor(BLACK, BLACK);      //Text Colour/ Background Colour 
+           tft.print("WIRE");       
+           }
+         if ((Wire_Status == 1)  && (Skip_Message == 0)){
+           tft.setCursor(180,100); 
+           tft.setTextColor(YELLOW, BLACK); 
+           tft.print("WIRE");
+           Skip_Message = 1;
+           }
+        }
 
      if ((Bumper_Status == 0) && (Skip_Message == 0)) {
        tft.setCursor(180,100); 
@@ -231,6 +256,33 @@ void Update_TFT_Mower_Messages_Mowing() {
        tft.print("TILT");
        Skip_Message = 1;
        }
+
+     if (GPS_Enabled == 1) {
+         if ((GPS_In_Out_TX == 1)  && (Skip_Message == 0)) {
+           tft.setCursor(160,100); 
+           tft.setTextColor(BLACK, BLACK); 
+           tft.print("GPS");
+           Skip_Message = 1;
+           }
+         if ((GPS_In_Out_TX == 0)  && (Skip_Message == 0)) {
+           tft.setCursor(160,100); 
+           tft.setTextColor(YELLOW, BLACK); 
+           tft.print("GPS");
+           Skip_Message = 1;
+           }
+         if ((GPS_Lock_OK_TX == 0)  && (Skip_Message == 0)) {
+           tft.setCursor(180,100); 
+           tft.setTextColor(YELLOW, BLACK); 
+           tft.print("FIX");
+           Skip_Message = 1;
+           }
+         if ((GPS_Lock_OK_TX == 1)  && (Skip_Message == 0)) {
+           tft.setCursor(180,100); 
+           tft.setTextColor(BLACK, BLACK); 
+           tft.print("FIX");
+           Skip_Message = 1;
+           }
+     }
 
     int left_arrow = 180;
     int right_arrow = 380;
@@ -325,7 +377,31 @@ void Print_Mower_Status() {
            tft.setTextColor(BLACK, BLACK); 
            tft.print("   - Charging");
            }
+       if (GPS_Enabled == 0) {
+           tft.setTextSize(2); 
+           tft.setCursor(170,50); 
+           tft.setTextColor(BLACK, BLACK); 
+           tft.print("GPS:");
+           }    
+       if (GPS_Enabled == 1) {
+           tft.setTextSize(2); 
+           tft.setCursor(170,50); 
+           tft.setTextColor(GREEN, BLACK); 
+           tft.print("GPS:");
+           }          
+       if (GPS_Enabled == 1) {
+             if (GPS_Lock_OK_TX == 0) {
+                 tft.print("    ");
+                 }    
+             if (GPS_Lock_OK_TX == 5) {
+                 tft.print("RTK");
+                 }     
+             if (GPS_Lock_OK_TX == 2) {
+                 tft.print("   ");
+                 }  
+             }
        }
+       
 
 void Calculate_TFT_Time() {
 

@@ -5,7 +5,7 @@
 void Print_Exit_Dock_Menu() {
 
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
-
+    tft.fillScreen(BLACK);
     int Start_X = 70;
     int Start_Y = 80;
     int Menu_Btn_Space = 30;          // Space between the buttons
@@ -21,7 +21,7 @@ void Print_Exit_Dock_Menu() {
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(20, 10);            // Text Coordinates X, Y
-    tft.print(F("ReP_AL Lawn Mower V8.0"));  
+    tft.print(F("ReP_AL Lawn Mower V8.2"));  
     
 
     int Button_X = Start_X;
@@ -138,7 +138,8 @@ void React_to_Button_Press_Exit_Dock() {
          Menu_Active = 1;
          Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
          delay(200);
-         if ((Mower_Status_Value == 1) || (Mower_Status_Value == 2)) {              // 1 = Docked
+         if ((Mower_Status_Value == 1) || (Mower_Status_Value == 2) || (Mower_Status_Value == 0)) {              // 1 = Docked
+            tft.fillScreen(BLACK);
             if (Draw_Pictures == 1) bmpDraw("mower1.bmp", 150, 90);      //Draw the mower picture
             delay(100);
             Print_Main_Menu_Graphic();

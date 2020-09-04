@@ -451,7 +451,7 @@ void Receive_Navigation_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d') {   
         Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
         } 
         else if (recieved == '\a') {
@@ -464,6 +464,10 @@ void Receive_Navigation_Data() {
           } 
        else if (recieved == '\c') {
           CPower = Serial1_RX_Value.toInt();                                
+          Serial1_RX_Value = "";
+          }
+       else if (recieved == '\d') {
+          GPS_Enabled = Serial1_RX_Value.toInt();                                
           Serial1_RX_Value = "";
           }
     
@@ -479,6 +483,9 @@ void Receive_Navigation_Data() {
       Serial.print(F("Compass Power = "));
       CPower = CPower / 10;
       Serial.println(CPower);
+
+      Serial.print(F("GPS Enabled = "));
+      Serial.println(GPS_Enabled);
 
       Serial.println(F(" "));
 }
@@ -672,7 +679,9 @@ void Receive_Start_Up_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' 
+    && recieved != '\d' && recieved != '\e' && recieved != '\f'
+    && recieved != '\g') {   
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
       else if (recieved == '\a') {
@@ -695,8 +704,18 @@ void Receive_Start_Up_Data() {
       Time_Minute = Serial1_RX_Value.toInt();                           
       Serial1_RX_Value = "";
       } 
+      else if (recieved == '\f') {
+      GPS_Enabled = Serial1_RX_Value.toInt();                           
+      Serial1_RX_Value = "";
+      } 
+      else if (recieved == '\g') {
+      Perimeter_Wire_Enabled = Serial1_RX_Value.toInt();                           
+      Serial1_RX_Value = "";
+      } 
     else Serial.print(F("No Data Received|"));
   }
+      tft.setCursor(0, 100); 
+      tft.setTextSize(2); 
       tft.print(F("Alarm 1:"));
       tft.println(Alarm_1_ON);
       tft.print(F("Alarm 2:"));
@@ -707,7 +726,32 @@ void Receive_Start_Up_Data() {
       tft.print(Time_Hour);
       tft.print(F(":"));
       if (Time_Minute < 10) tft.print("0");
-      tft.print(Time_Minute);       
+      tft.println(Time_Minute);     
+      tft.print(F("GPS:"));
+      if (GPS_Enabled == 1) tft.println("ON");   
+      if (GPS_Enabled == 0) tft.println("OFF"); 
+      tft.print(F("WIRE:"));
+      if (Perimeter_Wire_Enabled == 1) tft.println("ON");   
+      if (Perimeter_Wire_Enabled == 0) tft.println("OFF"); 
+
+      Serial.print(F("Alarm 1 ON = "));
+      Serial.println(Alarm_1_ON);
+      Serial.print(F("Alarm 2 ON = "));
+      Serial.println(Alarm_2_ON);
+      Serial.print(F("Alarm 3 ON = "));
+      Serial.println(Alarm_3_ON);
+      Serial.print(F("|Time:"));
+      Serial.print(Time_Hour);
+      Serial.print(F(":"));
+      if (Time_Minute < 10) Serial.print("0");
+      Serial.println(Time_Minute);
+      Serial.print(F("GPS:"));
+      if (GPS_Enabled == 1) Serial.println("ON");   
+      if (GPS_Enabled == 0) Serial.println("OFF"); 
+      Serial.print(F("WIRE:"));
+      if (Perimeter_Wire_Enabled == 1) Serial.println("ON");   
+      if (Perimeter_Wire_Enabled == 0) Serial.println("OFF"); 
+
 }
 
 
@@ -1031,8 +1075,9 @@ void Get_Initial_Values() {
     Menu_Active = 55;
     Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
     Serial.println("Recieving Start Up Values from Mower MEGA");
-    delay(Receive_Values_Delay + 1000);
+    delay(Receive_Values_Delay + 1200);
     Receive_Start_Up_Data();
+    //JSON_Get_Initial_Values();
     delay(1000);
     Menu_Active = 1;
     Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
@@ -1115,15 +1160,45 @@ void Receive_Mower_Running_Volt_Data() {
 }
 
 
-void Receive_Mower_Running_Data() {
+void Receive_Mower_Running_Data_Fly() {
 
   String Serial1_RX_Value  = "";                                            
 
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' && recieved != '\f' 
-          && recieved != '\g'  && recieved != '\h') { 
+    if ( recieved != '\g' && recieved != '\h') { 
+              
+      Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\g') {
+      Loops = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\h') {
+      Compass_Steering_Status = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+    }
+        Serial.print(F("|Lo:"));
+        Serial.print(Loops);
+        Serial.print(F("|CS:"));
+        Serial.print(Compass_Steering_Status);
+}
+
+
+
+
+void Receive_Mower_Running_Data() {
+
+  int VoltsTX;
+  String Serial1_RX_Value  = "";                                            
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' 
+    && recieved != '\f' && recieved != '\g' && recieved != '\h' && recieved != '\i' ) { 
               
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
@@ -1140,23 +1215,27 @@ void Receive_Mower_Running_Data() {
       Serial1_RX_Value = ""; // changed to string
       } 
       else if (recieved == '\d') {
-      Loops = Serial1_RX_Value.toInt();                                 
-      Serial1_RX_Value = ""; // changed to string
-      } 
-      else if (recieved == '\e') {
-      Compass_Steering_Status = Serial1_RX_Value.toInt();                                 
-      Serial1_RX_Value = ""; // changed to string
-      } 
-      else if (recieved == '\f') {
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\g') {
+      else if (recieved == '\e') {
       Mower_Error_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\h') {
+      else if (recieved == '\f') {
       Tilt_Angle_Sensed = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\g') {
+      VoltsTX = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\h') {
+      GPS_In_Out_TX = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\i') {
+      GPS_Lock_OK_TX = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
     else Serial.print(F("No Data Received|"));
@@ -1169,14 +1248,22 @@ void Receive_Mower_Running_Data() {
         Serial.print(Wire_Status);    
         Serial.print(F("|BU:"));
         Serial.print(Bumper_Status);               
-        Serial.print(F("|Lo:"));
-        Serial.print(Loops);
-        Serial.print(F("|CS:"));
-        Serial.print(Compass_Steering_Status);
         Serial.print(F("|MS:"));
         Serial.print(Mower_Status_Value);
         Serial.print(F("|Tip:"));
         Serial.print(Tilt_Angle_Sensed);
+        Battery = VoltsTX;
+        Battery = Battery / 100;
+        Serial.print(F("VoltsRX = "));
+        if (VoltsTX > 0) Serial.print(Battery);
+        else Serial.print("XX.XX");
+        Serial.print(F("|GPS:"));
+        if (GPS_In_Out_TX == 1) Serial.print("INSIDE");
+        if (GPS_In_Out_TX == 0) Serial.print("OUTSIDE");        
+        Serial.print(F("|GPS:"));
+        if (GPS_Lock_OK_TX == 1) Serial.print("RTKFIX");
+        if (GPS_Lock_OK_TX == 0) Serial.print("No Lock");    
+
 }
 
 
@@ -1190,7 +1277,7 @@ void Receive_Docked_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d') { 
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e') { 
       
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
@@ -1208,6 +1295,10 @@ void Receive_Docked_Data() {
       }    
       else if (recieved == '\d') {
       Charging = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      }     
+      else if (recieved == '\e') {
+      GPS_Lock_OK_TX = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       }  
     else Serial.print(F("No Data Received|"));
@@ -1233,6 +1324,13 @@ void Receive_Docked_Data() {
       if (Mower_Status_Value == 4) Serial.print("Err ");
       if (Mower_Status_Value == 5) Serial.print("Run ");
       if (Mower_Status_Value == 9) Serial.print("Exit");
+      Serial.print(F("|"));
+      Serial.print(F("GPS:"));
+      Serial.print(GPS_Lock_OK_TX);
+      if (GPS_Lock_OK_TX == 5) Serial.print("RTKFIX");
+      if (GPS_Lock_OK_TX == 2) Serial.print("No Lock");
+      if (GPS_Lock_OK_TX == 0) Serial.print(" ");    
+      
       
 }
 
@@ -1264,4 +1362,51 @@ void Receive_Error_Data() {
       Serial.print(F("  Mower Error = "));
       Serial.println(Mower_Error_Value);
 
+}
+
+
+
+
+
+void Receive_GPS_Data() {
+
+String Serial2_RX_Value  = "";                                              
+  while (Serial2.available() > 0) {
+  
+    char recieved = Serial2.read();
+    if ( recieved != '\h') {   
+      Serial2_RX_Value = Serial2_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\h') {
+      //Fence = Serial2.parseInt();  
+      Fence = Serial2_RX_Value.toInt();                                 
+      Serial2_RX_Value = ""; // changed to string
+      }        
+      
+   }
+
+  delay(1000);
+  
+  Serial2_RX_Value  = "";                                              
+  while (Serial2.available() > 0) {
+  
+    char recieved = Serial2.read();
+    if ( recieved != '\k') {   
+      Serial2_RX_Value = Serial2_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\k') {
+      //Min_Sats = Serial2.parseInt();  
+      Min_Sats = Serial2_RX_Value.toInt();                                 
+      Serial2_RX_Value = ""; // changed to string
+      }        
+      
+   }
+
+    Serial.println("");
+    Serial.print("TX Check: ");
+    Serial.println(Command_Check);
+    Serial.print("Fence: ");
+    Serial.println(Fence);
+    Serial.print("Min Sats: ");
+    Serial.println(Min_Sats);
 }

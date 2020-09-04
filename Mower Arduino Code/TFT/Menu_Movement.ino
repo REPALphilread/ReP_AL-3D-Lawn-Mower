@@ -1,7 +1,7 @@
 void Print_Movement_Menu() {  
 
      // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Movement.bmp", 155, 60);      //Draw the mower picture
     delay(100); 
 

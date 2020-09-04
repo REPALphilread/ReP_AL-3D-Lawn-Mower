@@ -404,7 +404,15 @@ void Manouver_Find_Wire_Track()  {
 
 void Manouver_Turn_Around() {
     Motor_Action_Stop_Motors(); 
+    Serial.println(F(""));
+    if (Outside_Wire == 1)     Serial.println(F("Mower is Outside the Wire"));
+    if (GPS_Inside_Fence == 0) Serial.println(F("Mower is Outside the GPS Fence"));
+    Serial.println(F("Mower is Turning"));
+    if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
+    Serial.println(F(""));
     delay(500);
+
+    // Back up the mower
     SetPins_ToGoBackwards();
     Motor_Action_Go_Full_Speed();
     delay(Mower_Reverse_Delay);
@@ -419,10 +427,8 @@ void Manouver_Turn_Around() {
     // Randomly turns the mower to a new heading depending on the delay Min or Delay Max from the settings
     Motor_Action_Turn_Speed();
     delay (random(Mower_Turn_Delay_Min, Mower_Turn_Delay_Max));
-    Serial.println("");
-    Serial.println("Mower Turned Around");
-    Serial.println("");
 
+    // If Spiral Mode is activated
     // Advances the type of movement in Pattern Spiral Mode from : 1 RH Spiral | 2 LH Spiral | 3 Straight line.
     if (Pattern_Mow == 2) {
     Spiral_Mow = (Spiral_Mow + 1);
@@ -431,29 +437,94 @@ void Manouver_Turn_Around() {
     //Spiral (random(1,3));  Activate this to make a true random pattern.
 
     Motor_Action_Stop_Motors();
-    TestforBoundaryWire();                                                   
-    Check_Wire_In_Out();
-    delay(200);
-    TestforBoundaryWire();                                                   
-    Check_Wire_In_Out();
-    Loop_Cycle_Mowing = 1;
-    Sonar_Hit = 0;  
+    
+    // If the perimeter wire is enabled
+    // Check that the mower has turned and moved back inside the boundary wire.
+    if (Perimeter_Wire_Enabled == 1) {
+        Check_Wire_In_Out();
+    
+        if (Outside_Wire == 1) { 
+          Serial.println(F("Outside Wire 1"));
+          TestforBoundaryWire();  
+          delay(100);
+          UpdateWireSensor();
+          Check_Wire_In_Out();
+              if (Outside_Wire == 1) { 
+                Serial.println(F("Outside Wire 2"));
+                SetPins_ToGoBackwards();
+                Motor_Action_Go_Full_Speed();
+                delay(300);
+                Motor_Action_Stop_Motors();
+                delay(1000);
+                TestforBoundaryWire();  
+                delay(100);
+                UpdateWireSensor();
+                Check_Wire_In_Out();
+                if (Outside_Wire == 1) { 
+                      Serial.println(F("Outside Wire = 3 - Must be really outside...."));
+                      SetPins_ToGoForwards();
+                      Motor_Action_Go_Full_Speed();
+                      delay(300);
+                      Motor_Action_Stop_Motors();
+                      delay(2000);
+                      TestforBoundaryWire();  
+                      delay(100);
+                      UpdateWireSensor();
+                      Check_Wire_In_Out();
+                      }
+                }
+    
+         }
+        }
+
+    // If the GPS Fencing is enabled
+    // Check that the mower has turned and moved back inside the GPS Fence.
+    if (GPS_Enabled == 1) {
+        Check_GPS_In_Out();       
+    
+        if (GPS_Inside_Fence == 0) {                                  // Mower is still outside the fence
+          Serial.println(F("Outside GPS Fence 1"));
+          delay(100);
+          Check_GPS_In_Out();                                         // Check the GPS signal again
+              if (GPS_Inside_Fence == 0) { 
+                Serial.println(F("Outside GPS Fence 2"));
+                delay(1000);
+                Check_GPS_In_Out(); 
+                if (GPS_Inside_Fence == 0) { 
+                      Serial.println(F("Outside GPS Fence = 3 - Must be really outside...."));
+                      }
+                }
+    
+         }
+        }
+
+    
+    Bumper = 0;                                                           // Reset Bumper
+    Loop_Cycle_Mowing = 1;                                                // Rest Loop Cycle
+    Sonar_Hit = 0;                                                        // Reset Sonar
     distance1 = 999;
     distance2 = 999;
     distance3 = 999;
+    Sonar_Status = 0;
     Sonar_Hit_1_Total = 0;
     Sonar_Hit_2_Total = 0;
     Sonar_Hit_3_Total = 0;
-    Compass_Heading_Locked = 0;
-    lcd.clear();
+    Compass_Heading_Locked = 0;                                           // Reset Compass Heading Lock
+    if (LCD_Screen_Keypad_Menu == 1) lcd.clear();
+    if (TFT_Screen_Menu == 1)        Send_Mower_Running_Data();           // Update TFT Screen
+    Serial.println(F(""));
+    Serial.println(F("Mower Turned Around"));
+    Serial.println(F(""));
 }
 
   
 
 void Manouver_Turn_Around_Sonar() {
   Sonar_Status = 1;
-  Send_Mower_Running_Data();  
+  Serial.println(F("Mower is Turning - Sonar"));
   Motor_Action_Stop_Motors(); 
+  
+  if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
   delay(500);
   SetPins_ToGoBackwards();
   Motor_Action_Go_Full_Speed();
@@ -481,7 +552,9 @@ void Manouver_Turn_Around_Sonar() {
   Sonar_Hit = 0;
   Loop_Cycle_Mowing = 0;
   Sonar_Status = 0;
-  Send_Mower_Running_Data();  
+  if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen 
+  Serial.println(F("Mower Turned Around"));
+  Serial.println(F(""));
   }
 
 

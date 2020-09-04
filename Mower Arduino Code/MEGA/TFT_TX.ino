@@ -333,12 +333,19 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(200);  
 
+
+      Serial3.print(GPS_Enabled);
+      Serial3.println("\d");
+      delay(200);  
+
       Serial.print(F("Compass Activated = "));
       Serial.println(Compass_Activate);
       Serial.print(F("Heading Hold Enebaled = "));
       Serial.println(Compass_Heading_Hold_Enabled);          
       Serial.print(F("Compass Power = "));
       Serial.println(CPower);    
+      Serial.print(F("GPS Enabled= "));
+      Serial.println(GPS_Enabled);   
       }
 
 // Alarm 1
@@ -583,7 +590,13 @@ void Send_Data_To_TFT() {
       Serial3.println("\e");
       delay(300);
 
+      Serial3.print(GPS_Enabled);
+      Serial3.println("\f");
+      delay(300);
  
+      Serial3.print(Perimeter_Wire_Enabled);
+      Serial3.println("\g");
+      delay(300);
 
       Serial.print(F("Alarm 1 ON = "));
       Serial.println(Alarm_1_ON);
@@ -595,7 +608,14 @@ void Send_Data_To_TFT() {
       Serial.print(t.hr);
       Serial.print(F(":"));
       if (t.min < 10) Serial.print("0");
-      Serial.print(t.min);
+      Serial.println(t.min);
+      Serial.print(F("GPS:"));
+      if (GPS_Enabled == 1) Serial.println("ON");   
+      if (GPS_Enabled == 0) Serial.println("OFF"); 
+      Serial.print(F("WIRE:"));
+      if (Perimeter_Wire_Enabled == 1) Serial.println("ON");   
+      if (Perimeter_Wire_Enabled == 0) Serial.println("OFF"); 
+
 }
 
 
@@ -892,62 +912,76 @@ void Send_Mower_Error_Data() {
 
 
 void Send_Mower_Running_Data() {
-        int Delay_running = 80;
+        int Delay_running = 200;
 
-        Serial.print("|TFT_Data");
+        Serial.println("|TFT_Data Running Turn Point");
        
         Serial3.print(Sonar_Status);
-        Serial3.println("\a");        
+        Serial3.println(F("\a"));        
         delay(Delay_running);
-        Serial.print("|S:");          
-        Serial.print(Sonar_Status);
     
-        Serial3.print(Wire_Status);
-        Serial3.println("\b");
-        delay(Delay_running); 
-        Serial.print("|W:");
-        Serial.print(Wire_Status);          
+        Serial3.print(Outside_Wire);
+        Serial3.println(F("\b"));
+        delay(Delay_running);        
         
         Serial3.print(Bumper_Status);
         Serial3.println("\c");
         delay(Delay_running);    
-        Serial.print(" |B:");
-        Serial.print(Bumper_Status); 
-
-
-        Serial3.print(Loop_Cycle_Mowing);
-        Serial3.println("\d");
-        delay(Delay_running);    
-        Serial.print("|L:");
-        Serial.print(Loop_Cycle_Mowing);
-
-
-        Serial3.print(Compass_Steering_Status);
-        Serial3.println("\e");
-        delay(Delay_running);  
-        Serial.print("|CS:");
-        Serial.print(Compass_Steering_Status);   
 
         Serial3.print(Mower_Status_Value);
-        Serial3.println("\f");
+        Serial3.println("\d");
         delay(Delay_running);    
-        Serial.print("|MS:");
-        Serial.print(Mower_Status_Value);  
 
         Serial3.print(Mower_Error_Value);      
-        Serial3.println("\g");
+        Serial3.println("\e");
         delay(Delay_running); 
-        Serial.print("|ME:");
-        Serial.print(Mower_Error_Value); 
   
         Serial3.print(Tilt_Angle_Sensed);      
-        Serial3.println("\h");
+        Serial3.println("\f");
         delay(Delay_running); 
-        Serial.print("|TIp:");
-        Serial.print(Tilt_Angle_Sensed);               
-       
 
-}
+        // Reformet Volts value for transmission
+        float VoltsTX1 = Volts * 100;
+        VoltsTX = VoltsTX1;
+        
+        Serial3.print(VoltsTX);      
+        Serial3.println("\g");
+        delay(Delay_running);
+
+        Serial3.print(GPS_Inside_Fence);      
+        Serial3.println("\h");
+        delay(Delay_running);
+
+        Serial3.print(GPS_Lock_OK);      
+        Serial3.println("\i");
+        delay(Delay_running);        
+
+        Calculate_TFT_Mower_Status_Value(); 
+
+
+        Serial.print(F("|S:"));          
+        Serial.print(Sonar_Status);
+        Serial.print(F("|W:"));
+        Serial.print(Outside_Wire);  
+        Serial.print(F("|B:"));
+        Serial.print(Bumper_Status); 
+        Serial.print(F("|MS:"));
+        Serial.print(Mower_Status_Value);  
+        Serial.print(F("|ME:"));
+        Serial.print(Mower_Error_Value); 
+        Serial.print(F("|Tip:"));
+        Serial.print(Tilt_Angle_Sensed);     
+        Serial.print(F("|VTX:"));
+        Serial.println(VoltsTX);          
+        Serial.print(F("|GPS Inside Fence:"));
+        if (GPS_Inside_Fence == 0) Serial.println("OUT");           
+        if (GPS_Inside_Fence == 1) Serial.println("IN");
+        Serial.print(F("|GPS Lock:"));
+        if (GPS_Lock_OK == 0) Serial.println("No lock");           
+        if (GPS_Lock_OK == 1) Serial.println("RTK FIX");
+        }
+
+
 
 
 
@@ -975,6 +1009,12 @@ void Send_Mower_Docked_Data()  {
         Serial3.println("\d");
         delay(300); 
 
+        int GPS_Lock_OK_Docked_TX;
+        if (GPS_Lock_OK == 0) GPS_Lock_OK_Docked_TX = 2;
+        if (GPS_Lock_OK == 1) GPS_Lock_OK_Docked_TX = 5;
+        Serial3.print(GPS_Lock_OK_Docked_TX);      
+        Serial3.println("\e");
+        delay(300); 
 
         Serial.print(F("|VTX:"));
         Serial.print(VoltsTX);
@@ -984,6 +1024,8 @@ void Send_Mower_Docked_Data()  {
         Serial.print(Mower_Error_Value);                 
         Serial.print(F("|C:"));
         Serial.print(Charging); 
+        Serial.print(F("|LOCK:"));
+        Serial.print(GPS_Lock_OK);         
         
         } 
 

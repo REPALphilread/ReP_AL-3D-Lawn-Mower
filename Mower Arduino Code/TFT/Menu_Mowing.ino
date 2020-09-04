@@ -2,7 +2,8 @@
 //*********************************
 
 void Print_Mowing_Menu_Graphic() {
-
+    
+    tft.fillScreen(BLACK);
     //bmpDraw("mower4.bmp", 150, 60);      //Draw the mower picture
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
 
@@ -21,7 +22,7 @@ void Print_Mowing_Menu_Graphic() {
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(20, 10);            // Text Coordinates X, Y
-    tft.print(F("ReP_AL Lawn Mower V8.0"));  
+    tft.print(F("ReP_AL Lawn Mower V8.2"));  
     
     
     

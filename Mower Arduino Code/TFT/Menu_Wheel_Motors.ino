@@ -1,6 +1,7 @@
 void Print_Wheel_Motors_Menu() {  
 
 
+  tft.fillScreen(BLACK);
   delay(100); 
 
 // Create Bars for the Motor Values

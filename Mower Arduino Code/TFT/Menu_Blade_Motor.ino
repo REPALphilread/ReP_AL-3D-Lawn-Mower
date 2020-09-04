@@ -1,6 +1,6 @@
 void Print_Blade_Motor_Menu() {  
 
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Motors.bmp", 70, 20);      //Draw the mower picture
     delay(100); 
 

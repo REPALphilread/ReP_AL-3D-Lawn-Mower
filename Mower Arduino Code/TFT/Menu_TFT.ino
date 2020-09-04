@@ -57,7 +57,7 @@ void Print_TFT_Menu() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("SPARE"));  
+    tft.print(F("Spare"));  
     
     Button_X = Label_X + (0.5 * Button_W);
     Button_Y = Label_Y + Offset_Btn + (0.3 * Button_H);   
@@ -65,8 +65,8 @@ void Print_TFT_Menu() {
     Value_X2 = Button_X;
     Value_Y2 = Button_Y;
     
-    if (SPARE == 1) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
-    if (SPARE == 0) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
+    if (Spare == 1) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
+    if (Spare == 0) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
     ONOFF2_btn.drawButton(false);
 
 
@@ -119,15 +119,15 @@ void React_to_Button_Press_TFT_Setup() {
         int Button_Y = Value_Y2;
         bool Changed = 0;
 
-        if ((SPARE == 1) && (Changed ==0))  {
-          SPARE = 0;
+        if ((Spare == 1) && (Changed ==0))  {
+          Spare = 0;
           Changed = 1;
           ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
           ONOFF2_btn.drawButton(false);
           }
         
-        if ((SPARE == 0) && (Changed ==0)) {
-          SPARE = 1;
+        if ((Spare == 0) && (Changed ==0)) {
+          Spare = 1;
           Changed = 1;
           ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
           ONOFF2_btn.drawButton(false);

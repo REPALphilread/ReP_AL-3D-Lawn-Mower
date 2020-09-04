@@ -23,7 +23,6 @@ void Check_TFT_Serial_Input() {
       if ((Mower_Docked == 1) || (Mower_Parked == 1)) delay(500);
       Send_Data_To_TFT();                                   // Send data to TFT - depends on menu code received
       Receive_Data_From_TFT();                              // Receive Data from TFT - depends on menu code received
-      //delay(200);  
       }         
       
     else Serial.print(F("No Data Received|"));

@@ -1,4 +1,4 @@
-void Check_if_Raining_From_Nano () {
+void Check_if_Raining_From_Nano() {
 
   if (Rain_Sensor_Installed == 1) {
       

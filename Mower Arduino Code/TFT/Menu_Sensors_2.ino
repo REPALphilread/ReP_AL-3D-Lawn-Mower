@@ -5,7 +5,7 @@
 
 
 void Print_Sensors_Menu_2() {
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Sensors.bmp", 70, 20);      //Draw the mower picture
     delay(100); 
 

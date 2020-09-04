@@ -1,5 +1,6 @@
 void Print_Track_PID_Menu() {  
 
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("PID.bmp", 160, 80);      //Draw the mower picture
     delay(100); 
 

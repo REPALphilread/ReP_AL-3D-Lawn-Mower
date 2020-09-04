@@ -3,7 +3,7 @@
 //*********************************
 
 void Print_Settings_2_Menu() {
-
+    tft.fillScreen(BLACK);
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
 
     int Start_X = 90;
@@ -41,7 +41,7 @@ void Print_Settings_2_Menu() {
     Button_X = Start_X ;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Tests_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "Tests >", 2);
+    Tests_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, WHITE, BLACK, "Tests >", 2);
     Tests_btn.drawButton(false);
 
 

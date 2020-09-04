@@ -50,45 +50,54 @@ void Setup_Compass() {
       if (Compass_Type == 1) {
         //HMC5883 Compass
         while ((!compass.begin()) && (Compass_Attempt <= 5)){
-          Serial.println(F("Could not find a valid QMC5883 sensor, check wiring!"));
+          Serial.println(F("No HMC or QMC5883 sensor found, check wiring!"));
           delay(500);
           Compass_Attempt = Compass_Attempt + 1;
           }
         if (compass.isHMC()) {
           Serial.println(F("Initialize DF Robot HMC5883 Compass"));
-          lcd.setCursor(6,0);
-          lcd.print(F(": HMC5883"));
-          delay(500);
-          compass.setRange(HMC5883L_RANGE_1_3GA);
-          compass.setMeasurementMode(HMC5883L_CONTINOUS);
-          compass.setDataRate(HMC5883L_DATARATE_15HZ);
-          compass.setSamples(HMC5883L_SAMPLES_8);
-          Compass_Found = 1;
+          if (LCD_Screen_Keypad_Menu == 1) {
+            lcd.setCursor(6,0);
+            lcd.print(F(": HMC5883"));
+            delay(500);
+            }
+
+                  //compass.setRange(HMC5883L_RANGE_1_3GA);
+                  //compass.setMeasurementMode(HMC5883L_CONTINOUS);
+                  //compass.setDataRate(HMC5883L_DATARATE_15HZ);
+                  //compass.setSamples(HMC5883L_SAMPLES_8);
+                  //Compass_Found = 1;
           }
+      
        //QMC5883 Compass
         else if (compass.isQMC()) {
-            Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+          Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+          if (LCD_Screen_Keypad_Menu == 1) {
             lcd.setCursor(6,0);
             lcd.print(F(": QMC5883"));
             delay(500);
-            compass.setRange(QMC5883_RANGE_2GA);
-            compass.setMeasurementMode(QMC5883_CONTINOUS); 
-            compass.setDataRate(QMC5883_DATARATE_50HZ);
-            compass.setSamples(QMC5883_SAMPLES_8);
-            Compass_Found = 1;
             }
+                  //compass.setRange(QMC5883_RANGE_2GA);
+                  //compass.setMeasurementMode(QMC5883_CONTINOUS); 
+                  //compass.setDataRate(QMC5883_DATARATE_50HZ);
+                  //compass.setSamples(QMC5883_SAMPLES_8);
+                  //Compass_Found = 1;
+         }
       
     
+      // Escape the loop if no compass is found but compass is activated in the settings
       if ((Compass_Attempt > 5) && (Compass_Found == 0)) {
         Serial.println("No Valid Compass Found");
         Compass_Activate = 0;
         Serial.println("Compass Deactivated");
         delay(3000);
       }
-      lcd.setCursor(0,1); 
-      lcd.print(F("Done!             "));
-      delay(500);
-      lcd.clear();
+      if (LCD_Screen_Keypad_Menu == 1) {
+            lcd.setCursor(0,1); 
+            lcd.print(F("Done!             "));
+            delay(500);
+            lcd.clear();
+            }
     }
   
   if (Compass_Type == 2) {
@@ -148,11 +157,28 @@ void Setup_Bumper_Bar() {
 }
 
 void Setup_ADCMan() {
-  Serial.println(F("ADCMAN"));
-  ADCMan.init();
-  perimeter.setPins(pinPerimeterLeft, pinPerimeterRight);
-  perimeter.useDifferentialPerimeterSignal = true;
-  perimeter.speedTest();
+  Serial.println(F("Setting up ADCMAN"));
+
+  if (Perimeter_Wire_Enabled == 1) {
+      // Wire Sensor
+      Serial.println(F("Setting up Wire Sensor"));
+      ADCMan.init();
+      ADCMan.setCapture(pinPerimeterLeft, 1, 0);
+      perimeter.setPins(pinPerimeterLeft, pinPerimeterRight);
+      perimeter.useDifferentialPerimeterSignal = true; 
+      perimeter.speedTest(); 
+      }
+
+  if (GPS_Enabled == 1) {
+      // GPS Fence Sensor 
+      Serial.println(F("Setting up GPS Fence Sensor"));
+      pinMode(GPS_Fence_Signal_Pin, INPUT);
+      pinMode(GPS_Lock_Pin, INPUT);
+      ADCMan.init();
+      ADCMan.setCapture(GPS_Fence_Signal_Pin, 1, 1);
+      ADCMan.setCapture(GPS_Lock_Pin, 1, 1);
+      }
+
   ADCMan.run();
 }
 

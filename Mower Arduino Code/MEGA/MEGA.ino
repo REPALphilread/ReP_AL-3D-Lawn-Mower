@@ -1,4 +1,3 @@
-// BETA VERISON !!!
 
 // ReP_AL Lawn Mower Arduino Code
 // Please make sure you have installed all the library files to the Arduino libraries folder
@@ -43,6 +42,9 @@ DFRobot_QMC5883 compass;
 #define pinPerimeterRight A4       // leave open
 #define pinLED LED_BUILTIN
 
+//GPS Fence Signal Pin
+#define GPS_Fence_Signal_Pin A7
+#define GPS_Lock_Pin A6
 
 //Real Time Clock Pins
 const int kCePin   = 29;  // RST
@@ -149,8 +151,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
   // Mower Running Data
   int Sonar_Status;
-  int Wire_Status;
-  int Data_Sent_Wire;       // Counter
+  //int Data_Sent_Wire;       // Counter
   int Bumper_Status;
   int Loops;
   int Compass_Steering_Status;
@@ -305,6 +306,12 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Leg = 1;
   float Compass_Last;  
 
+  // GPS
+  bool GPS_Inside_Fence;
+  int GPS_Fence_Signal;
+  int GPS_Lock_Signal;
+  bool GPS_Lock_OK;
+
   //Wire Track Printer
   int PrintInMax;
   int PrintInMid;
@@ -315,7 +322,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int PrintMAG_Now;
 
   // Tilt Sensor
-  int Tilt_Angle_Sensed;          // reads the Tilt Angle sensor
+  int Tilt_Angle_Sensed = 1;          // reads the Tilt Angle sensor
   int Tilt_Orientation_Sensed;    // reads the Tilt Orientation sensor
 
   //WIFI Variables
@@ -346,14 +353,15 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.0";
+  char Version[16] = "V8.2";
 
-  bool TFT_Screen_Menu            = 0;                          // Set to 1 to use TFT  and 0 when not used
-  bool LCD_Screen_Keypad_Menu     = 1;                          // Set to 1 to use LCD  and 0 when not used
+  bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
+  bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
   bool Perimeter_Wire_Enabled     = 1;     // EEPROM            // Activates use of the perimeter boundary wire
+  bool GPS_Enabled                = 0;     // EEPROM            // Activates the GPS Fence Module
 
   //Docking Station
   bool Use_Charging_Station       = 1;      //EEPROM            // 1 if you are using the docking/charging station     0 if not
@@ -422,7 +430,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int PWM_MaxSpeed_LH            = 240;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
   int PWM_MaxSpeed_RH            = 255;     //EEPROM            // Straight line speed RH Wheel - adjust to keep mower tracking straight.  Will be overridden if saved in EEPROM
 
-  bool MAG_Speed_Adjustment      = 1;   //** Experimental
+  bool MAG_Speed_Adjustment      = 0;   //** Experimental
   int Slow_Speed_MAG             = -900;                        // MAG Value that Slow Speed Kicks In
   int PWM_Slow_Speed_LH          = 160;                         // Straight line speed when the mower is almost over the wire Left Wheel.
   int PWM_Slow_Speed_RH          = 175;                         // Straight line speed when the mower is almost over the wire Right Wheel.
@@ -547,12 +555,14 @@ if ((TFT_Screen_Menu == 1) && (TFT_Menu_Command > 1))     Activate_TFT_Menu();  
 Read_Serial1_Nano();                                                                  // Read the Serial data from the nano
 Print_Mower_Status();                                                                 // Update the Serial monitor with the current mower status.
 
+
 // Mower is docked, docking station is enabled and waiting for a command to leave and mow.
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
 if  (Mower_Docked == 1)                                           Check_if_Charging();
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Docked();                                // Print information to the LCD screen
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_Time_On_LCD(); 
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
+if ((Mower_Docked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();
                                
 if (Mower_Docked == 1)                                            TestforBoundaryWire();                                  // Test is the boundary wire is live                                 
 if (Mower_Docked == 1)                                            Manouver_Dock_The_Mower();
@@ -568,6 +578,7 @@ if (Mower_Parked == 1)                                            Check_if_Charg
 if (Mower_Parked == 1)                                            Check_if_Raining_From_Nano ();                          // Checks if the water sensor detects Rain
 if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Parked();                                // Print information to the LCD screen
 if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();                   // Check the membrane buttons for any input
+if ((Mower_Parked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();
 if (Mower_Parked == 1)                                            TestforBoundaryWire();
 if (Mower_Parked == 1)                                            Manouver_Park_The_Mower();
 if ((Mower_Parked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
@@ -586,19 +597,21 @@ if ((Mower_Error == 1)  && (TFT_Screen_Menu == 1))                Send_Mower_Err
 
 // Mower is running cutting the grass.
 if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
-if (Mower_Running == 1)                                                                                                   Process_Volt_Information();         // Take action based on the voltage readings
-if (Mower_Running == 1)                                                                                                   Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
+if  (Mower_Running == 1)                                                                                                  Process_Volt_Information();         // Take action based on the voltage readings
+if  (Mower_Running == 1)                                                                                                  Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
 if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
-
-if (Mower_Running == 1)                                                                                                   Check_Timed_Mow();                  // Check to see if the time to go home has come.
-if (Mower_Running == 1)                                                                                                   TestforBoundaryWire();              // Test is the boundary wire is live
-if (Mower_Running == 1)                                                                                                   Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
+if  (Mower_Running == 1)                                                                                                  Check_Timed_Mow();                  // Check to see if the time to go home has come.
+if  (Mower_Running == 1)                                                                                                  TestforBoundaryWire();              // Test is the boundary wire is live
+if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                                         Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
+if ((Mower_Running == 1) && (GPS_Enabled == 1))                                                                           Check_GPS_In_Out();                 // Test is the GPS Fence has been crossed
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
 if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
+if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Inside_Fence == 0))                                                Manouver_Turn_Around();             // If the GPS Fence is activated Turn Around
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
+//if ((Mower_Running == 1) && (TFT_Screen_Menu == 1))                                                                     Send_Mower_Running_Data_Fly();      // Send only neccesary info
 
 
 // WIFI Commands from and to APP

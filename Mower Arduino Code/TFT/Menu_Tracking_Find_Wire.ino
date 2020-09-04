@@ -1,5 +1,6 @@
 void Print_Track_Find_Wire_Menu() {  
 
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("FindWire.bmp", 200, 80);      //Draw the mower picture
     delay(100); 
 

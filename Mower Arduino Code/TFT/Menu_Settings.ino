@@ -3,7 +3,7 @@
 //*********************************
 
 void Print_Settings_Menu() {
-
+    tft.fillScreen(BLACK);
       // Framework for the buttons - setting the start position of the Quick start button wil automatically then space the other buttons
 
     int Start_X = 90;
@@ -33,7 +33,7 @@ void Print_Settings_Menu() {
     int Button_X = Start_X;
     int Button_Y = Start_Y;
    
-    Time_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, BLACK, YELLOW, "Time >", 2);
+    Time_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, YELLOW, BLACK, "Time >", 2);
     Time_btn.drawButton(false);
     
     //Sensors Options
@@ -41,7 +41,7 @@ void Print_Settings_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Sensors_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "Sensors >", 2);
+    Sensors_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, WHITE, BLACK, "Sensors >", 2);
     Sensors_btn.drawButton(false);
 
     //Motion Options
@@ -49,7 +49,7 @@ void Print_Settings_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Motion_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "Motion >", 2);
+    Motion_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "Motion >", 2);
     Motion_btn.drawButton(false);
 
     //Tracking Options
@@ -57,7 +57,7 @@ void Print_Settings_Menu() {
     Button_X = Start_X + (Button_W + Column_Spacing) ;
     Button_Y = Start_Y;    
     
-    Tracking_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, MAGENTA, BLACK, WHITE, "Track >", 2);
+    Tracking_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, MAGENTA, WHITE, "Track >", 2);
     Tracking_btn.drawButton(false);
 
     //Navigation Options
@@ -65,7 +65,7 @@ void Print_Settings_Menu() {
     Button_X = Button_X;
     Button_Y = Start_Y + (Button_H + Menu_Spacing);    
     
-    Navigation_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, BLACK, WHITE, "NAVI >", 2);
+    Navigation_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, BLUE, WHITE, "NAVI >", 2);
     Navigation_btn.drawButton(false);
 
     //More Options
@@ -73,7 +73,7 @@ void Print_Settings_Menu() {
     Button_X = Button_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Next_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, BLUE, WHITE, "Next >", 2);
+    Next_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, YELLOW, BLACK, "Next >", 2);
     Next_btn.drawButton(false);
 
 // Done Button
@@ -200,7 +200,12 @@ void React_to_Button_Press_Options() {
           Serial.println(F("Main Screen Selected"));
           Menu_Active = 1;
           Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
-          if ((Mower_Status_Value == 1) || (Mower_Status_Value == 2)) {              // 1 = Docked
+          Serial.print(F("Mower Status ="));
+          Serial.println(Mower_Status_Value);
+          if ((Mower_Status_Value == 0) ||(Mower_Status_Value == 1) || (Mower_Status_Value == 2)) {              // 1 = Docked  2 = Parked
+            tft.fillScreen(BLACK);
+
+            
             if (Draw_Pictures == 1) bmpDraw("mower1.bmp", 150, 90);      //Draw the mower picture
             delay(100);
             Print_Main_Menu_Graphic();

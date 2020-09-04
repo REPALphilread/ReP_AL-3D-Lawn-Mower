@@ -1,5 +1,6 @@
 void Print_Tracking_Exit_Menu() {  
 
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1)   bmpDraw("Exit12CCW.bmp", 60, 50);      //Draw the mower picture
     delay(100); 
 
