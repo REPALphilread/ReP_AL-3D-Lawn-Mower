@@ -21,14 +21,27 @@ void Manouver_Mow_The_Grass() {
     delay(1);
   
   if (Loop_Cycle_Mowing < 5  )  {                       
-    Serial.print(F("C-Lock:OFF"));
-    Serial.print(F("|"));
-    Print_LCD_Mowing();
-    if (Compass_Activate == 1) Get_Compass_Reading();
-    Motor_Action_Go_Mowing_Speed();
-    Compass_Heading_Locked = 0;                           // Turn off the compass heading lock for the new cycles
-    Compass_Steering_Status = 0;
-    }
+
+    // If the GYRO is activated the compass will be ignored and the mower uses the GYRO instead.
+    if ((Compass_Activate == 1) && (Compass_Heading_Hold_Enabled == 1) && (GYRO_Enabled == 0) ) {
+        Serial.print(F("C-Lock:OFF"));
+        Serial.print(F("|"));
+        if (LCD_Screen_Keypad_Menu == 1)  Print_LCD_Mowing();
+        Get_Compass_Reading();
+        Motor_Action_Go_Mowing_Speed();
+        Compass_Heading_Locked = 0;                           // Turn off the compass heading lock for the new cycles
+        Compass_Steering_Status = 0;
+        }
+
+    if (GYRO_Enabled == 1);
+        Serial.print(F("G-Lock:OFF"));
+        Serial.print(F("|"));
+        if (LCD_Screen_Keypad_Menu == 1)  Print_LCD_Mowing();
+        Get_GYRO_Reading();
+        Motor_Action_Go_Mowing_Speed();
+        GYRO_Heading_Locked = 0;                           // Turn off the compass heading lock for the new cycles
+        GYRO_Steering_Status = 0;
+        }   
 
   // On the 5th Mowing cycle options are chosen how to Mow based on the settings of pattern mow
   // Compass assistance etc.
@@ -39,30 +52,43 @@ void Manouver_Mow_The_Grass() {
     if (Pattern_Mow == 0) {
         
         // Normal Random Mowing no compass Assistance
-        if (Compass_Heading_Hold_Enabled == 0) {
+        if ((Compass_Heading_Hold_Enabled == 0) && (GYRO_Enabled == 0)) {
           Serial.print(F("C-Lock:OFF"));
           Serial.print(F("|"));
-          Print_LCD_Compass_Mowing();
+          if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Compass_Mowing();
           Motor_Action_Go_Mowing_Speed();
           Compass_Heading_Locked = 0;
+          }
+
+        // Normal Random Mowing no GYRO Assistance
+        if (GYRO_Enabled == 0) {
+          Serial.print(F("GYRO:OFF"));
+          Serial.print(F("|"));
+          Motor_Action_Go_Mowing_Speed();
+          GYRO_Heading_Locked = 0;
           }          
 
         // Normal Random Mowing with Compass Assitnace turned on.
-        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1))  {
+        // If the GYRO is turned on then the compass will be ignored and the angle will come from the GYRO
+        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1) && (GYRO_Enabled == 0) )  {
            Get_Compass_Reading();                                                      // Gets the latest compass reading
            Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
            Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
            Motor_Action_Go_Mowing_Speed();
            }
+        if (GYRO_Enabled == 1) {
+           Get_GYRO_Reading();                                                      // Gets the latest compass reading
+           GYRO_Heading_Locked = 1;                                                 // Turns on the heading lock feature
+           Motor_Action_Go_Mowing_Speed();    
+           }
         else {
           Motor_Action_Go_Mowing_Speed();
-          Serial.println("Comp;OFF|");
           }
       }
 
     if (Pattern_Mow == 1)  {                                  
         Motor_Action_Go_Mowing_Speed();
-        Print_LCD_Parallel();
+        if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Parallel();
         Serial.print("Parallel:ON");
         Serial.print(F("|"));
 
@@ -82,7 +108,7 @@ void Manouver_Mow_The_Grass() {
     // Sets up the variables so that a spiral mow pattern is activated.
     if (Pattern_Mow == 2)  {                                  
         Compass_Heading_Locked = 0;                   // Compass Lock is switched off                 
-        Print_LCD_Spiral();
+        if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Spiral();
         Serial.print("Spiral:ON");
         Serial.print(F("|"));
         Motor_Action_Go_Mowing_Speed();
@@ -95,26 +121,49 @@ void Manouver_Mow_The_Grass() {
   // Based on the settings above the Mower will continue to mow with the following actions
   if (Loop_Cycle_Mowing > 5) {
       
+      // Normal Random Mowing
       if (Pattern_Mow == 0) {
-         if (Compass_Heading_Locked == 0) {
+         if ((Compass_Heading_Locked == 0) && (GYRO_Enabled == 0)) {
            lcd.setCursor(0, 1);  
            Serial.print(F("C-Lock:OFF"));
            Serial.print(F("|"));
-           lcd.print("Mowing          ");
+           if (LCD_Screen_Keypad_Menu == 1) lcd.print("Mowing          ");
+           Motor_Action_Go_Mowing_Speed();
+           Compass_Steering_Status = 0;                                             // TFT Information
+           }
+        if ((GYRO_Heading_Locked == 0) && (GYRO_Enabled == 0)) {
+           lcd.setCursor(0, 1);  
+           Serial.print(F("G-Lock:OFF"));
+           Serial.print(F("|"));
+           if (LCD_Screen_Keypad_Menu == 1) lcd.print("Mowing          ");
            Motor_Action_Go_Mowing_Speed();
            Compass_Steering_Status = 0;
            }
-        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1)) {            // if the Mower is tracking using the compass steer here
+           
+        if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1) && (GYRO_Enabled == 0)) {            // if the Mower is tracking using the compass steer here
           if ( (Loop_Cycle_Mowing % 2) == 0 ) {
           Get_Compass_Reading(); 
           Compass_Steering_Status = 1;        
           Calculate_Compass_Wheel_Compensation();
           Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
-          Print_LCD_Compass_Mowing();
+          if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Compass_Mowing();
           Serial.print(F("C-Lock:ON_"));
           Serial.print("|");
           }
         }
+
+        if (GYRO_Enabled == 1) {            // if the Mower is tracking using the compass steer here
+          if ( (Loop_Cycle_Mowing % 2) == 0 ) {
+          Get_GYRO_Reading(); 
+          GYRO_Steering_Status = 1;        
+          Calculate_GYRO_Wheel_Compensation();
+          Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
+          if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Compass_Mowing();
+          Serial.print(F("G-Lock:ON_"));
+          Serial.print("|");
+          }
+        }
+      
       }
         
         
@@ -410,7 +459,7 @@ void Manouver_Turn_Around() {
     Serial.println(F("Mower is Turning"));
     if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
     Serial.println(F(""));
-    delay(500);
+    delay(80);
 
     // Back up the mower
     SetPins_ToGoBackwards();
@@ -451,24 +500,24 @@ void Manouver_Turn_Around() {
           Check_Wire_In_Out();
               if (Outside_Wire == 1) { 
                 Serial.println(F("Outside Wire 2"));
-                SetPins_ToGoBackwards();
-                Motor_Action_Go_Full_Speed();
-                delay(300);
+                //SetPins_ToGoBackwards();
+                //Motor_Action_Go_Full_Speed();
+                //delay(300);
                 Motor_Action_Stop_Motors();
-                delay(1000);
+                delay(20);
                 TestforBoundaryWire();  
-                delay(100);
+                delay(80);
                 UpdateWireSensor();
                 Check_Wire_In_Out();
                 if (Outside_Wire == 1) { 
                       Serial.println(F("Outside Wire = 3 - Must be really outside...."));
-                      SetPins_ToGoForwards();
-                      Motor_Action_Go_Full_Speed();
-                      delay(300);
+                      //SetPins_ToGoForwards();
+                      //Motor_Action_Go_Full_Speed();
+                      //delay(300);
                       Motor_Action_Stop_Motors();
-                      delay(2000);
+                      delay(20);
                       TestforBoundaryWire();  
-                      delay(100);
+                      delay(80);
                       UpdateWireSensor();
                       Check_Wire_In_Out();
                       }
@@ -882,7 +931,7 @@ void Manouver_Exit_To_Zone_X() {
    Send_Mower_Tracking_Data();                                  // Send the tracking TX Data package to the mower.   
    Manouver_Mower_Exit_Dock();                                  // Carry out the Exit Dock Manouver
    
-   _Docking_Station();                         // Move the Mower into position backing out of the docking station
+   Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
    if (Perimeter_Wire_Enabled == 1) {
      Mower_Track_To_Exit = 1;
      TestforBoundaryWire();

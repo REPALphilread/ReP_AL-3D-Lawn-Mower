@@ -46,6 +46,18 @@ void Send_Data_To_TFT() {
       
     }
 
+// Navigation Menu
+    if (TFT_Menu_Command == 9) {
+      Serial.println("TX Nav to TFT");
+      
+      Serial3.print(GPS_Enabled);
+      Serial3.println("\a");
+      delay(200);  
+
+      Serial.print(F("GPS Enabled= "));
+      Serial.println(GPS_Enabled);   
+      }
+
 
 // Menu Battery
     if (TFT_Menu_Command == 26) {
@@ -260,7 +272,7 @@ void Send_Data_To_TFT() {
       Serial3.println("\a");
       delay(300); 
 
-      Serial.print(F("USe Charging Station = "));
+      Serial.print(F("Use Charging Station = "));
       Serial.println(Use_Charging_Station); 
       } 
 
@@ -280,6 +292,7 @@ void Send_Data_To_TFT() {
       Serial3.print(Home_Wire_Compass_Heading);
       Serial3.println("\c");
       delay(200);  
+   
 
       Serial.print(F("Wire Find Forwards / cylces = "));
       Serial.println(Max_Cycle_Wire_Find);
@@ -317,9 +330,9 @@ void Send_Data_To_TFT() {
       }
 
 
-// Navigation Menu
-    if (TFT_Menu_Command == 9) {
-      Serial.println("TX Nav to TFT");
+// Compass
+    if (TFT_Menu_Command == 27) {
+      Serial.println("TX Compass to TFT");
       
       Serial3.print(Compass_Activate);
       Serial3.println("\a");
@@ -327,26 +340,43 @@ void Send_Data_To_TFT() {
 
       Serial3.print(Compass_Heading_Hold_Enabled);
       Serial3.println("\b");
-      delay(200);  
+      delay(300);  
 
       Serial3.print(CPower * 10);
       Serial3.println("\c");
-      delay(200);  
-
-
-      Serial3.print(GPS_Enabled);
+      delay(300);  
+      
+      Serial3.print(Compass_Setup_Mode);
       Serial3.println("\d");
       delay(200);  
 
       Serial.print(F("Compass Activated = "));
       Serial.println(Compass_Activate);
-      Serial.print(F("Heading Hold Enebaled = "));
+      Serial.print(F("Heading Hold Enabled = "));
       Serial.println(Compass_Heading_Hold_Enabled);          
       Serial.print(F("Compass Power = "));
       Serial.println(CPower);    
-      Serial.print(F("GPS Enabled= "));
-      Serial.println(GPS_Enabled);   
+      Serial.print(F("Compass Setup Mode = "));
+      Serial.println(Compass_Setup_Mode); 
       }
+
+
+// GYRO
+    if (TFT_Menu_Command == 28) {
+
+      Serial3.print(GYRO_Enabled);
+      Serial3.println("\a");
+      delay(300);  
+
+      Serial3.print(GPower * 10);
+      Serial3.println("\b");
+      delay(300);
+
+      Serial.print(F("GYRO Enabled= "));
+      Serial.println(GYRO_Enabled); 
+      Serial.print(F("GYRO Power = "));
+      Serial.println(GPower);     
+    }
 
 // Alarm 1
     if (TFT_Menu_Command == 20) {
@@ -471,9 +501,19 @@ void Send_Data_To_TFT() {
 // Set Time
     if (TFT_Menu_Command == 23) {
       Serial.println("Set Time TFT");
-      Time t = rtc.time();
-      int Time_Hour = t.hr;
-      int Time_Minute = t.min;   
+      if (PCB == 0) {
+        Time t = rtc.time();
+        int Time_Hour = t.hr;
+        int Time_Minute = t.min;  
+        }
+      if (PCB == 1) {
+        byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
+        Read_DS3231_Time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month,
+                 &year);
+        Time_Hour = hour;
+        Time_Minute = minute;
+        Time_Second = second;
+        }
  
       Serial3.print(Time_Hour);
       Serial3.println("\a");
@@ -563,7 +603,18 @@ void Send_Data_To_TFT() {
     if (TFT_Menu_Command == 55) {
       Serial.println("TX Start Up Values TFT");
 
-      Time t = rtc.time();
+      if (PCB == 0) {
+        Time t = rtc.time();
+        int Time_Hour = t.hr;
+        int Time_Minute = t.min;
+      }
+      if (PCB == 1) {        
+        byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
+        Read_DS3231_Time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);
+        int Time_Hour = hour;
+        int Time_Minute = minute;
+        int Time_Second = second;
+        }
 
       Serial3.print(Alarm_1_ON);
       Serial3.println("\a");
@@ -577,11 +628,11 @@ void Send_Data_To_TFT() {
       Serial3.println("\c");
       delay(300); 
         
-      Serial3.print(t.hr);
+      Serial3.print(Time_Hour);
       Serial3.println("\d");         // Sends the time to the Serial Monitor for the TFt to receive
       delay(300);  
         
-      Serial3.print(t.min);
+      Serial3.print(Time_Minute);
       Serial3.println("\e");
       delay(100);
 
@@ -600,10 +651,10 @@ void Send_Data_To_TFT() {
       Serial.print(F("Alarm 3 ON = "));
       Serial.println(Alarm_3_ON);
       Serial.print(F("|Time:"));
-      Serial.print(t.hr);
+      Serial.print(Time_Hour);
       Serial.print(F(":"));
-      if (t.min < 10) Serial.print("0");
-      Serial.println(t.min);
+      if (Time_Minute < 10) Serial.print("0");
+      Serial.println(Time_Minute);
       Serial.print(F("GPS:"));
       if (GPS_Enabled == 1) Serial.println("ON");   
       if (GPS_Enabled == 0) Serial.println("OFF"); 
@@ -708,9 +759,11 @@ void Send_Data_To_TFT() {
     Serial.println(F("Compass Test"));
     bool Test_Complete = 0;
 
-      for (int i = 0; i <= 30; i++) {
+      int Cycles = 40;
 
-        if (i > 28) Test_Complete = 1;
+      for (int i = 0; i <= Cycles; i++) {
+
+        if (i > (Cycles - 2) ) Test_Complete = 1;
         Get_Compass_Reading();
 
         int Compass_Degrees_TX = Compass_Heading_Degrees;
@@ -719,19 +772,22 @@ void Send_Data_To_TFT() {
         Serial3.print(Heading * 10);
         Serial3.println("\a");
         delay(300);  
-    
+      
         Serial3.print(Compass_Degrees_TX);
         Serial3.println("\b");
         delay(300); 
-        
-        Serial3.print(Test_Complete);
-        Serial3.println("\c");
-        delay(300);    
 
         Serial.print("Heading: ");
         Serial.print(Heading);
         Serial.print("  Degrees: ");
         Serial.println(Compass_Degrees_TX);
+  
+     
+        Serial3.print(Test_Complete);
+        Serial3.println("\c");
+        delay(300);    
+
+
       }
 
     Serial.print(F("Compass Test Complete"));
@@ -739,8 +795,45 @@ void Send_Data_To_TFT() {
     }
 
 
+// Start GYRO Test
+  if (TFT_Menu_Command == 39) {
+    Serial.println(F("GYRO Test"));
+    bool Test_Complete = 0;
 
-// Start Compass Test
+      int Cycles = 60;
+
+      for (int i = 0; i <= Cycles; i++) {
+
+        if (i > (Cycles - 2) ) Test_Complete = 1;
+        Get_GYRO_Reading();
+        Print_GYRO_Reading();
+
+       
+        Serial3.print(GYRO_Angle_X);
+        Serial3.println("\a");
+        delay(300);  
+      
+        Serial3.print(GYRO_Angle_Y);
+        Serial3.println("\b");
+        delay(300); 
+    
+        Serial3.print(Test_Complete);
+        Serial3.println("\c");
+        delay(300);    
+
+        //Serial.print("Angle X: ");
+        //Serial.print(GYRO_Angle_X);
+        //Serial.print(" Angle Y: ");
+        //Serial.println(GYRO_Angle_Y);
+
+      }
+
+    Serial.print(F("Compass Test Complete"));
+    Serial.println(Test_Complete);
+    }
+
+
+// Start Volt Amp Test
   if (TFT_Menu_Command == 47) {
     Serial.println(F("Volt Amp Test"));
     bool Test_Complete = 0;

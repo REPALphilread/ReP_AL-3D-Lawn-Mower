@@ -38,44 +38,44 @@ void Print_Docking_Stage() {
         tft.setTextSize(3); 
         tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour        
         tft.setCursor(180,100);
-        tft.print("Turn to Home");
+        tft.print(F("Turn to Home"));
      }
      if (Turn_To_Home == 0)  {
         tft.setTextSize(3); 
         tft.setTextColor(BLACK, BLACK);      //Text Colour/ Background Colour        
         tft.setCursor(180,100);
-        tft.print("Turn to Home");
+        tft.print(F("Turn to Home"));
      }
      
      if (Find_Wire_Track == 1) {
         tft.setTextSize(3); 
         tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour  
         tft.setCursor(180,130);
-        tft.print("Finding Wire");
+        tft.print(F("Finding Wire"));
      }
      if (Find_Wire_Track == 0)  {
         tft.setTextSize(3); 
         tft.setTextColor(BLACK, BLACK);      //Text Colour/ Background Colour        
         tft.setCursor(180,130);
-        tft.print("Finding Wire");
+        tft.print(F("Finding Wire"));
      }
      if (Go_To_Charging_Station == 1){   
         tft.setTextSize(3); 
         tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour  
         tft.setCursor(180,160);
-        tft.print("Tracking to Dock");
+        tft.print(F("Tracking to Dock"));
      }
      if (Go_To_Charging_Station == 0)  {
         tft.setTextSize(3); 
         tft.setTextColor(BLACK, BLACK);      //Text Colour/ Background Colour        
         tft.setCursor(180,160);
-        tft.print("Tracking to Dock");
+        tft.print(F("Tracking to Dock"));
      }
      if (Docking_Complete == 1){   
         tft.setTextSize(3); 
         tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour  
         tft.setCursor(180,200);
-        tft.print("Docking Complete");
+        tft.print(F("Docking Complete"));
         delay(4000);
         Mower_Status_Value = 1;    //1 = Docked   2 = Mowing   7 = Tracking to Dock
         

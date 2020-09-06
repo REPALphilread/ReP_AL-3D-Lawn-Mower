@@ -1,8 +1,5 @@
 // ReP_AL Mower Project Touchscreen Control
 
-
-
-
 #include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
 MCUFRIEND_kbv tft;
@@ -58,7 +55,8 @@ Adafruit_GFX_Button up1_btn, down1_btn, up2_btn, down2_btn, up3_btn, down3_btn, 
                     Save_Track_Find_Wire_btn, Save_Track_PID_btn, Done_Navigation_btn, HeadHold_btn, PCompass_btn, GPS_btn, Alarm1_btn,
                     Alarm2_btn, Alarm3_btn, SetTime_btn, Done_Time_btn, Save_AlarmX_btn, Save_Set_Time_btn, Next_btn, TFT_btn, Done3_btn, 
                     Tests_btn, Test1_btn, Test2_btn, Test3_btn, Test4_btn, Test5_btn, Done4_btn, Cancel_QG_btn, Cancel_ED_btn, Clear_Error_btn,
-                    Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn, Create_Fence_btn, GPS_Enabled_ONOFF_btn, Save_GPS_Point_btn, Save_Fence_btn;
+                    Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn, Create_Fence_btn, GPS_Enabled_ONOFF_btn, Save_GPS_Point_btn, Save_Fence_btn,
+                    GYRO_Test_btn, GYRO_Enabled_btn, Compass_btn, Done_Compass_btn, GYRO_btn, Done_GYRO_btn, Comp_Mode_btn;
                     
 
 unsigned long time;
@@ -100,6 +98,7 @@ bool  Menu_Complete_Testing_3;
 bool  Menu_Complete_Wire_Test;
 bool  Menu_Complete_Sonar_Test;
 bool  Menu_Complete_Compass_Test;
+bool  Menu_Complete_GYRO_Test;
 bool  Menu_Complete_Volt_Amp_Test;
 bool  Menu_Complete_Tilt_Test;
 bool  Menu_Complete_Bumper_Test;
@@ -108,6 +107,10 @@ bool  Menu_Complete_Exit_Dock;
 bool  Menu_Complete_Tip_Setup;
 bool  Menu_Complete_Pattern;
 bool  Menu_Complete_GPS_New_Fence;
+bool  Menu_Complete_Compass;
+bool  Menu_Complete_GPS;
+bool  Menu_Complete_GYRO;
+
 
 
 int  Mower_Status_Value = 1;
@@ -144,9 +147,13 @@ int Sonar_Test_Cycles;
 bool Bump_LH;
 bool Bump_RH;
 
-//Compass
-int   Compass_Heading_Degrees;
-float   Heading;
+
+
+// GYRO
+int GYRO_X_Angle;
+int GYRO_Y_Angle;
+int GYRO_Enabled;
+float GPower;
 
 
 // Motor Menu
@@ -190,6 +197,10 @@ int LH_RH_Spacing;
   bool Compass_Heading_Hold_Enabled;
   float CPower;
 
+//Compass
+int   Compass_Heading_Degrees;
+float   Heading;
+int Compass_Setup_Mode;
 
   int Pos_X1;
   int Pos_Y1;
@@ -202,6 +213,8 @@ int LH_RH_Spacing;
   int Pos_Y4;  
   int Pos_X5;
   int Pos_Y5;  
+  int Pos_X6;
+  int Pos_Y6;
   int Button_X1;
   int Button_Y1;
   int Button_X2;
@@ -212,6 +225,8 @@ int LH_RH_Spacing;
   int Button_Y4;
   int Button_X5;
   int Button_Y5;
+
+//
   
 // Blade Menu
 bool Cutting_Blades_Activate;
@@ -423,11 +438,11 @@ void setup(void){
 
     bool good = SD.begin(SD_CS);
     if (!good) {
-        Serial.print(F("cannot start SD"));
+      Serial.print(F("cannot start SD"));
       tft.setTextSize(3); 
       tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
       tft.setCursor(50, 100); 
-      tft.println("SD Card Missing ?");
+      tft.println(F("SD Card Missing ?"));
       delay(2000);
       while (1);
     }
@@ -436,11 +451,11 @@ void setup(void){
 tft.setTextSize(2); 
 tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
 tft.setCursor(0, 0);                      // Text Coordinates X, Y
-tft.println("REP_AL Robot Lawn Mower");
-tft.println(" ");
-tft.println("STARTING TFT MENU");
-tft.println("PLEASE WAIT....");
-tft.println(" ");
+tft.println(F("REP_AL Robot Lawn Mower"));
+tft.println(F(" "));
+tft.println(F("STARTING TFT MENU"));
+tft.println(F("PLEASE WAIT...."));
+tft.println(F(" "));
 
 bmpDraw("logo.bmp", 75, 80);
 delay(4000);

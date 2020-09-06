@@ -6,7 +6,6 @@
 // www.repalmakershop.com
 
 
-
 //Libraries for Perimeter Wire Receiver
 #include <Arduino.h>
 #include <Wire.h>
@@ -19,6 +18,19 @@
 //Libraries for Real Time Clock
 #include <stdio.h>
 #include <DS1302.h>
+#define DS3231_I2C_ADDRESS 0x68
+// Convert normal decimal numbers to binary coded decimal
+byte decToBcd(byte val)
+{
+  return ( (val / 10 * 16) + (val % 10) );
+}
+// Convert binary coded decimal to normal decimal numbers
+byte bcdToDec(byte val)
+{
+  return ( (val / 16 * 10) + (val % 16) );
+}
+
+
 
 //Libraries for ic2 Liquid Crystal
 #include <LiquidCrystal_I2C.h>
@@ -34,7 +46,53 @@ AlarmId id;
 //Compass Setup
 #include <DFRobot_QMC5883.h>
 DFRobot_QMC5883 compass;
+#include <QMC5883L.h>
+QMC5883L compass2;
 
+// Manuel Access QMC5883L Compass
+#define QMC5883_ADDRESS                  0x0D
+#define QMC5883_OUTPUT_DATA              0x00
+#define QMC5883_XL                       0x00
+#define QMC5883_XH                       0x01
+#define QMC5883_YL                       0x02
+#define QMC5883_YH                       0x03
+#define QMC5883_ZL                       0x04
+#define QMC5883_ZH                       0x05
+// STATUS (R)
+#define QMC5883_STATUS                   0x06
+#define QMC5883_STATUS_DREADY            B00000001
+#define QMC5883_STATUS_OVERFLOW          B00000010
+#define QMC5883_STATUS_DATASKIP          B00000100
+// TEMPERATURE (R)
+#define QMC5883_TEMPERATURE1             0x07
+#define QMC5883_TEMPERATURE2             0x08
+#define LSB_C_MULTIPLIER  100
+// MODE CONTROL (RW)
+#define QMC5883_CONTROL                  0x09
+// MODE CONTROL
+#define QMC5883_CONTROL_MODE_STBY        B00000000
+#define QMC5883_CONTROL_MODE_CONTINUOUS  B00000001
+// OUTPUT DATA RATE
+#define QMC5883_CONTROL_ODR_10HZ         B00000000
+#define QMC5883_CONTROL_ODR_50HZ         B00000100
+#define QMC5883_CONTROL_ODR_100HZ        B00001000
+#define QMC5883_CONTROL_ODR_200HZ        B00001100
+// RANGE SCALE
+#define QMC5883_CONTROL_RNG_2G           B00000000
+#define QMC5883_CONTROL_RNG_8G           B00010000
+#define LSB_G_MULTIPLIER_8G  3000
+#define LSB_G_MULTIPLIER_2G  12000
+// OVER SAMPLE RATIO
+#define QMC5883_CONTROL_OSR_512          B00000000
+#define QMC5883_CONTROL_OSR_256          B01000000
+#define QMC5883_CONTROL_OSR_128          B10000000
+#define QMC5883_CONTROL_OSR_64           B11000000
+#define QMC5883_CONTROL2                 0x0A
+#define QMC5883_CONTROL2_INTERRUPT       B00000001 // set to disable
+#define QMC5883_CONTROL2_SOFTRST         B10000000 // set to signal soft reset
+#define QMC5883_CONTROL2_ROL_PNT         B01000000 // set to enable roll over reads
+#define QMC5883_SETRESET                 0x0B
+#define QMC5883_SETRESET_DEFAULT         B00000001
 
 //Pin setup for Arduino MEGA
 
@@ -156,6 +214,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Bumper_Status;
   int Loops;
   int Compass_Steering_Status;
+  int GYRO_Steering_Status;
 
 
   //Membrane Key Variables
@@ -294,10 +353,24 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   float   Y_Tilt;
   float   Z_Tilt;
   int     Compass_Detected;
+  Vector  norm;
 
-  //GY-521 Compass
-  const int MPU_addr=0x68;
-  int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+  //GY-521 GYRO
+  bool    GYRO_Heading_Locked = 0;
+  int     GYRO_Angle;
+  const int MPU_addr=0x69;
+  int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ, Temp;
+  int GYRO_Angle_X;
+  int GYRO_Angle_Y;
+  int GYRO_Angle_Z;
+
+  char tmp_str[7]; // temporary variable used in convert function
+
+  // converts int16 to string. Moreover, resulting strings will have the same length in the debug monitor.
+  char* convert_int16_to_str(int16_t i) { 
+  sprintf(tmp_str, "%6d", i);
+  return tmp_str;
+  }
 
   int minVal=265;
   int maxVal=402;
@@ -309,7 +382,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   float Compass_Last;  
 
   // GPS
-  bool GPS_Inside_Fence;
+  bool GPS_Inside_Fence = 1;
   int GPS_Fence_Signal;
   int GPS_Lock_Signal;
   bool GPS_Lock_OK;
@@ -355,11 +428,11 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.5";
+  char Version[16] = "V8.6";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
-  bool PCB                        = 0;                          // USE Printed Circuit Board Relay
+  bool PCB                        = 1;                          // USE Printed Circuit Board Relay
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -384,12 +457,16 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Max_Cycle_Wire_Find_Back    = 50;     //EEPROM            // Maximum number of Backward tracking cycles in finding wire before the mower restarts a compass turn and wire find.  
 
   //Compass Settings
+  int  Compass_Setup_Mode             = 2;                      // 1 to use DFRobot Library   2 to use Manual access code.  3 MechaQMC Library
   bool Compass_Activate               = 0;       //EEPROM       // Turns on the Compass (needs to be 1 to activate further compass features)
-  int  Compass_Type                   = 1;                      // 1 = HMC QMC   2 = GY-521 ** Experimental Dont Use**
   bool Compass_Heading_Hold_Enabled   = 1;       //EEPROM       // Activates the compass heading hold function to keep the mower straight
   int  Home_Wire_Compass_Heading      = 110;     //EEPROM       // Heading the Mower will search for the wire once the mowing is completed.
   float CPower                        = 2;       //EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
 
+  // GYRO Settings
+  bool GYRO_Enabled                   = 1;      // EEPROM       // Enable the GYRO - Automatically activates the GYRO heading hold               
+  float GPower                        = 3;      // EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
+  
   // Pattern Mow
   int  Pattern_Mow                = 0;       //EEPROM       // 0 = OFF |  1 = Parallel (not working!!) | 3 = Sprials |
     
@@ -530,15 +607,24 @@ void setup() {
   Serial.println(F("Starting Mower Setup"));
   Serial.println(F("==================="));
   Load_EEPROM_Saved_Data();
+
+
+  // If the manuel set time is switched on
   if (Set_Time == 1 ) {
     Serial.print(F("Setting Time"));
-    Set_Time_On_RTC();
-  }
-  DisplayTime();
+    if (PCB == 0) Set_Time_On_DS1302();
+    if (PCB == 1) Set_Time_DS3231();
+    }
+  if (PCB == 0) DisplayTime_DS1302();
+  if (PCB == 1) Display_DS3231_Time();
+  
   Serial.println("");
   Prepare_Mower_from_Settings();
-  if (LCD_Screen_Keypad_Menu == 1) Setup_Run_LCD_Intro ();
-  Setup_Compass();
+  if (LCD_Screen_Keypad_Menu == 1)  Setup_Run_LCD_Intro ();
+  if (Compass_Setup_Mode == 1)      Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
+  if (Compass_Setup_Mode == 2)      Setup_Manuel_QMC5883_Compass();             // Uses manual i2C address
+  if (Compass_Setup_Mode == 3)      Setup_QMC5883L_Compass();                   // Uses QMC5883L Library
+  Setup_Gyro();
   delay(100);
   Setup_Relays();
   Setup_Tilt_Tip_Safety();

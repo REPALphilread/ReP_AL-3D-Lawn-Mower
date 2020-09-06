@@ -11,60 +11,16 @@ void Get_Compass_Reading() {
           // displays a star on the LCD to show compass is being used.
           if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
           if (LCD_Screen_Keypad_Menu == 1) lcd.print("*");
-        
+
+          // Gets the compass data depending on which method is selected    
+          if (Compass_Detected == 1) Get_DFRobot_HMC5883L_Reading();
+          if (Compass_Detected == 2) Get_DFRobot_QMC5883_Reading(); 
+          if (Compass_Detected == 3) Get_Manuel_QMC5883_Reading();                                               
+          if (Compass_Detected == 4) Get_QMC5883L_Reading();
           
-          if (Compass_Type == 1)  {
-            
-            if (Compass_Detected == 1) {                                             // HMC5883
-                long x = micros();
-                Vector norm = compass.readNormalize();
-                delay(30);
-                Heading = atan2(norm.YAxis, norm.XAxis);                            // Calculate heading
-                }
-        
-            if (Compass_Detected == 2) {                                             // QMC5883
-                if ( (Loop_Cycle_Mowing % 2) == 0) {                                // Only take readings every second cycle. 
-                    long x = micros();
-                    Vector norm = compass.readNormalize();
-                    delay(30);
-                    Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
-                    }
-                }
-            
-            }
-          
-          if (Compass_Type == 2)  {
-             Wire.beginTransmission(MPU_addr);
-             Wire.write(0x3B);
-             Wire.endTransmission(false);
-             Wire.requestFrom(MPU_addr,14,true);
-             AcX=Wire.read()<<8|Wire.read();
-             AcY=Wire.read()<<8|Wire.read();
-             AcZ=Wire.read()<<8|Wire.read();
-             int xAng = map(AcX,minVal,maxVal,-90,90);
-             int yAng = map(AcY,minVal,maxVal,-90,90);
-             int zAng = map(AcZ,minVal,maxVal,-90,90);
-              
-                int Xaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
-                int Yaxis_GY501 = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
-                int Zaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
-        
-                Heading = atan2(yAng, xAng);
-                
-                Serial.print("AngleX= ");
-                Serial.println(Xaxis_GY501);
-                Serial.print("AngleY= ");
-                Serial.println(Yaxis_GY501);
-              
-                Serial.print("AngleZ= ");
-                Serial.println(Zaxis_GY501);
-                Serial.println("-----------------------------------------");
-                delay(400);
-              }    
-        
           if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
           if (LCD_Screen_Keypad_Menu == 1) lcd.print("/");
-        
+
           // Set declination angle. Find your location declination on: http://magnetic-declination.com/
           // (+) Positive or (-) for negative,
           float Declination_Angle = (2.0 + (19.0 / 60.0)) / (180 / PI);   // Bad Krozingen is 2° 19'
@@ -78,20 +34,87 @@ void Get_Compass_Reading() {
             }
         
           Compass_Heading_Degrees = Heading * 180 / M_PI;                 // Convert to degrees
-          //Serial.print(F("Comp H:"));
-          //Serial.print(Heading);
+
           Serial.print(F("Comp°:"));
           Serial.print(Compass_Heading_Degrees);
           Serial.print("|");
           delay(5);
-          lcd.setCursor(7, 0);
-          lcd.print(" ");
+          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
+          if (LCD_Screen_Keypad_Menu == 1) lcd.print(" ");
           delay(100);
-        }
+          }
+}
+
+
+void Get_DFRobot_HMC5883L_Reading() {
+   //long x = micros();
+   Vector norm = compass.readNormalize();
+   delay(30);
+   Heading = atan2(norm.YAxis, norm.XAxis);                            // Calculate heading
+   }
+
+void Get_DFRobot_QMC5883_Reading() {
+   //long x = micros();
+   Vector norm = compass.readNormalize();
+   delay(30);
+   Heading = atan2(norm.YAxis, norm.XAxis);                            // Calculate heading
+   }
+
+
+void Get_Manuel_QMC5883_Reading() {
+  
+  char msg[80];
+  Wire.beginTransmission(QMC5883_ADDRESS);
+  Wire.write(QMC5883_STATUS);
+  Wire.endTransmission();
+  Wire.requestFrom(QMC5883_ADDRESS, 1);
+
+  if (Wire.available() == 1) {
+    byte status  = Wire.read();
+    if (status & QMC5883_STATUS_DREADY) {
+      Wire.beginTransmission(QMC5883_ADDRESS);
+      Wire.write(QMC5883_OUTPUT_DATA);
+      Wire.endTransmission();
+      Wire.requestFrom(QMC5883_ADDRESS, 6);
+      if (Wire.available() == 6) {
+        int x, y, z;
+        x = Wire.read();
+        x |= Wire.read() << 8;
+        y = Wire.read() ;
+        y |= Wire.read() << 8;
+        z = Wire.read() ;
+        z |= Wire.read() << 8;
+
+        sprintf(msg, "%d\t%d\t%d", x,y,z);
+        Serial.print(msg);
+        Serial.print("   X:");
+        Serial.print(x);
+        Serial.print(" Y:");
+        Serial.print(y);
+        Serial.print(" Z:");
+        Serial.print(z);        
+        Heading = atan2(y,x);                          //Calculate Heading in Radians.
+        
+      } else {
+        Serial.println("output data underflow");
+      }
+    } else {
+      Serial.print(status);
+      Serial.println(":output data not ready");
+    }
+  } else {
+    Serial.println("status read underflow");
+  }
+  delay(100);
 
 }
 
 
+void Get_QMC5883L_Reading() {
+    int x, y, z;
+    Heading = compass2.readHeading();
+    Heading = atan2(y, x);                          //Calculate Heading in Radians.
+    }
 
 
 

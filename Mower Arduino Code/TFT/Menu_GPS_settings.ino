@@ -118,6 +118,35 @@ void Print_GPS_Menu_Settings() {
 
 void React_to_Button_Press_GPS_Settings() {
 
+    // Action if GPS ONOFF is pressed
+    if (GPS_Enabled_ONOFF_btn.justPressed()) {
+        
+        bool Changed = 0;
+        int Button_W = 160;
+        int Button_H = 60;
+        int Menu_Spacing = 20; 
+        int Column_Spacing = 200; 
+     
+        int Button_X = Pos_X2;
+        int Button_Y = Pos_Y2;  
+      
+        if ((GPS_Enabled == 1) && (Changed == 0))  {
+          GPS_Enabled  = 0;
+          Changed = 1;
+          GPS_Enabled_ONOFF_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "GPS OFF", 2);
+          GPS_Enabled_ONOFF_btn.drawButton(false);
+          }
+        
+        if ((GPS_Enabled  == 0) && (Changed == 0)) {
+          GPS_Enabled  = 1;
+          Changed = 1;
+          GPS_Enabled_ONOFF_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLACK, GREEN, BLACK, "GPS ON", 2);
+          GPS_Enabled_ONOFF_btn.drawButton(false);
+        }          
+
+    }
+
+
  // If the WIFI APP ON/OFF Button is pressed
  if (ONOFF1_btn.justPressed() ) {
 

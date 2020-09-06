@@ -124,6 +124,39 @@ Serial.println("*** EEPROM Settings ***");
     if (Compass_Activate == 1) Serial.println(F("ON"));
   }
 
+  int COMPASS_Setup_Mode_EEPROM = EEPROM.read(113);
+  if (COMPASS_Setup_Mode_EEPROM == 1) {
+    Compass_Setup_Mode = EEPROM.read(114);  
+    Serial.print(F("Compass Setup Mode from EEPROM : "));
+   if (Compass_Setup_Mode == 1) Serial.println(F("Setup DFRobot_QMC5883 Compass"));
+   if (Compass_Setup_Mode == 2) Serial.println(F("Setup QMC5883_Manual Compass"));           
+   if (Compass_Setup_Mode == 3) Serial.println(F("Setup QMC5883L Compass"));      
+   }
+
+  int Compass_Heading_Hold_Enabled_EEPROM = EEPROM.read(59);
+  if (Compass_Heading_Hold_Enabled_EEPROM == 1) {
+    Compass_Heading_Hold_Enabled = EEPROM.read(60);  
+    Serial.print(F("Compass HEading Hold Settings from EEPROM : "));
+    if (Compass_Heading_Hold_Enabled == 0) Serial.println(F("OFF"));
+    if (Compass_Heading_Hold_Enabled == 1) Serial.println(F("ON"));
+  }
+
+  int CPower_EEPROM = EEPROM.read(61);
+  if (CPower_EEPROM == 1) {
+    CPower = EEPROM.read(62); 
+    CPower = CPower / 10; 
+    Serial.print(F("Compass Power from EEPROM : "));
+    Serial.println(CPower);
+  }
+
+
+
+  int Compass_Home_EEPROM = EEPROM.read(27);
+  if (Compass_Home_EEPROM == 1) {
+    Home_Wire_Compass_Heading = (EEPROM.read(28) * 10);    // *10 as value can be more than 255. Vaule is therefore stored as a tenth value
+    Serial.print(F("Compass Home Degrees : ")); 
+    Serial.println(Home_Wire_Compass_Heading);
+  }
 
  int Tracking_PID_P_EEPROM = EEPROM.read(21);
   if (Tracking_PID_P_EEPROM == 1) {
@@ -153,12 +186,6 @@ Serial.println("*** EEPROM Settings ***");
   }
 
 
-  int Compass_Home_EEPROM = EEPROM.read(27);
-  if (Compass_Home_EEPROM == 1) {
-    Home_Wire_Compass_Heading = (EEPROM.read(28) * 10);    // *10 as value can be more than 255. Vaule is therefore stored as a tenth value
-    Serial.print(F("Compass Home Degrees : ")); 
-    Serial.println(Home_Wire_Compass_Heading);
-  }
 
   int Angle_Sensor_Enabled_EEPROM = EEPROM.read(29);
   if (Angle_Sensor_Enabled_EEPROM == 1) {
@@ -291,21 +318,7 @@ Serial.println("*** EEPROM Settings ***");
   }
 
 
-  int Compass_Heading_Hold_Enabled_EEPROM = EEPROM.read(59);
-  if (Compass_Heading_Hold_Enabled_EEPROM == 1) {
-    Compass_Heading_Hold_Enabled = EEPROM.read(60);  
-    Serial.print(F("Compass HEading Hold Settings from EEPROM : "));
-    if (Compass_Heading_Hold_Enabled == 0) Serial.println(F("OFF"));
-    if (Compass_Heading_Hold_Enabled == 1) Serial.println(F("ON"));
-  }
 
-  int CPower_EEPROM = EEPROM.read(61);
-  if (CPower_EEPROM == 1) {
-    CPower = EEPROM.read(62); 
-    CPower = CPower / 100; 
-    Serial.print(F("Traking PID P Setting from EEPROM : "));
-    Serial.println(CPower);
-  }
 
   int Max_Sonar_Hit_EEPROM = EEPROM.read(63);
   if (Max_Sonar_Hit_EEPROM == 1) {
@@ -416,13 +429,6 @@ Serial.println("*** EEPROM Settings ***");
   }
 
 
-  int GPS_Enabled_EEPROM = EEPROM.read(99);
-  if (GPS_Enabled_EEPROM == 1) {
-    GPS_Enabled = EEPROM.read(100);  
-    Serial.print(F("GPS Enabled from EEPROM : "));
-    if (GPS_Enabled == 0) Serial.println(F("Disabled"));
-    if (GPS_Enabled == 1) Serial.println(F("Enabled"));
-  }
 
   int Turn_90_Delay_LH_EEPROM = EEPROM.read(101);
   if (Turn_90_Delay_LH_EEPROM == 1) {
@@ -446,6 +452,30 @@ Serial.println("*** EEPROM Settings ***");
     Line_Length_Cycles = Line_Length_Cycles * 10;
     Serial.print(F("Line_Length_Cycles Enabled from EEPROM : "));
     Serial.println(Line_Length_Cycles);
+  }
+
+  int GPS_Enabled_EEPROM = EEPROM.read(107);
+  if (GPS_Enabled_EEPROM == 1) {
+    GPS_Enabled = EEPROM.read(108);  
+    Serial.print(F("GPS Enabled from EEPROM : "));
+    if (GPS_Enabled == 0) Serial.println(F("Disabled"));
+    if (GPS_Enabled == 1) Serial.println(F("Enabled"));
+  }
+
+  int GYRO_Enabled_EEPROM = EEPROM.read(109);
+  if (GYRO_Enabled_EEPROM == 1) {
+    GYRO_Enabled = EEPROM.read(110);  
+    Serial.print(F("GYRO Enabled from EEPROM : "));
+    if (GYRO_Enabled == 0) Serial.println(F("Disabled"));
+    if (GYRO_Enabled == 1) Serial.println(F("Enabled"));
+  }
+  
+  int GPower_EEPROM = EEPROM.read(111);
+  if (GPower_EEPROM == 1) {
+    GPower = EEPROM.read(112); 
+    GPower = GPower / 10; 
+    Serial.print(F("GYRO PID set from EEPROM : "));
+    Serial.println(GPower);
   }
 
 Serial.println(F("*************************"));
@@ -503,11 +533,11 @@ void Clear_EERPOM() {
   EEPROM.write(94,0);     // Wheel Slow Speed LH
   EEPROM.write(96,0);     // Wheel Slow Speed RH
   EEPROM.write(98,0);     // Slow MAG Point
-  EEPROM.write(100,0);    // GPS Enabled
   EEPROM.write(102,0);    // Turn_90_Delay_LH 
   EEPROM.write(104,0);    // Turn_90_Delay_RH
   EEPROM.write(106,0);    // Line_Length_Cycles
-
-
-  
+  EEPROM.write(107,0);    // GPS Enabled
+  EEPROM.write(109,0);    // GYRO Enabled
+  EEPROM.write(111,0);    // GYRO Power
+  EEPROM.write(113,0);    // Compass Setup Mode
 }

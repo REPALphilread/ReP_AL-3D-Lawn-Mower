@@ -49,7 +49,7 @@ void Print_AlarmX_Menu() {
     Pos_X3 = Pos_X1 + 100;
     Pos_Y3 = Pos_Y1;  
     tft.setCursor(Pos_X3, Pos_Y3);            // Text Coordinates X, Y
-    tft.print(":");     
+    tft.print(F(":"));     
 
 
     // Minutes X 10 
@@ -339,6 +339,9 @@ void Sense_Button_AlarmX() {
 void Check_For_Active_Alarms() {
     if ((Alarm_1_ON == 1) || (Alarm_2_ON == 1) || (Alarm_3_ON == 1)) {
       bmpDraw("Alarmbell.bmp", 390, 235);
-      Serial.println(F("ALARM ON"));
+      if (Alarm_1_ON == 1) Serial.println(F("ALARM 1 ON"));
+      if (Alarm_2_ON == 1) Serial.println(F("ALARM 2 ON"));
+      if (Alarm_3_ON == 1) Serial.println(F("ALARM 3 ON"));
+   
     }
 }

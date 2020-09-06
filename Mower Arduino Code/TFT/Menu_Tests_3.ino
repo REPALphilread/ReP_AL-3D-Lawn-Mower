@@ -40,8 +40,8 @@ void Print_Testing_3_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Test2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "SPARE", 2);
-    Test2_btn.drawButton(false);
+    GYRO_Test_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "GYRO >", 2);
+    GYRO_Test_btn.drawButton(false);
 
     //Spare Test
     
@@ -120,7 +120,35 @@ void React_to_Button_Press_Testing_3() {
     }
 
 // Test 2
-if (Test2_btn.justPressed()) {
+if (GYRO_Test_btn.justPressed()) {
+    Setup_TFT_Screen_Test();
+    Menu_Active = 39;
+    Send_Menu_Selected_To_Mower_MEGA_No_RX();
+    tft.println(F("Testing GYRO Sensor"));
+    tft.setTextSize(2); 
+    tft.setCursor(50,80);
+    tft.print("X Angle");
+    tft.setCursor(250,80);
+    tft.print("Y Angle");
+    int GYRO_Sensor_Count = 0;
+    Menu_Complete_GYRO_Test = false;
+    while (Menu_Complete_GYRO_Test == false) {
+          tft.setTextColor(BLACK, BLACK); 
+          Print_X_Angle_Text();         
+          Print_Y_Angle_Text();    
+          Receive_GYRO_Sensor_Data();               
+          tft.setTextColor(YELLOW, BLACK);  
+          Print_X_Angle_Text();         
+          tft.setTextColor(RED, BLACK);  
+          Print_Y_Angle_Text();  
+          delay(500);
+          GYRO_Sensor_Count = GYRO_Sensor_Count + 1;
+          if (GYRO_Sensor_Count < 3)   Menu_Complete_GYRO_Test = false;   // Stops any first problems with the TXRX cancelling the test
+          if (GYRO_Sensor_Count > 100)  Menu_Complete_GYRO_Test = true;    // Backup Exit Clause
+          }
+
+    tft.fillScreen(BLACK);
+    Print_Testing_3_Menu(); 
     }
     
 // Test 3
@@ -147,6 +175,20 @@ if (Test2_btn.justPressed()) {
 }
 
 
+void Print_X_Angle_Text() {
+      tft.setTextSize(6); 
+      tft.setCursor(50,110);
+      tft.println(GYRO_X_Angle); 
+      }
+      
+void Print_Y_Angle_Text() {
+      tft.setTextSize(6); 
+      tft.setCursor(250,110);
+      tft.print(GYRO_Y_Angle);
+      }
+
+      
+
 void Print_Tilt_Text() {
       tft.setTextSize(6); 
       tft.setCursor(50,110);
@@ -165,7 +207,7 @@ void Print_Orientation_Text() {
 void Sense_Button_Press_Testing_3() {
     down = Touch_getXY();
     Tilt_Test_btn.press      (down && Tilt_Test_btn.contains(pixel_x, pixel_y));
-    Test2_btn.press          (down && Test2_btn.contains(pixel_x, pixel_y));
+    GYRO_Test_btn.press      (down && GYRO_Test_btn.contains(pixel_x, pixel_y));
     Test3_btn.press          (down && Test3_btn.contains(pixel_x, pixel_y));
     Test4_btn.press          (down && Test4_btn.contains(pixel_x, pixel_y));
     Test5_btn.press          (down && Test5_btn.contains(pixel_x, pixel_y));
@@ -173,7 +215,7 @@ void Sense_Button_Press_Testing_3() {
     Done6_btn.press          (down && Done6_btn.contains(pixel_x, pixel_y));
 
     if (Tilt_Test_btn.justReleased())   Tilt_Test_btn.drawButton();
-    if (Test2_btn.justReleased())       Test2_btn.drawButton();
+    if (GYRO_Test_btn.justReleased())   GYRO_Test_btn.drawButton();
     if (Test3_btn.justReleased())       Test3_btn.drawButton();
     if (Test4_btn.justReleased())       Test4_btn.drawButton();
     if (Test5_btn.justReleased())       Test5_btn.drawButton();

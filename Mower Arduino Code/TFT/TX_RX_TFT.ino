@@ -11,10 +11,9 @@ void Send_Menu_Selected_To_Mower_MEGA() {
     tft.setTextSize(3); 
     tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
     tft.setCursor(50, 50); 
-    tft.println("Please Wait..");
+    tft.println(F("Please Wait.."));
     Transmit_Active_Menu_Interupt();
-    delay(Delay_Transmit - 200);
-        
+    delay(Delay_Transmit - 200); 
     //Now check that the Transmition was succesfull.
     Check_TX_Received();
     Serial.print("TX Check:");
@@ -79,7 +78,7 @@ void Send_Menu_Selected_To_GPS_NodeMCU() {
     tft.setTextSize(2); 
     tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
     tft.setCursor(50, 50); 
-    tft.println("Talking to GPS....");
+    tft.println(F("Talking to GPS...."));
     Transmit_Active_Menu_Interupt_GPS();
     delay(1500);
         

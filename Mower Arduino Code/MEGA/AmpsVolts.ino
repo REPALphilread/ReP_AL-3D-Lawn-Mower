@@ -129,7 +129,7 @@ if (Show_TX_Data == 1) {
  float vout = 0.0;
  float R1 = 30000;      // Mower 330 = 30000    Mower LAM = 30000
  //float R2 = 7000;       // Mower 330 = 7000     
- float R2 = 7000;       // Mower LAM = 6500
+ float R2 = 7300;       // Mower LAM = 6500
  vout = (RawValueVolt * 5.0) / 1024.0; // see text
  Volts = vout / (R2/(R1+R2));
  Volts_Last = Volts;

@@ -90,7 +90,11 @@ if (TFT_Menu_Command == 23) Serial.println(F("Set Time"));
 if (TFT_Menu_Command == 24) Serial.println(F("Tip Sensor Menu"));
 if (TFT_Menu_Command == 25) Serial.println(F("Pattern Menu"));
 if (TFT_Menu_Command == 26) Serial.println(F("Battery Menu"));
+if (TFT_Menu_Command == 27) Serial.println(F("Compass Menu"));
+if (TFT_Menu_Command == 28) Serial.println(F("GYRO Menu"));
 
+
+if (TFT_Menu_Command == 39) Serial.println(F("GYRO Test"));
 if (TFT_Menu_Command == 40) Serial.println(F("Tilt Test"));
 if (TFT_Menu_Command == 41) Serial.println(F("Wire Test"));
 if (TFT_Menu_Command == 42) Serial.println(F("Relay Test"));
@@ -105,5 +109,6 @@ if (TFT_Menu_Command == 50) Serial.println(F("Bumper Bar"));
 if (TFT_Menu_Command == 55) Serial.println(F("Start-Up Value"));
 if (TFT_Menu_Command == 57) Serial.println(F("TX Docked Info"));
 if (TFT_Menu_Command == 58) Serial.println(F("Mower Running"));
+
 
 }

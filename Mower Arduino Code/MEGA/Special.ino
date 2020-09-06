@@ -17,7 +17,7 @@ void Special_Move_Into_Garden_Zone_X() {
     SetPins_ToGoForwards();                                         // Get ready to move off
     }
 
-void _Docking_Station() {
+void Manouver_Exit_From_Docking_Station() {
     lcd.clear();
     lcd.print(F("Exiting Garage"));
     delay(2000);

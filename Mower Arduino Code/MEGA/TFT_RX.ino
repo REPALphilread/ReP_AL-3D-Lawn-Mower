@@ -347,6 +347,42 @@ void Receive_Data_From_TFT()  {
   }
 
 
+// Receive the Navigation data from TFT
+  if (TFT_Menu_Command == 299) {
+      Serial.println(F("Receiving Navigation Values from TFT ..."));
+      delay(1100);
+      String Serial3_RX_Value  = "";                                             
+
+  while (Serial3.available() > 0) {
+    
+    char recieved = Serial3.read();
+    if ( recieved != '\a') {   
+        Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
+        } 
+
+       else if (recieved == '\a') {
+          GPS_Enabled = Serial3_RX_Value.toInt();                               
+          Serial3_RX_Value = "";
+          }
+    
+    else Serial.print(F("No Data Received|"));
+    }
+
+      Serial.print(F("GPS Enabled = "));
+      Serial.println(GPS_Enabled);
+
+      if (GPS_Enabled == 1) Setup_ADCMan();
+
+      Serial.println(" ");
+      // EEPROM
+      EEPROM.write(99 , 1);
+      EEPROM.write(100, GPS_Enabled);
+      
+      Serial.println(F("Saved to EEPROM"));
+      Serial.println(F(" "));
+
+}
+
 
 // Receive the Mower Motor Values Back again
   if (TFT_Menu_Command == 917) {
@@ -557,7 +593,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Mower Motor Values Back again
   if (TFT_Menu_Command == 919) {
-      Serial.println(F("Receiving Track PID Values from TFT ..."));
+      Serial.println(F("RX PID Values from TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";                                             
 
@@ -609,9 +645,9 @@ void Receive_Data_From_TFT()  {
   }
 
 
-// Receive the Navigation data from TFT
-  if (TFT_Menu_Command == 99) {
-      Serial.println(F("Receiving Navigation Values from TFT ..."));
+// Receive the Compass data from TFT
+  if (TFT_Menu_Command == 926) {
+      Serial.println(F("RX Compass from TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";                                             
 
@@ -634,7 +670,7 @@ void Receive_Data_From_TFT()  {
           Serial3_RX_Value = "";
           }
        else if (recieved == '\d') {
-          GPS_Enabled = Serial3_RX_Value.toInt();                               
+          Compass_Setup_Mode = Serial3_RX_Value.toInt();                               
           Serial3_RX_Value = "";
           }
     
@@ -643,38 +679,71 @@ void Receive_Data_From_TFT()  {
 
       Serial.print(F("Compass Activated = "));
       Serial.println(Compass_Activate);
-
       Serial.print(F("Heading Hold Enabled = "));
-      Serial.println(Compass_Heading_Hold_Enabled);
-          
+      Serial.println(Compass_Heading_Hold_Enabled);        
       Serial.print(F("Compass Power = "));
       CPower = CPower / 10;
       Serial.println(CPower);
+      Serial.print(F("Compas Setup Mode = "));
+      Serial.println(Compass_Setup_Mode); 
 
-      Serial.print(F("GPS Enabled = "));
-      Serial.println(GPS_Enabled);
-
-      if (GPS_Enabled == 1) Setup_ADCMan();
-
-      Serial.println(" ");
+      Serial.println("");
       // EEPROM
+      Serial.println("Save to EEPROM ");
       EEPROM.write(19 , 1);
       EEPROM.write(20 , Compass_Activate);
       EEPROM.write(59 , 1);
       EEPROM.write(60 , Compass_Heading_Hold_Enabled);
       EEPROM.write(61, 1);
-      EEPROM.write(62, (CPower*100)); 
-      EEPROM.write(99 , 1);
-      EEPROM.write(100, GPS_Enabled);
-      
-      Serial.println(F("Saved to EEPROM"));
-      Serial.println(F(" "));
+      EEPROM.write(62, (CPower*10)); 
+      EEPROM.write(113, 1);
+      EEPROM.write(114, Compass_Setup_Mode); 
 
 }
 
 
 
-// Receive the Navigation data from TFT
+// Receive the GYRO data from TFT
+  if (TFT_Menu_Command == 928) {
+      Serial.println(F("RX GYRO from TFT ..."));
+      delay(1100);
+      String Serial3_RX_Value  = "";                                             
+
+  while (Serial3.available() > 0) {
+    
+    char recieved = Serial3.read();
+    if ( recieved != '\a' && recieved != '\b') {   
+        Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
+        } 
+        else if (recieved == '\a') {
+          GYRO_Enabled = Serial3_RX_Value.toInt();                                 
+          Serial3_RX_Value = ""; // changed to string
+          } 
+       else if (recieved == '\b') {
+          GPower = Serial3_RX_Value.toInt();                               
+          Serial3_RX_Value = "";
+          } 
+    
+    else Serial.print(F("No Data Received|"));
+    }
+
+
+
+      Serial.print(F("GYRO Enabled = "));
+      Serial.println(GYRO_Enabled);
+      Serial.print(F("GYRO Power = "));
+      GPower = GPower / 10;
+      Serial.println(GPower);      
+      if (GYRO_Enabled == 1) Setup_Gyro();
+      EEPROM.write(109 , 1);
+      EEPROM.write(110, GYRO_Enabled);
+      EEPROM.write(111, 1);
+      EEPROM.write(112, (GPower*10)); 
+  }
+
+
+
+// Receive the Time Alarm data from TFT
   if (TFT_Menu_Command == 920) {
       Serial.println(F("Receiving Alarm 1 Values from TFT ..."));
       delay(1100);
@@ -736,7 +805,7 @@ void Receive_Data_From_TFT()  {
 
 
 
-// Receive the Navigation data from TFT
+// Receive the Alarm 2 data from TFT
   if (TFT_Menu_Command == 921) {
       Serial.println(F("Receiving Alarm 2 Values from TFT ..."));
       delay(1100);
@@ -796,7 +865,7 @@ void Receive_Data_From_TFT()  {
   }
 
 
-// Receive the Navigation data from TFT
+// Receive the Alarm 3 data from TFT
   if (TFT_Menu_Command == 922) {
       Serial.println(F("Receiving Alarm 3 Values from TFT ..."));
       delay(1100);
@@ -857,7 +926,7 @@ void Receive_Data_From_TFT()  {
 
 
 
-// Receive the Navigation data from TFT
+// Receive the Time data from TFT
   if (TFT_Menu_Command == 923) {
       Serial.println(F("Receiving Time Values from TFT ..."));
       delay(1100);
@@ -881,21 +950,28 @@ void Receive_Data_From_TFT()  {
       } 
     else Serial.print(F("No Data Received|"));
   }
-               rtc.writeProtect(false);
-               rtc.halt(false);
-               Serial.print(F("Clock : "));
-               Serial.print(set_hour);
-               Serial.print(":");
-               if (set_min < 10) Serial.print("0");
-               Serial.println(set_min);
-               Time t(2019, 07, 19, set_hour, set_min, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
-               rtc.time(t);    
-               delay(200);
-               rtc.writeProtect(true);
-               rtc.halt(true);
-               rtc.time(t); 
-               Serial.println(F("TIME SAVED"));
-               delay(2000);
+
+       if (PCB == 0) {           
+          rtc.writeProtect(false);
+          rtc.halt(false);
+          Serial.print(F("Clock : "));
+          Serial.print(set_hour);
+          Serial.print(":");
+          if (set_min < 10) Serial.print("0");
+          Serial.println(set_min);
+          Time t(2019, 07, 19, set_hour, set_min, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
+          rtc.time(t);    
+          delay(200);
+          rtc.writeProtect(true);
+          rtc.halt(true);
+          rtc.time(t); 
+          }
+
+      if (PCB == 1) {
+          Set_DS3231_Time(00,set_min, set_hour, 2,14,7,20);    //second, minute, hour, dayof week, day of month, month, year
+          Serial.println(F("TIME SAVED"));
+          delay(2000);
+          }
   
   }
 

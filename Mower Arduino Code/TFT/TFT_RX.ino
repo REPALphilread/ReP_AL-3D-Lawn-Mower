@@ -444,7 +444,7 @@ void Receive_Track_PID_Data() {
 
 
 
-void Receive_Navigation_Data() {
+void Receive_Compass_Data() {
 
     String Serial1_RX_Value  = "";                                              
 
@@ -467,10 +467,10 @@ void Receive_Navigation_Data() {
           Serial1_RX_Value = "";
           }
        else if (recieved == '\d') {
-          GPS_Enabled = Serial1_RX_Value.toInt();                                
+          Compass_Setup_Mode = Serial1_RX_Value.toInt();                                
           Serial1_RX_Value = "";
           }
-    
+
     else Serial.print(F("No Data Received|"));
     }
 
@@ -483,10 +483,66 @@ void Receive_Navigation_Data() {
       Serial.print(F("Compass Power = "));
       CPower = CPower / 10;
       Serial.println(CPower);
+      
+      Serial.print(F("Compass Setup Mode = "));
+      Serial.println(Compass_Setup_Mode);
+
+      Serial.println(F(" "));
+}
+
+
+
+          
+void Receive_GYRO_Data() {
+
+  String Serial1_RX_Value  = "";                                              
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' && recieved != '\b') {   
+        Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+        } 
+       else if (recieved == '\a') {
+          GYRO_Enabled = Serial1_RX_Value.toInt();                                
+          Serial1_RX_Value = "";
+          }
+       else if (recieved == '\b') {
+          GPower = Serial1_RX_Value.toInt();                                
+          Serial1_RX_Value = "";
+          }
+
+    else Serial.print(F("No Data Received|"));
+    }
+
+      Serial.print(F("GYRO Enabled = "));
+      Serial.println(GYRO_Enabled);
+      Serial.print(F("GPower = "));      
+      GPower = GPower / 10;
+      Serial.println(GPower);
+  }
+
+
+void Receive_Navigation_Data() {
+
+    String Serial1_RX_Value  = "";                                              
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a') {   
+        Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+        } 
+       else if (recieved == '\a') {
+          GPS_Enabled = Serial1_RX_Value.toInt();                                
+          Serial1_RX_Value = "";
+          }
+    
+    else Serial.print(F("No Data Received|"));
+    }
 
       Serial.print(F("GPS Enabled = "));
       Serial.println(GPS_Enabled);
-
       Serial.println(F(" "));
 }
 
@@ -860,6 +916,40 @@ void Receive_Compass_Sensor_Data() {
     Serial.print(Compass_Heading_Degrees);
     Serial.print("  Test Completed: ");
     Serial.println(Menu_Complete_Compass_Test); 
+}
+
+
+void Receive_GYRO_Sensor_Data() {
+  String Serial1_RX_Value  = "";                                            
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c') {   
+      Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\a') {
+      GYRO_X_Angle = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\b') {
+      GYRO_Y_Angle = Serial1_RX_Value.toInt();                         
+      Serial1_RX_Value = "";
+      } 
+      else if (recieved == '\c') {
+      Menu_Complete_GYRO_Test = Serial1_RX_Value.toInt();                         
+      Serial1_RX_Value = "";
+      } 
+    else Serial.print(F("No Data Received|"));
+  }
+
+    
+    Serial.print("GYRO X Angle: ");
+    Serial.print(GYRO_X_Angle);
+    Serial.print("  GYRO_Y_Angle: ");
+    Serial.print(GYRO_Y_Angle);
+    Serial.print("  Test Completed: ");
+    Serial.println(Menu_Complete_GYRO_Test); 
 }
 
 

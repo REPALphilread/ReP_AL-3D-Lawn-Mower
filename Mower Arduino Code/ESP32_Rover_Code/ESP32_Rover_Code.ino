@@ -26,13 +26,12 @@ HardwareSerial TFT_Serial(1);
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "Blynk GPS Token";      // Input your Blank Auth Code here.
+char auth[] = "BLYNK AUTH";      // Little Monster Input your Blank Auth Code here.
 
 
 // Your WiFi credentials. Set password to "" for open networks.
-char ssid[] = "WLAN Name";
-char pass[] = "WLAN Password";
-
+char ssid[] = "WLAN-NAme";
+char pass[] = "WLAN-Password";
 
 
 BlynkTimer timer;
@@ -310,5 +309,21 @@ if (GPS_WIFI_Enabled == true) {
   Blynk_Update_Frequecy = Blynk_Update_Frequecy + 1;
   Serial.println("");
   }
+
+if (GPS_WIFI_Enabled == 1)  {
+    if(!Blynk.connected()) {
+        digitalWrite(GPS_Signal_Pin, LOW);       // OUTSIDE FENCE = 0V on Pin 26
+        digitalWrite(LED, LOW);
+        Serial.println("ESP32 Disconnected");
+        Serial.println("Reconnecting . . . . . . ");
+        WIFI_Connect();
+        digitalWrite(GPS_Signal_Pin, HIGH);       // OUTSIDE FENCE = 0V on Pin 26
+        digitalWrite(LED, HIGH);
+        }
+  else {
+
+    }
+  
+}
 
 }

@@ -2,7 +2,7 @@
 void Transmit_Save_Sonar_Values() {
    
     // Menu Sonar
-      Serial.println("TX Sonar to MEGA");
+      Serial.println("TX Sonar");
       delay(5);
       
       Serial1.print(Sonar_1_Activate);
@@ -41,7 +41,7 @@ void Transmit_Save_Sonar_Values() {
 
 
 void  Transmit_Saved_Battery_Values() {
-      Serial.println("TX Battery to MEGA");
+      Serial.println("TX Battery");
       
       Serial1.print(Battery_Min * 10);     // *100 to make a float value volts 12.6 into an int 126
       Serial1.println("\a");
@@ -62,7 +62,7 @@ void  Transmit_Saved_Battery_Values() {
 
 void Transmit_Sensor_Menu1_Values() {
 
-      Serial.println("TX Sensor to MEGA");
+      Serial.println("TX Sensor");
       
       Serial1.print(Perimeter_Wire_Enabled);
       Serial1.println("\a");
@@ -87,7 +87,7 @@ void Transmit_Sensor_Menu1_Values() {
 
 
 void Transmit_Saved_Rain_Sensor_Values () {
-      Serial.println("TX Rain to MEGA");
+      Serial.println("TX Rain");
       
       Serial1.print(Rain_Sensor_Installed);
       Serial1.println("\a");
@@ -105,7 +105,7 @@ void Transmit_Saved_Rain_Sensor_Values () {
 
 
 void Transmit_Wheel_Motor_Values() {
-      Serial.println("TX Wheel Motor to MEGA");
+      Serial.println("TX Wheel Motor");
       
       Serial1.print(PWM_MaxSpeed_LH);
       Serial1.println("\a");
@@ -141,7 +141,7 @@ void Transmit_Wheel_Motor_Values() {
       }
 
 void Transmit_Blade_Motor_Values() {
-      Serial.println("TX Blade Motor to MEGA");
+      Serial.println("TX Blade");
       
       Serial1.print(PWM_Blade_Speed);
       Serial1.println("\a");
@@ -159,7 +159,7 @@ void Transmit_Blade_Motor_Values() {
       }
 
 void Transmit_Save_Movement_Values() {
-      Serial.println("TX Movement to MEGA");
+      Serial.println("TX Movement");
       
       Serial1.print(Max_Cycles_Straight / 10);
       Serial1.println("\a");
@@ -196,7 +196,7 @@ void Transmit_Save_Movement_Values() {
 
 
 void Transmit_Saved_Tracking_Exit_Values() {
-      Serial.println("TX Track Exit MEGA");
+      Serial.println("TX Exit");
       
       Serial1.print(Track_Wire_Zone_1_Cycles / 100);
       Serial1.println("\a");
@@ -233,7 +233,7 @@ void Transmit_Saved_Tracking_Exit_Values() {
       }
 
 void Transmit_Saved_Tracking_Find_Wire_Values() {
-      Serial.println("TX Track Find Wire MEGA");
+      Serial.println("TX Wire");
       
       Serial1.print(Max_Cycle_Wire_Find / 100);
       Serial1.println("\a");
@@ -259,7 +259,7 @@ void Transmit_Saved_Tracking_Find_Wire_Values() {
 
 
 void  Transmit_Tracking_Menu_Values() {
-      Serial.println("TX Tracking MEGA");
+      Serial.println("TX Tracking");
     
       Serial1.print(Use_Charging_Station);
       Serial1.println("\a");
@@ -270,7 +270,7 @@ void  Transmit_Tracking_Menu_Values() {
       } 
 
 void Transmit_Saved_Tracking_PID_Values() {
-      Serial.println("TX Find Wire MEGA");
+      Serial.println("TX Find");
       
       Serial1.print(Max_Tracking_Turn_Left / 10);
       Serial1.println("\a");
@@ -293,8 +293,8 @@ void Transmit_Saved_Tracking_PID_Values() {
       Serial.println(F(" "));     
       }
 
-void Transmit_Navigation_Menu_Values() {
-      Serial.println("TX Nav to MEGA");
+void Transmit_Compass_Menu_Values() {
+      Serial.println("TX Compass");
       
       Serial1.print(Compass_Activate);
       Serial1.println("\a");
@@ -302,28 +302,63 @@ void Transmit_Navigation_Menu_Values() {
 
       Serial1.print(Compass_Heading_Hold_Enabled);
       Serial1.println("\b");
-      delay(200);  
-
+      delay(300);  
+      
       Serial1.print(CPower * 10);
       Serial1.println("\c");
-      delay(200);  
+      delay(300);  
 
-      Serial1.print(GPS_Enabled);
+      Serial1.print(Compass_Setup_Mode);
       Serial1.println("\d");
-      delay(200);  
+      delay(300); 
 
       Serial.print(F("Compass Activated = "));
       Serial.println(Compass_Activate);
-      Serial.print(F("Heading Hold Enebaled = "));
-      Serial.println(Compass_Heading_Hold_Enabled);          
+      Serial.print(F("Heading Hold Enabled = "));
+      Serial.println(Compass_Heading_Hold_Enabled);   
       Serial.print(F("Compass Power = "));
       Serial.println(CPower);    
+      Serial.print(F("Compass Setup Mode = "));
+      Serial.println(Compass_Setup_Mode); 
+
+}
+
+void Transmit_GYRO_Menu_Values() {
+
+      Serial.println("TX GYRO");
+      
+      Serial1.print(GYRO_Enabled);
+      Serial1.println("\a");
+      delay(200);  
+
+
+      Serial1.print(GPower * 10);
+      Serial1.println("\b");
+      delay(200);  
+
+      Serial.print(F("GYRO Enabled = "));
+      Serial.println(GYRO_Enabled);   
+      Serial.print(F("GPower = "));
+      Serial.println(GPower);  
+      }
+
+
+void Transmit_Navigation_Menu_Values() {
+      Serial.println("TX Nav");
+
+      Serial1.print(GPS_Enabled);
+      Serial1.println("\a");
+      delay(200);  
+
       Serial.print(F("GPS Enabled = "));
       Serial.println(GPS_Enabled);   
       }
 
+
+      
+
 void Transmit_Save_Alarm1_Values() {
-      Serial.println("TX Alarm1 to MEGA");
+      Serial.println("TX Alarm1");
       
       Serial1.print(Alarm_1_ON);
       Serial1.println("\a");
@@ -363,7 +398,7 @@ void Transmit_Save_Alarm1_Values() {
 
 
 void Transmit_Save_Alarm2_Values() {
-      Serial.println("TX Alarm1 to MEGA");
+      Serial.println("TX Alarm2");
       
       Serial1.print(Alarm_2_ON);
       Serial1.println("\a");
@@ -401,7 +436,7 @@ void Transmit_Save_Alarm2_Values() {
       }
 
 void Transmit_Save_Alarm3_Values() {
-      Serial.println("TX Alarm3 to MEGA");
+      Serial.println("TX Alarm3");
       
       Serial1.print(Alarm_3_ON);
       Serial1.println("\a");
@@ -440,7 +475,7 @@ void Transmit_Save_Alarm3_Values() {
 
 
 void Transmit_Save_Set_Time_Values() {
-      Serial.println("TX Time to MEGA");
+      Serial.println("TX Time");
       
       Serial1.print(Time_Hour);
       Serial1.println("\a");
@@ -458,7 +493,7 @@ void Transmit_Save_Set_Time_Values() {
 
 void   Transmit_Saved_Pattern_Values() {
       
-      Serial.println(F("TX Pattern to MEGA"));
+      Serial.println(F("TX Pattern"));
       
       Serial1.print(Pattern_Mow );
       Serial1.println("\a");
@@ -502,7 +537,7 @@ void   Transmit_Saved_Pattern_Values() {
 
 
 void Transmit_Mower_Start_Conditions_Exit_Dock() {
-      Serial.println("TX Start Cond to MEGA");
+      Serial.println("TX Start");
       
       Serial1.print(Exit_Zone);
       Serial1.println("\a");
@@ -526,7 +561,7 @@ void Transmit_Mower_Start_Conditions_Exit_Dock() {
 
 
 void Transmit_Mower_Start_Conditions_Quick_Start() {
-      Serial.println("TX Start Cond to MEGA");
+      Serial.println("TX QStart");
       
       Serial1.print(Mow_Time);
       Serial1.println("\a");
@@ -545,7 +580,7 @@ void Transmit_Mower_Start_Conditions_Quick_Start() {
 
       
 void Transmit_Saved_Tip_Sensor_Values() {
-      Serial.println("TX Tip Sensor to MEGA");
+      Serial.println("TX Tip");
       
       Serial1.print(Angle_Sensor_Enabled);
       Serial1.println("\a");
@@ -564,7 +599,7 @@ void Transmit_Saved_Tip_Sensor_Values() {
 
 
 void Transmit_Saved_GPS_Values() {
-      Serial.println(F("TX GPS Settings to ESP32"));
+      Serial.println(F("TX GPS ESP32"));
       
       Serial2.print(GPS_WIFI_Enabled);
       Serial2.println("\a");
@@ -578,6 +613,11 @@ void Transmit_Saved_GPS_Values() {
       Serial2.println("\c");
       delay(1000); 
       Serial2.flush();
+
+      Serial1.print(GPS_Enabled);
+      Serial1.println("\d");
+      delay(200);  
+
       
       Serial.print(F("GPS_WIFI_Enabled = "));
       if (GPS_WIFI_Enabled == 1) Serial.println("Enabled");

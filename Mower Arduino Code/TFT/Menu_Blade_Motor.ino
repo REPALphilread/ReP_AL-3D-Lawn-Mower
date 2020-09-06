@@ -45,9 +45,9 @@ void Print_Blade_Motor_Menu() {
   tft.setTextSize(2); 
   tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour
   tft.setCursor(Button_X_Pos - Button_W  + 10, (Bar_Pos_Y + Bar_Height + Bar_To_Button_Y + Button_H - 10) );            // Text Coordinates X, Y
-  tft.print("Blade");
+  tft.print(F("Blade"));
   tft.setCursor(Button_X_Pos - 20, (Bar_Pos_Y - Button_H - 30) );            // Text Coordinates X, Y
-  tft.print("PWM");
+  tft.print(F("PWM"));
 
   Print_RPM_Blade_Value();  
 

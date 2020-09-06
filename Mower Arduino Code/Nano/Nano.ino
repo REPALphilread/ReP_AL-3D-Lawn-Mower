@@ -45,7 +45,7 @@ void Calculate_Volt_Amp() {
  
  float vout = 0.0;
  float R1 = 30000;      // 30000 Mower 2    Mower 1 30000
- float R2 = 7300;       // 7300 Mower 2     Mower 1 7500
+ float R2 = 7500;       // 7300 Mower 2     Mower 1 7500
  vout = (RawValueVolt * 5.0) / 1024.0; // see text
  VoltsTX = vout / (R2/(R1+R2)); 
 
