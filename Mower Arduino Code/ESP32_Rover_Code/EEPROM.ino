@@ -1,40 +1,47 @@
 void Activate_EEPROM_Seetings() {
 
+Serial.println(" ");
+Serial.println(" ");
+Serial.println("Loading Saved Settings from EEPROM");
+Serial.println("---------------------------------- ");
  
-   bool Fence_EEPROM = EEPROM.read(502);
+   bool Fence_EEPROM = EEPROM.read(5);
    Serial.print("Fence_EEPROM = "); 
    Serial.println(Fence_EEPROM);
    if (Fence_EEPROM == 1)  {
-     Fence = EEPROM.read(503); 
-     Serial.print("Fence from EEPROM : ");
+     Fence = EEPROM.read(6); 
+     Serial.print("Fence Selected : ");
      Serial.println(Fence);
      Serial.println(" ");
-     Serial.print("Active Fence :");
-     Serial.println(Fence);
      }
    
 
-  bool WIFI_Enabled_EEPROM = EEPROM.read(504);
+  bool GPS_WIFI_Enabled_EEPROM = EEPROM.read(1);
   Serial.print("WIFI_Enabled_EEPROM = "); 
-  Serial.println(WIFI_Enabled_EEPROM);
-  if (WIFI_Enabled_EEPROM == 1) {
-    WIFI_Enabled = EEPROM.read(505);  
-    Serial.print(F("WIFI Enabled from EEPROM : "));
-    if (WIFI_Enabled == 0) Serial.println(F("OFF"));
-    if (WIFI_Enabled == 1) Serial.println(F("ON"));
+  Serial.println(GPS_WIFI_Enabled_EEPROM);
+  if (GPS_WIFI_Enabled_EEPROM == 1) {
+    GPS_WIFI_Enabled = EEPROM.read(2);  
+    Serial.print(F("WIFI Enabled : "));
+    if (GPS_WIFI_Enabled == 0) Serial.println(F("OFF"));
+    if (GPS_WIFI_Enabled == 1) Serial.println(F("ON"));
+         Serial.println(" ");
     }
 
- bool Min_Sats_EEPROM = EEPROM.read(506);
- Serial.print("Min_Sats_EEPROM = "); 
- Serial.println(Min_Sats_EEPROM);
- if (Min_Sats_EEPROM == 1) {
-    Min_Sats = EEPROM.read(507);  
-    Serial.print(F("Min Sats Enabled from EEPROM : "));
-    Serial.println(Min_Sats);
+ bool Simulation_Mode_EEPROM = EEPROM.read(3);
+ Serial.print("Simulation Mode = "); 
+ Serial.println(Simulation_Mode_EEPROM);
+ if (Simulation_Mode_EEPROM == 1) {
+    Simulation_Mode = EEPROM.read(4);  
+    Serial.print(F("Simulation Mode : "));
+    if (Simulation_Mode == 0) Serial.println(F("OFF"));
+    if (Simulation_Mode == 1) Serial.println(F("ON"));
+    Serial.println(" ");
     }
  
-
-
+Serial.println("---------------------------------- ");
+Serial.println(" ");
+Serial.println(" ");
+Serial.println(" ");
 delay(2000);
 }
 

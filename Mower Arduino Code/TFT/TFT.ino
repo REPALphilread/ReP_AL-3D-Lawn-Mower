@@ -12,7 +12,6 @@ MCUFRIEND_kbv tft;
 #include <SdFat.h>           // Use the SdFat library
 SdFatSoftSpi<12, 11, 13> SD; //Bit-Bang on the Shield pins
 #include <EEPROM.h>
-#include <ArduinoJson.h>
   
 #define MINPRESSURE 485             // if multiple buttons are pressing increase this value
 #define MAXPRESSURE 1000
@@ -359,9 +358,9 @@ int   Value_Y8;
 // GPS Menu
 
   bool  GPS_Enabled;
-  int   GPS_Mode = 0;
+  int   GPS_WIFI_Enabled = 0;
   int   Fence = 0;
-  int   Min_Sats = 0;
+  int   Simulation_Mode = 0;
   int   GPS_Lock_OK_TX;
 
 

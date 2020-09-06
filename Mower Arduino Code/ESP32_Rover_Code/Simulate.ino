@@ -5,8 +5,9 @@ void Simulate_Mower_Movements() {
     
     Serial.print(F("Simuation = Bounce: "));
     Serial.print(bounce);
-    Serial.print(F(" Bounce Back: "));
-    Serial.println(bounce_back);
+    Serial.print(F(" | Bounce Back: "));
+    Serial.print(bounce_back);
+    Serial.print(" | ");
     
     // Simulates the mower moving around the GPS Fence.
     if (Mower_In_Out == 0) { 

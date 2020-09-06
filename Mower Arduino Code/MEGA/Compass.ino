@@ -4,72 +4,91 @@
 
 /* Calculates the compass heading as heading & degrees of the onboard compass */
 void Get_Compass_Reading() {
+
+  // If the Compass is activated
+  if (Compass_Activate == 1) {
   
-  // displays a star on the LCD to show compass is being used.
-  lcd.setCursor(7, 0);
-  lcd.print("*");
-
-
-  if (Compass_Type == 1)  {
-    Vector norm = compass.readNormalize();
-    delay(30);
-    Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
-    }
-  
-  if (Compass_Type == 2)  {
-     Wire.beginTransmission(MPU_addr);
-     Wire.write(0x3B);
-     Wire.endTransmission(false);
-     Wire.requestFrom(MPU_addr,14,true);
-     AcX=Wire.read()<<8|Wire.read();
-     AcY=Wire.read()<<8|Wire.read();
-     AcZ=Wire.read()<<8|Wire.read();
-     int xAng = map(AcX,minVal,maxVal,-90,90);
-     int yAng = map(AcY,minVal,maxVal,-90,90);
-     int zAng = map(AcZ,minVal,maxVal,-90,90);
-      
-        int Xaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
-        int Yaxis_GY501 = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
-        int Zaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
-
-        Heading = atan2(yAng, xAng);
+          // displays a star on the LCD to show compass is being used.
+          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
+          if (LCD_Screen_Keypad_Menu == 1) lcd.print("*");
         
-        Serial.print("AngleX= ");
-        Serial.println(Xaxis_GY501);
-        Serial.print("AngleY= ");
-        Serial.println(Yaxis_GY501);
-      
-        Serial.print("AngleZ= ");
-        Serial.println(Zaxis_GY501);
-        Serial.println("-----------------------------------------");
-        delay(400);
-      }    
+          
+          if (Compass_Type == 1)  {
+            
+            if (Compass_Detected == 1) {                                             // HMC5883
+                long x = micros();
+                Vector norm = compass.readNormalize();
+                delay(30);
+                Heading = atan2(norm.YAxis, norm.XAxis);                            // Calculate heading
+                }
+        
+            if (Compass_Detected == 2) {                                             // QMC5883
+                if ( (Loop_Cycle_Mowing % 2) == 0) {                                // Only take readings every second cycle. 
+                    long x = micros();
+                    Vector norm = compass.readNormalize();
+                    delay(30);
+                    Heading = atan2(norm.YAxis, norm.XAxis);                        // Calculate heading
+                    }
+                }
+            
+            }
+          
+          if (Compass_Type == 2)  {
+             Wire.beginTransmission(MPU_addr);
+             Wire.write(0x3B);
+             Wire.endTransmission(false);
+             Wire.requestFrom(MPU_addr,14,true);
+             AcX=Wire.read()<<8|Wire.read();
+             AcY=Wire.read()<<8|Wire.read();
+             AcZ=Wire.read()<<8|Wire.read();
+             int xAng = map(AcX,minVal,maxVal,-90,90);
+             int yAng = map(AcY,minVal,maxVal,-90,90);
+             int zAng = map(AcZ,minVal,maxVal,-90,90);
+              
+                int Xaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
+                int Yaxis_GY501 = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
+                int Zaxis_GY501 = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
+        
+                Heading = atan2(yAng, xAng);
+                
+                Serial.print("AngleX= ");
+                Serial.println(Xaxis_GY501);
+                Serial.print("AngleY= ");
+                Serial.println(Yaxis_GY501);
+              
+                Serial.print("AngleZ= ");
+                Serial.println(Zaxis_GY501);
+                Serial.println("-----------------------------------------");
+                delay(400);
+              }    
+        
+          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
+          if (LCD_Screen_Keypad_Menu == 1) lcd.print("/");
+        
+          // Set declination angle. Find your location declination on: http://magnetic-declination.com/
+          // (+) Positive or (-) for negative,
+          float Declination_Angle = (2.0 + (19.0 / 60.0)) / (180 / PI);   // Bad Krozingen is 2° 19'
+          Heading += Declination_Angle;
+        
+          if (Heading < 0) {                                              // Correct for heading < 0deg and heading > 360deg
+            Heading += 2 * PI;
+            }
+          if (Heading > 2 * PI) {
+            Heading -= 2 * PI;
+            }
+        
+          Compass_Heading_Degrees = Heading * 180 / M_PI;                 // Convert to degrees
+          //Serial.print(F("Comp H:"));
+          //Serial.print(Heading);
+          Serial.print(F("Comp°:"));
+          Serial.print(Compass_Heading_Degrees);
+          Serial.print("|");
+          delay(5);
+          lcd.setCursor(7, 0);
+          lcd.print(" ");
+          delay(100);
+        }
 
-  lcd.setCursor(7, 0);
-  lcd.print("/");
-
-  // Set declination angle. Find your location declination on: http://magnetic-declination.com/
-  // (+) Positive or (-) for negative,
-  float Declination_Angle = (2.0 + (19.0 / 60.0)) / (180 / PI);   // Bad Krozingen is 2° 19'
-  Heading += Declination_Angle;
-
-  if (Heading < 0) {                                              // Correct for heading < 0deg and heading > 360deg
-    Heading += 2 * PI;
-    }
-  if (Heading > 2 * PI) {
-    Heading -= 2 * PI;
-    }
-
-  Compass_Heading_Degrees = Heading * 180 / M_PI;                 // Convert to degrees
-  //Serial.print(F("Comp H:"));
-  //Serial.print(Heading);
-  Serial.print(F("Comp°:"));
-  Serial.print(Compass_Heading_Degrees);
-  Serial.print("|");
-  delay(5);
-  lcd.setCursor(7, 0);
-  lcd.print(" ");
-  delay(100);
 }
 
 

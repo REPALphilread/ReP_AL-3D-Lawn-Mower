@@ -7,7 +7,7 @@ void Check_Wire_In_Out() {
       if (TFT_Screen_Menu == 1) {
         Outside_Wire = 0;
         //Data_Sent_Wire = 0;                                           // Resets the counter to send info to the TFT
-        Send_Mower_Running_Data();
+        //Send_Mower_Running_Data();
         }    
       }
 
@@ -129,7 +129,7 @@ void TestforBoundaryWire()  {
   if (Perimeter_Wire_Enabled == 0) {   
     Serial.print(F("Wire"));
     Serial.print(F(":"));                                            
-    Serial.print(F("WIRE DISABLED"));
+    Serial.print(F("DISABLED|"));
     Wire_Detected = 1;
 
   }

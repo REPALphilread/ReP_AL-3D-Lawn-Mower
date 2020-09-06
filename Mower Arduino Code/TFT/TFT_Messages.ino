@@ -196,6 +196,7 @@ void Update_TFT_Mower_Messages_Mowing() {
           tft.print("GPS:OUT");   
           }
          
+         
          tft.setCursor(330, 80);
          tft.setTextColor(GREEN, BLACK);
          tft.print("FIX:");
@@ -258,6 +259,18 @@ void Update_TFT_Mower_Messages_Mowing() {
        }
 
      if (GPS_Enabled == 1) {
+         if ((GPS_Lock_OK_TX == 1)  && (Skip_Message == 0)) {
+           tft.setCursor(180,100); 
+           tft.setTextColor(BLACK, BLACK); 
+           tft.print("FIX");
+           Skip_Message = 1;
+           }
+         if ((GPS_Lock_OK_TX == 0)  && (Skip_Message == 0)) {
+           tft.setCursor(180,100); 
+           tft.setTextColor(YELLOW, BLACK); 
+           tft.print("FIX");
+           Skip_Message = 1;
+           }
          if ((GPS_In_Out_TX == 1)  && (Skip_Message == 0)) {
            tft.setCursor(160,100); 
            tft.setTextColor(BLACK, BLACK); 
@@ -270,18 +283,7 @@ void Update_TFT_Mower_Messages_Mowing() {
            tft.print("GPS");
            Skip_Message = 1;
            }
-         if ((GPS_Lock_OK_TX == 0)  && (Skip_Message == 0)) {
-           tft.setCursor(180,100); 
-           tft.setTextColor(YELLOW, BLACK); 
-           tft.print("FIX");
-           Skip_Message = 1;
-           }
-         if ((GPS_Lock_OK_TX == 1)  && (Skip_Message == 0)) {
-           tft.setCursor(180,100); 
-           tft.setTextColor(BLACK, BLACK); 
-           tft.print("FIX");
-           Skip_Message = 1;
-           }
+
      }
 
     int left_arrow = 180;

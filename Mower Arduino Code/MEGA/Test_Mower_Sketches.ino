@@ -41,17 +41,17 @@
 
 void Test_Relay() {
   
-  digitalWrite(Relay_Motors, HIGH);
+  Turn_Off_Relay();
   Serial.println("Relay OFF");
   lcd.print("Relay OFF");
   delay(1000);
   lcd.clear();
-  digitalWrite(Relay_Motors, LOW);
+  Turn_On_Relay();
   Serial.println("Relay ON");
   lcd.print("Relay ON");
   delay(1000);
   lcd.clear();
-  digitalWrite(Relay_Motors, HIGH);
+  Turn_Off_Relay();
   Serial.println("Relay OFF");
   lcd.print("Relay OFF");
 
@@ -62,7 +62,7 @@ void Test_Relay() {
 void Test_Wheel_Motors() {
   I = 1;
   Serial.println(F("Wheel Test Started"));
-  digitalWrite(Relay_Motors, LOW);
+  Turn_On_Relay();
   delay(200);
   if (I == 1) {
 
@@ -231,7 +231,7 @@ void Test_Wheel_Motors() {
 
   I = 2;
   }
-  digitalWrite(Relay_Motors, HIGH);
+  Turn_Off_Relay();
   delay(200);
 
   Serial.println(F("Wheel Test Complete"));
@@ -241,7 +241,7 @@ void Test_Wheel_Motors() {
 
 void Test_Mower_Blade_Motor() {
   // Spin the blade motor for 7 seconds
-  digitalWrite(Relay_Motors, LOW);
+  Turn_On_Relay();;
   delay(200);
   lcd.print("Blade Motor");
   lcd.setCursor(0,1);
@@ -277,7 +277,7 @@ void Test_Mower_Blade_Motor() {
   lcd.clear();
   delay(500);
 
-  digitalWrite(Relay_Motors, HIGH);
+  Turn_Off_Relay();
   delay(200);
 
   }
@@ -378,7 +378,7 @@ int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int so
 
 
 void Test_Compass_Turn_Function() {
-    digitalWrite(Relay_Motors, LOW);
+    Turn_On_Relay();
     delay(200);
     SetPins_ToGoForwards();
     Motor_Action_Go_Full_Speed();
@@ -388,6 +388,6 @@ void Test_Compass_Turn_Function() {
     SetPins_ToGoForwards();
     Motor_Action_Go_Full_Speed();
     delay(2000); 
-    digitalWrite(Relay_Motors, HIGH);
+    Turn_Off_Relay();
     }
   

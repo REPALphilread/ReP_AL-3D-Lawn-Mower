@@ -1,4 +1,19 @@
-
+void Activate_GPS_Fence() {
+Load_GPS_Fence_Data();
+Calculate_Equation_Type();
+Calculate_GPS_Data();
+Calculate_X_Projected();
+Calculate_Y_Limited();
+Calculate_X_Limited();
+Calculate_IN_OUT();
+Copy_Array_For_MinMax();
+Print_Initial_Information();
+//Print_Excel_Sheet();
+Sort_Y_Array();
+Sort_X_Array();
+Print_X_Y_Max_Min();
+Serial.println(" ");
+}
 
 void Calculate_Equation_Type() {
 

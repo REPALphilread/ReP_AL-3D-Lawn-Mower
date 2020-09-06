@@ -564,22 +564,28 @@ void Transmit_Saved_Tip_Sensor_Values() {
 
 
 void Transmit_Saved_GPS_Values() {
-      Serial.println(F("TX GPS Settings to NodeMCU"));
+      Serial.println(F("TX GPS Settings to ESP32"));
       
-      Serial2.print(Fence);
+      Serial2.print(GPS_WIFI_Enabled);
       Serial2.println("\a");
-      delay(1000); 
-      Serial2.flush(); 
-
-      Serial2.print(Min_Sats);
+      delay(200);
+      
+      Serial2.print(Simulation_Mode);
       Serial2.println("\b");
+      delay(200);
+
+      Serial2.print(Fence);
+      Serial2.println("\c");
       delay(1000); 
       Serial2.flush();
-
-     
+      
+      Serial.print(F("GPS_WIFI_Enabled = "));
+      if (GPS_WIFI_Enabled == 1) Serial.println("Enabled");
+      if (GPS_WIFI_Enabled == 0) Serial.println("Disabled");
+      Serial.print(F("Simulation Mode = "));
+      if (Simulation_Mode == 1) Serial.println("Enabled");
+      if (Simulation_Mode == 0) Serial.println("Disabled");
       Serial.print(F("Fence = "));
       Serial.println(Fence);
-      Serial.print(F("Min Sats = "));
-      Serial.println(Min_Sats);
       Serial.println(F(" "));
       }

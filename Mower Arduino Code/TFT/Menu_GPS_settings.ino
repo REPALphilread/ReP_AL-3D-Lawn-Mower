@@ -37,16 +37,35 @@ void Print_GPS_Menu_Settings() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("GPS Setting"));  
+    tft.print(F("WIFI APP"));  
     
-    int Button_X = Label_X + (0.5 * Button_W);
-    int Button_Y = Label_Y + Offset_Btn + (0.2 * Button_H);
+    Button_X1 = Label_X + (0.5 * Button_W);
+    Button_Y1 = Label_Y + Offset_Btn + (0.2 * Button_H);
     
-    if (GPS_Mode == 0) ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, BLACK, "OFF", 2);
-    if (GPS_Mode == 1) ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, YELLOW, BLACK, "ON", 2);
-    if (GPS_Mode == 2) ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLUE, WHITE, "ON + APP", 2);
+    if (GPS_WIFI_Enabled == 0) ONOFF1_btn.initButton(&tft, Button_X1, Button_Y1, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
+    if (GPS_WIFI_Enabled == 1) ONOFF1_btn.initButton(&tft, Button_X1, Button_Y1, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
     
     ONOFF1_btn.drawButton(false);
+
+    
+    //Simulation ON/OFF Mode Button
+    //------------------------------------------------------------
+    
+    Label_X = Start_X;                           // Starting X Point.
+    Label_Y = Label_Y + Menu_Spacing;            // Starting Y Point
+
+    tft.setTextSize(Txt_Size_Label); 
+    tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour
+    tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
+    tft.print(F("SIMULATE FENCE IN APP"));  
+    
+    Button_X2 = Label_X + (0.5 * Button_W);
+    Button_Y2 = Label_Y + Offset_Btn + (0.2 * Button_H);
+    
+    if (Simulation_Mode == 0) ONOFF2_btn.initButton(&tft, Button_X2, Button_Y2, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
+    if (Simulation_Mode == 1) ONOFF2_btn.initButton(&tft, Button_X2, Button_Y2, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
+    
+    ONOFF2_btn.drawButton(false);
 
 
     //GPS Fence Activate
@@ -62,11 +81,11 @@ void Print_GPS_Menu_Settings() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("GPS Fence Activate"));  
+    tft.print(F("GPS Fence Activated"));  
 
     
-    Button_X = Value_X2 + Menu_Btn_Space;
-    Button_Y = Value_Y2 + (0.2 * Button_H);
+    int Button_X = Value_X2 + Menu_Btn_Space;
+    int Button_Y = Value_Y2 + (0.2 * Button_H);
    
     tft.setTextSize(Txt_Size_Value); 
     tft.setTextColor(RED, BLACK);                 //Text Colour/ Background Colour
@@ -81,67 +100,6 @@ void Print_GPS_Menu_Settings() {
     down2_btn.drawButton(false);
 
 
-
-    //Minimum GPS Lock
-    //------------------------------------------------------------
-
-    Label_X   = Label_X;
-    Label_Y   = Label_Y + Menu_Spacing;
-    Value_X3  = Label_X;                        // X Position of the item
-    Value_Y3  = Label_Y + Offset_Btn;           // Y Position of the item
-    Value_3   = Min_Sats;                           // Value to be modified in the menu
-
-    tft.setTextSize(Txt_Size_Label); 
-    tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
-    tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Minimum Sat Lock"));  
-
-    
-    Button_X = Value_X3 + Menu_Btn_Space;
-    Button_Y = Value_Y3 + (0.2 * Button_H);
-   
-    tft.setTextSize(Txt_Size_Value); 
-    tft.setTextColor(RED, BLACK);                 //Text Colour/ Background Colour
-    tft.setCursor(Value_X3, Value_Y3);            // Text Coordinates X, Y
-    tft.print(Value_3);    
-
- 
-    up3_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "+", 2);
-    down3_btn.initButton(&tft, (Button_X + (Button_W + Button_Spacing)), Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "-", 2);
-
-    up3_btn.drawButton(false);
-    down3_btn.drawButton(false);
-
-
-    //Spare
-    //------------------------------------------------------------
-
-    Label_X   = Label_X;
-    Label_Y   = Label_Y + Menu_Spacing;
-    Value_X4  = Label_X;                        // X Position of the item
-    Value_Y4  = Label_Y + Offset_Btn;           // Y Position of the item
-    Value_4   = Spare;                           // Value to be modified in the menu
-
-    tft.setTextSize(Txt_Size_Label); 
-    tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
-    tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Spare"));  
-
-    
-    Button_X = Value_X4 + Menu_Btn_Space;
-    Button_Y = Value_Y4 + (0.2 * Button_H);
-   
-    tft.setTextSize(Txt_Size_Value); 
-    tft.setTextColor(RED, BLACK);                 //Text Colour/ Background Colour
-    tft.setCursor(Value_X4, Value_Y4);            // Text Coordinates X, Y
-    tft.print(Value_4);    
-
- 
-    up4_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "+", 2);
-    down4_btn.initButton(&tft, (Button_X + (Button_W + Button_Spacing)), Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "-", 2);
-
-    up4_btn.drawButton(false);
-    down4_btn.drawButton(false);
 
 
 // Create Fence
@@ -160,42 +118,56 @@ void Print_GPS_Menu_Settings() {
 
 void React_to_Button_Press_GPS_Settings() {
 
- // If the SONAR Sensor ON/OFF Button is pressed
+ // If the WIFI APP ON/OFF Button is pressed
  if (ONOFF1_btn.justPressed() ) {
 
-        int Start_X = 10;
-        int Start_Y = 50;
         int Button_W = 150;                // width of the button
         int Button_H = 40;                // height of the button
         int Offset_Btn = 25;
         int Column_Spacing = 200;         // Distance between the Left Hand and Right Hand Columns
-        
-        int Button_X = Start_X + (0.5 * Button_W);
-        int Button_Y = Start_Y + Offset_Btn + (0.2 * Button_H);
         bool Changed = 0;
 
-        if (( GPS_Mode == 3) && (Changed ==0 )) {
-          GPS_Mode = 0;
+        if (( GPS_WIFI_Enabled  == 1) && (Changed ==0 )) {
+          GPS_WIFI_Enabled = 0;
           Changed = 1;
-          ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, BLACK, "OFF", 2);
+          ONOFF1_btn.initButton(&tft, Button_X1, Button_Y1, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
           ONOFF1_btn.drawButton(false);
         }
-        if (( GPS_Mode == 0) && (Changed ==0 ))  {
-          GPS_Mode = 1;
+        if (( GPS_WIFI_Enabled == 0) && (Changed ==0 ))  {
+          GPS_WIFI_Enabled  = 1;
           Changed = 1;
-          ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, YELLOW, BLACK, "ON", 2);
+          ONOFF1_btn.initButton(&tft, Button_X1, Button_Y1, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
           ONOFF1_btn.drawButton(false);
           }
         
-        if (( GPS_Mode == 1) && (Changed ==0 )) {
-          GPS_Mode = 3;
-          Changed = 1;
-          ONOFF1_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLUE, WHITE, "ON + APP", 2);
-          ONOFF1_btn.drawButton(false);
-        }
   delay(200);
  }
 
+
+ // If the Simulation ON/OFF Button is pressed
+ if (ONOFF2_btn.justPressed() ) {
+
+        int Button_W = 150;                // width of the button
+        int Button_H = 40;                // height of the button
+        int Offset_Btn = 25;
+        int Column_Spacing = 200;         // Distance between the Left Hand and Right Hand Columns
+        bool Changed = 0;
+
+        if (( Simulation_Mode == 1) && (Changed ==0 )) {
+          Simulation_Mode = 0;
+          Changed = 1;
+          ONOFF2_btn.initButton(&tft, Button_X2, Button_Y2, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
+          ONOFF2_btn.drawButton(false);
+        }
+        if (( Simulation_Mode == 0) && (Changed ==0 ))  {
+          Simulation_Mode  = 1;
+          Changed = 1;
+          ONOFF2_btn.initButton(&tft, Button_X2, Button_Y2, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
+          ONOFF2_btn.drawButton(false);
+          }
+        
+  delay(200);
+ }
 
 
 //If the Button 2 is pressed (up or down)
@@ -229,68 +201,6 @@ void React_to_Button_Press_GPS_Settings() {
     }
 
 
-//If the Button 2 is pressed (up or down)
- if ((up3_btn.justPressed() )  || (down3_btn.justPressed())) {
-        
-        Value_All = Turn_90_Delay_RH;
-        Value_X_All = Value_X3;
-        Value_Y_All = Value_Y3;
-    
-    // Actions if UP is pressed
-    if (up3_btn.justPressed()) {
-        Clear_Old_Value_GPS();       
-        up3_btn.drawButton(true);
-        Min_Sats = Min_Sats + 1;
-        if (Min_Sats > 15) Min_Sats = 15;       
-        Value_All = Min_Sats;
-        Int_Float = 0;
-        Print_New_Value_GPS();
-        }
-
-
-    // Action if down is pressed
-    if (down3_btn.justPressed()) {
-        Clear_Old_Value_GPS();
-        down3_btn.drawButton(true);
-        Min_Sats = Min_Sats - 1;
-        if (Min_Sats < 5) Min_Sats = 5;
-        Value_All = Min_Sats;
-        Int_Float = 0;
-        Print_New_Value_GPS();
-        }
-    }
-
-
-//If the Button 4 is pressed (up or down)
- if ((up4_btn.justPressed() )  || (down4_btn.justPressed())) {
-        
-        Value_All = Move_to_next_line_delay;
-        Value_X_All = Value_X4;
-        Value_Y_All = Value_Y4;
-    
-    // Actions if UP is pressed
-    if (up4_btn.justPressed()) {
-        Clear_Old_Value_GPS();       
-        up4_btn.drawButton(true);
-        Spare = Spare + 100;
-        Value_All = Spare;
-        Int_Float = 0;
-        Print_New_Value_GPS();
-        }
-
-
-    // Action if down is pressed
-    if (down4_btn.justPressed()) {
-        Clear_Old_Value_GPS();
-        down4_btn.drawButton(true);
-        Spare = Spare - 100;
-        if (Spare < 100) Spare = 100;
-        Value_All = Spare;
-        Int_Float = 0;
-        Print_New_Value_GPS();
-        }
-    }
-
 
  // Action if Create Fence is pressed
  if (Create_Fence_btn.justPressed()) {
@@ -314,7 +224,7 @@ void React_to_Button_Press_GPS_Settings() {
          Menu_Complete_GPS_Settings = true;
          tft.fillScreen(BLACK);
          Serial.println(F("GPS Data Saved and TX"));
-         Menu_Active = 99;                                  // Cancel the GPS menu hold on the NodeMCU
+         Menu_Active = 95;                                  // Cancel the GPS menu hold on the NodeMCU
          Send_Menu_Selected_To_GPS_NodeMCU();
          Transmit_Saved_GPS_Values();
          Print_Navigation_Menu();
@@ -357,6 +267,7 @@ void Print_New_Value_GPS() {
 void Sense_Button_Press_GPS_Settings() {
     down = Touch_getXY();
     ONOFF1_btn.press (down && ONOFF1_btn.contains(pixel_x, pixel_y));
+    ONOFF2_btn.press (down && ONOFF2_btn.contains(pixel_x, pixel_y));
     up2_btn.press    (down && up2_btn.contains(pixel_x, pixel_y));
     down2_btn.press  (down && down2_btn.contains(pixel_x, pixel_y));
     up3_btn.press    (down && up3_btn.contains(pixel_x, pixel_y));
@@ -367,6 +278,7 @@ void Sense_Button_Press_GPS_Settings() {
     Save_btn.press   (down && Save_btn.contains(pixel_x, pixel_y));
 
     if (ONOFF1_btn.justReleased())  ONOFF1_btn.drawButton();
+    if (ONOFF2_btn.justReleased())  ONOFF2_btn.drawButton();
     if (up2_btn.justReleased())     up2_btn.drawButton();
     if (down2_btn.justReleased())   down2_btn.drawButton();
     if (up3_btn.justReleased())     up3_btn.drawButton();

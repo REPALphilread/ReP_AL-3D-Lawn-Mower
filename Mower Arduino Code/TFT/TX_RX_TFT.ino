@@ -27,27 +27,13 @@ void Send_Menu_Selected_To_Mower_MEGA() {
     
 }
 
-
-void Send_Menu_Selected_To_Mower_MEGA_No_RX() {
-    Serial.println(" ");
-    Transmit_Active_Menu_Interupt();
-    delay(Delay_Transmit); 
-    }
-
-
 void Transmit_Active_Menu_Interupt() {
-  for (int i=1;  i<=1;  i++) {
     Serial1.print(Menu_Active);
     Serial1.println("\g");
     delay(100);
-    }
     Serial.print("TX Active=");
     Serial.println(Menu_Active);  
-  }
-
-// this TX sends out more than 1 transmittion so the MEGA has time to detect it.
-
-
+    }
 
 // Feedback Loop to ensure the transmition is sent.
 void Check_TX_Received() {
@@ -68,13 +54,20 @@ void Check_TX_Received() {
 
 
 
+void Send_Menu_Selected_To_Mower_MEGA_No_RX() {
+    Serial.println(" ");
+    Transmit_Active_Menu_Interupt();
+    delay(Delay_Transmit); 
+    }
+
+
+
+  
 
 
 
 
-
-
-
+//************************************************************************
 // Transmit functions to send data to the GPS NodeMCU on the mower.
 //************************************************************************
 
@@ -103,24 +96,13 @@ void Send_Menu_Selected_To_GPS_NodeMCU() {
 }
 
 
-void Send_Menu_Selected_To_Mower_GPS_NodeMCU_No_RX() {
-    Serial.println(" ");
-    Transmit_Active_Menu_Interupt_GPS();
-    delay(Delay_Transmit); 
-    }
-
-
 void Transmit_Active_Menu_Interupt_GPS() {
-  for (int i=1;  i<=1;  i++) {
     Serial2.print(Menu_Active);
     Serial2.println("\g");
     delay(100);
-    }
     Serial.print("TX GPS Menu = ");
     Serial.println(Menu_Active);  
-  }
-
-// this TX sends out more than 1 transmittion so the MEGA has time to detect it.
+    }
 
 
 // Feedback Loop to ensure the transmition is sent.
@@ -131,11 +113,10 @@ void Check_TX_Received_GPS() {
   while (Serial2.available() > 0) {
   
     char recieved = Serial2.read();
-    if ( recieved != '\a') {   
+    if ( recieved != '\j') {   
       Serial2_RX_Value = Serial2_RX_Value +  (char)recieved;          
       } 
-      else if (recieved == '\a') {
-      //Command_Check = Serial2.parseInt();  
+      else if (recieved == '\j') {
       Command_Check = Serial2_RX_Value.toInt();                                 
       Serial2_RX_Value = ""; // changed to string
       }   

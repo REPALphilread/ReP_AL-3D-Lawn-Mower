@@ -235,7 +235,7 @@ void React_to_Button_Press_Pattern() {
     if (up2_btn.justPressed()) {
         Clear_Old_Value_Pattern();       
         up2_btn.drawButton(true);
-        Turn_90_Delay_LH = Turn_90_Delay_LH + 100;
+        Turn_90_Delay_LH = Turn_90_Delay_LH + 25;
         Value_All = Turn_90_Delay_LH;
         Int_Float = 0;
         Print_New_Value_Pattern();
@@ -246,7 +246,7 @@ void React_to_Button_Press_Pattern() {
     if (down2_btn.justPressed()) {
         Clear_Old_Value_Pattern();
         down2_btn.drawButton(true);
-        Turn_90_Delay_LH = Turn_90_Delay_LH - 100;
+        Turn_90_Delay_LH = Turn_90_Delay_LH - 25;
         if (Turn_90_Delay_LH < 100) Turn_90_Delay_LH = 100;
         Value_All = Turn_90_Delay_LH;
         Int_Float = 0;
@@ -266,7 +266,7 @@ void React_to_Button_Press_Pattern() {
     if (up3_btn.justPressed()) {
         Clear_Old_Value_Pattern();       
         up3_btn.drawButton(true);
-        Turn_90_Delay_RH = Turn_90_Delay_RH + 100;
+        Turn_90_Delay_RH = Turn_90_Delay_RH + 25;
         Value_All = Turn_90_Delay_RH;
         Int_Float = 0;
         Print_New_Value_Pattern();
@@ -277,7 +277,7 @@ void React_to_Button_Press_Pattern() {
     if (down3_btn.justPressed()) {
         Clear_Old_Value_Pattern();
         down3_btn.drawButton(true);
-        Turn_90_Delay_RH = Turn_90_Delay_RH - 100;
+        Turn_90_Delay_RH = Turn_90_Delay_RH - 25;
         if (Turn_90_Delay_RH < 100) Turn_90_Delay_RH = 100;
         Value_All = Turn_90_Delay_RH;
         Int_Float = 0;
@@ -297,7 +297,7 @@ void React_to_Button_Press_Pattern() {
     if (up4_btn.justPressed()) {
         Clear_Old_Value_Pattern();       
         up4_btn.drawButton(true);
-        Move_to_next_line_delay = Move_to_next_line_delay + 100;
+        Move_to_next_line_delay = Move_to_next_line_delay + 25;
         Value_All = Move_to_next_line_delay;
         Int_Float = 0;
         Print_New_Value_Pattern();
@@ -308,7 +308,7 @@ void React_to_Button_Press_Pattern() {
     if (down4_btn.justPressed()) {
         Clear_Old_Value_Pattern();
         down4_btn.drawButton(true);
-        Move_to_next_line_delay = Move_to_next_line_delay - 100;
+        Move_to_next_line_delay = Move_to_next_line_delay - 25;
         if (Move_to_next_line_delay < 100) Move_to_next_line_delay = 100;
         Value_All = Move_to_next_line_delay;
         Int_Float = 0;

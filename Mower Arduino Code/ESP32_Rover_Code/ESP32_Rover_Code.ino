@@ -15,33 +15,31 @@
 #define EEPROM_SIZE 512
 
 // Signal Outpin for GPS Fence.
-#define GPS_Signal_Pin 14   // GPIO14
-#define GPS_Lock_Pin 27     // GPIO27
+#define GPS_Signal_Pin 26   // GPIO14   INSIDE OUTSIDE FENCE
+#define GPS_Lock_Pin 27     // GPIO27   GPS LOCK SIGNAL
 
 
-#define RX 13    // GPIO13
-#define TX 12    // GPIO12
+#define RX 13    // GPIO13   
+#define TX 14    // GPIO12   
 
 HardwareSerial TFT_Serial(1);
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "BLYNK GPS Code APP";      // Input your Blank Auth Code here.
+char auth[] = "Blynk GPS Token";      // Input your Blank Auth Code here.
+
 
 // Your WiFi credentials. Set password to "" for open networks.
 char ssid[] = "WLAN Name";
 char pass[] = "WLAN Password";
 
-// Your WiFi credentials. Set password to "" for open networks.
-//char ssid[] = "Android_ReP_AL";
-//char pass[] = "yzxt3769";
 
 
 BlynkTimer timer;
 WidgetMap myMap(V1);
 
-// on various NODEMCU boards the LED Pin is different.....
-#define LED 9      
+// on various boards the LED Pin is different.....
+#define LED 2      
 
 // The TinyGPS++ object
 TinyGPSPlus gps;
@@ -193,7 +191,7 @@ int Spare = 5;
 //-------------------------------------------------
 
 
-bool  WIFI_Enabled        = 0;    // Activate the WIFI on the NodeMCU board.
+bool  GPS_WIFI_Enabled    = 1;    // Activate the WIFI on the NodeMCU board.
 int   GPS_BAUD            = 2;    // 1 = 9600 2 = 19200
 bool  Show_GPS_Fence      = 1;    // Renders/Plots the coordinates of the GPS Fence onto the Blynk Smartphone APP.
 int   GPS_Fence_Update    = 500;  // Loops run before the GPS fence data is re-rendered on the smartphone APP
@@ -205,7 +203,7 @@ bool  Sim_Mower_Moves     = 1;    // Simulates random movements of the mower.  I
 bool  Print_Full_Report   = 0;    // Every loop a full report of every GPS fence point is printed.
 int   Fence               = 3;    // More than 1 GPS fence coordinate array can be saved in the GPS_Fence_Data tab.  For each additonal GPS fence Data use the next 
                                   // consecutive number.
-int   Min_Sats            = 4;    // Minimum number of locked Sattellites to start mower navigation.  Otherwise the mower will stop and wait.
+int   Min_Sats            = 11;   // Minimum number of locked Sattellites to start mower navigation.  Otherwise the mower will stop and wait. recommended min 11
 bool  Print_Summary_Fence = 0;    // Prints the fence summary to determine where the mower is in or out of the fence in the Serial monitor
 bool  Print_GPS_Fix_cm    = 1;    // Prints the range of movement of the GPS Signal in the last 10 readings. - Useful to see if the module is accurate when left in one positionint 
 int   GPS_Delay           = 1000; // Time between GPs readings
@@ -219,34 +217,17 @@ if (GPS_BAUD == 1) Serial2.begin(9600);                 // Start connection usin
 if (GPS_BAUD == 2) Serial2.begin(19200);                // Start connection using UART2 to the GPS Device at this BAUD rate
 //Serial1.begin(9600); 
 TFT_Serial.begin(9600, SERIAL_8N1, RX, TX);// Start the TFT Touchscreen communication Serial                                                                
-//pinMode (RX, INPUT);
-//pinMode (TX, OUTPUT);
+pinMode(LED, OUTPUT);
 delay(100);
 
 // Set the signal Pins
 pinMode(GPS_Signal_Pin, OUTPUT);
 pinMode(GPS_Lock_Pin, OUTPUT);
 
-//Clear_EEPROM();         // uncomment to clear EEPROM
-//Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
-
-
-Load_GPS_Fence_Data();
-Calculate_Equation_Type();
-Calculate_GPS_Data();
-Calculate_X_Projected();
-Calculate_Y_Limited();
-Calculate_X_Limited();
-Calculate_IN_OUT();
-Copy_Array_For_MinMax();
-Print_Initial_Information();
-//Print_Excel_Sheet();
-Sort_Y_Array();
-Sort_X_Array();
-Print_X_Y_Max_Min();
-Serial.println(" ");
-
-if (WIFI_Enabled == true) Connect_ESP32_to_WIFI();
+//Clear_EEPROM();
+Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
+Activate_GPS_Fence();
+if (GPS_WIFI_Enabled == true) Connect_ESP32_to_WIFI();
 
 }
 
@@ -254,8 +235,8 @@ if (WIFI_Enabled == true) Connect_ESP32_to_WIFI();
 
 void loop() {
 
-Check_TFT_Serial_Input();                                // Check the TFT Serial for any input command.
-if (TFT_Menu_Command < 99)    Activate_TFT_Menu();        // If TFT Menu has requested an input, TX or RX that input.
+Check_TFT_Serial_Input();                                 // Check the TFT Serial for any input command.
+if (TFT_Menu_Command < 50)    Activate_TFT_Menu();        // If TFT Menu has requested an input, TX or RX that input.
   
 if (Simulation_Mode == 0)  {
   
@@ -279,11 +260,12 @@ if (Simulation_Mode == 0)  {
     if (Print_Full_Report == 1) Print_X_Y_Max_Min();
     if (Print_Full_Report == 1) Print_Initial_Information();
     Print_Running_Loop_Data();
+    if (GPS_WIFI_Enabled == 0) Serial.println("");   // just starts a new line if the WIFI function is not called.
     }
 
   // If not enough satellites are detected then wait.
   if (gps.satellites.value() < Min_Sats) {
-    Serial.print(F("Waiting for GPS Lock  |  "));
+    Serial.print(F("NO GPS Lock|"));
     GPS_Locked = 0;
     Y_GPS = gps.location.lat();    
     X_GPS = gps.location.lng();
@@ -292,6 +274,7 @@ if (Simulation_Mode == 0)  {
     Mower_In_Out = 0;
     GPS_Cycles = 0;
     Set_Output_Pins();
+    if (GPS_WIFI_Enabled == 0) Serial.println("");   // just starts a new line if the WIFI function is not called.
     }
   }
 
@@ -310,10 +293,11 @@ if (Simulation_Mode == 0)  {
     if (Print_Full_Report == 1) Print_Initial_Information();
     Sats = bounce;
     Serial.print(F("Mower In/Out = "));
-    Serial.println(Mower_In_Out);
+    Serial.print(Mower_In_Out);
+    if (GPS_WIFI_Enabled == 0) Serial.println("");   // just starts a new line if the WIFI function is not called.
     }
     
-if (WIFI_Enabled == true) {
+if (GPS_WIFI_Enabled == true) {
 
   // Update the Blynk APP at the frequency given by BUF
   if ((Blynk_Update_Frequecy == BUF) || (Mower_In_Out ==0) ) { 
@@ -324,7 +308,7 @@ if (WIFI_Enabled == true) {
    
   // Update the Blynk APP. 
   Blynk_Update_Frequecy = Blynk_Update_Frequecy + 1;
+  Serial.println("");
   }
 
- Serial.println("");
 }

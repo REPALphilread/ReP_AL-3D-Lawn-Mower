@@ -1360,39 +1360,30 @@ String Serial2_RX_Value  = "";
   while (Serial2.available() > 0) {
   
     char recieved = Serial2.read();
-    if ( recieved != '\h') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c') {   
       Serial2_RX_Value = Serial2_RX_Value +  (char)recieved;          
       } 
-      else if (recieved == '\h') {
-      //Fence = Serial2.parseInt();  
+      else if (recieved == '\a') {
+      GPS_WIFI_Enabled = Serial2_RX_Value.toInt();                                 
+      Serial2_RX_Value = ""; // changed to string
+      }
+      else if (recieved == '\b') {
+      Simulation_Mode = Serial2_RX_Value.toInt();                                 
+      Serial2_RX_Value = ""; // changed to string
+      }        
+      else if (recieved == '\c') {
       Fence = Serial2_RX_Value.toInt();                                 
       Serial2_RX_Value = ""; // changed to string
-      }        
-      
+      }  
+   else Serial.print(F("No Data Received|"));   
    }
-
-  delay(1000);
-  
-  Serial2_RX_Value  = "";                                              
-  while (Serial2.available() > 0) {
-  
-    char recieved = Serial2.read();
-    if ( recieved != '\k') {   
-      Serial2_RX_Value = Serial2_RX_Value +  (char)recieved;          
-      } 
-      else if (recieved == '\k') {
-      //Min_Sats = Serial2.parseInt();  
-      Min_Sats = Serial2_RX_Value.toInt();                                 
-      Serial2_RX_Value = ""; // changed to string
-      }        
-      
-   }
-
-    Serial.println("");
-    Serial.print("TX Check: ");
-    Serial.println(Command_Check);
-    Serial.print("Fence: ");
-    Serial.println(Fence);
-    Serial.print("Min Sats: ");
-    Serial.println(Min_Sats);
+      Serial.print(F("GPS_WIFI_Enabled = "));
+      if (GPS_WIFI_Enabled == 1) Serial.println("Enabled");
+      if (GPS_WIFI_Enabled == 0) Serial.println("Disabled");
+      Serial.print(F("Simulation Mode = "));
+      if (Simulation_Mode == 1) Serial.println("Enabled");
+      if (Simulation_Mode == 0) Serial.println("Disabled");
+      Serial.print(F("Fence = "));
+      Serial.println(Fence);
+      Serial.println(F(" "));
 }

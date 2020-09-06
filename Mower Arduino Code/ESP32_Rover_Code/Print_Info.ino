@@ -114,7 +114,7 @@ void Print_Initial_Information() {
   }
 
 
-  void Print_Running_Loop_Data() {
+void Print_Running_Loop_Data() {
     Serial.print("Fence Active:");
     Serial.print(Fence);
     Serial.print(" | Y:");
@@ -182,7 +182,9 @@ void Print_Initial_Information() {
   }
 
 void Print_No_Lock_Data() {
-    Serial.print("Y GPS:");
+    Serial.print("Fence Active:");
+    Serial.print(Fence);
+    Serial.print(" | Y GPS:");
     Serial.print(Y_GPS,8);
     Serial.print(" X_GPS:");
     Serial.print(X_GPS,8);

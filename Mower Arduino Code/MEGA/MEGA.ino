@@ -11,10 +11,10 @@
 #include <Arduino.h>
 #include <Wire.h>
 //#include <EEPROM.h>
-#include <ArduinoJson.h>
 #include "drivers.h"
 #include "adcman.h"
 #include "perimeter.h"
+
 
 //Libraries for Real Time Clock
 #include <stdio.h>
@@ -293,6 +293,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   float   X_Tilt;
   float   Y_Tilt;
   float   Z_Tilt;
+  int     Compass_Detected;
 
   //GY-521 Compass
   const int MPU_addr=0x68;
@@ -354,10 +355,11 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.3";
+  char Version[16] = "V8.5";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
+  bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -563,8 +565,7 @@ if  (Mower_Docked == 1)                                           Check_if_Charg
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Docked();                                // Print information to the LCD screen
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_Time_On_LCD(); 
 if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
-if ((Mower_Docked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();
-                               
+if ((Mower_Docked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();                                     // Get the GPS Signal In / Out of Fence                                
 if (Mower_Docked == 1)                                            TestforBoundaryWire();                                  // Test is the boundary wire is live                                 
 if (Mower_Docked == 1)                                            Manouver_Dock_The_Mower();
 if (Mower_Docked == 1)                                            Print_Time_On_Serial_Monitor();
@@ -612,8 +613,6 @@ if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sona
 if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
 if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Inside_Fence == 0))                                                Manouver_Turn_Around();             // If the GPS Fence is activated Turn Around
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
-//if ((Mower_Running == 1) && (TFT_Screen_Menu == 1))                                                                     Send_Mower_Running_Data_Fly();      // Send only neccesary info
-
 
 // WIFI Commands from and to APP
 if (Manuel_Mode == 1) Receive_WIFI_Manuel_Commands();

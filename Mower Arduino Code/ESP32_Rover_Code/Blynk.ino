@@ -9,7 +9,7 @@ void Run_Blynk_Data() {
   if(!Blynk.connected()) {
     Blynk.run();
     timer.run();  
-    digitalWrite(LED, HIGH);
+    //digitalWrite(LED, HIGH);
     Serial.println("------------------------");
     Serial.println("ESP32 Disconnected");
     Serial.println("Reconnecting ... ");
@@ -18,11 +18,16 @@ void Run_Blynk_Data() {
   else {
     Blynk.run();
     timer.run();  
-    digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
+    //digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
 
     // Only updates the GPS Fence every 20 loops to reduce the blinking on the screen
     if ((Show_GPS_Fence == 1) && (First_Plot == 1)) {    
+      Serial.println("");
+      Serial.println("------------------------");
+      Serial.println("Plotting the Fence to the APP");
       Plot_GPS_Fence();
+      Serial.println("------------------------");
+      Serial.println("");
       First_Plot = 2;
     }
     First_Plot = First_Plot + 1;              // cycles forward the counter                 
@@ -52,7 +57,7 @@ void Update_Mower_Location_and_Info_on_Map() {
 
 void Plot_GPS_Fence() {
 
-Serial.println("Blynk Print");
+Serial.println("Blynk Plotting GPS Fence");
 
 // Plots the GPS Fence on the map
 for (int i = 1; i <=GPSMAX ; i++) {
@@ -69,7 +74,7 @@ for (int i = 1; i <=GPSMAX ; i++) {
   Serial.print("  GPSX[");
   Serial.print(i -1);
   Serial.print("] = ");
-  Serial.print(GPSX[i - 1], 8);   // Print the vlaue to 8 decimal places
+  Serial.println(GPSX[i - 1], 8);   // Print the vlaue to 8 decimal places
   }
 
 }
@@ -88,6 +93,6 @@ void Blynk_Map_Update() {
     Blynk.run();
     timer.run();  
     myMap.location((Fence_Point - 1), GPSY6[Fence_Point - 1], GPSX6[Fence_Point - 1], (Fence_Point - 1));   //Pin,pointIndex, lat, lon, "value"
-    Blynk.virtualWrite(V2, Sats);               // Update Satellites
+    Blynk.virtualWrite(V18, Sats);               // Update Satellites
 
 }

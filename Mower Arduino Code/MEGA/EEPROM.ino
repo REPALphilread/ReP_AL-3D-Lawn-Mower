@@ -119,11 +119,11 @@ Serial.println("*** EEPROM Settings ***");
   int COMPASS_EEPROM = EEPROM.read(19);
   if (COMPASS_EEPROM == 1) {
     Compass_Activate = EEPROM.read(20);  
-    Serial.print(F("Compass Settings from EEPROM : "));
+    Serial.print(F("Compass Activated from EEPROM : "));
     if (Compass_Activate == 0) Serial.println(F("OFF"));
     if (Compass_Activate == 1) Serial.println(F("ON"));
   }
-  //Compass_Activate = 0;
+
 
  int Tracking_PID_P_EEPROM = EEPROM.read(21);
   if (Tracking_PID_P_EEPROM == 1) {
@@ -242,7 +242,7 @@ Serial.println("*** EEPROM Settings ***");
   int Use_Charging_Station_EEPROM = EEPROM.read(47);
   if (Use_Charging_Station_EEPROM == 1) {
     Use_Charging_Station = EEPROM.read(48);  
-    Serial.print(F("Compass Settings from EEPROM : "));
+    Serial.print(F("Charge Station from EEPROM : "));
     if (Use_Charging_Station == 0) Serial.println(F("OFF"));
     if (Use_Charging_Station == 1) Serial.println(F("ON"));
   }

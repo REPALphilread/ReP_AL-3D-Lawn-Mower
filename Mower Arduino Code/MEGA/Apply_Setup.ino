@@ -56,6 +56,7 @@ void Setup_Compass() {
           }
         if (compass.isHMC()) {
           Serial.println(F("Initialize DF Robot HMC5883 Compass"));
+          Compass_Detected = 1;                        // HMC5883
           if (LCD_Screen_Keypad_Menu == 1) {
             lcd.setCursor(6,0);
             lcd.print(F(": HMC5883"));
@@ -72,6 +73,7 @@ void Setup_Compass() {
        //QMC5883 Compass
         else if (compass.isQMC()) {
           Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+          Compass_Detected = 2;                        // HMC5883
           if (LCD_Screen_Keypad_Menu == 1) {
             lcd.setCursor(6,0);
             lcd.print(F(": QMC5883"));
@@ -134,12 +136,14 @@ void Setup_Motor_Pins() {
 
 void  Turn_On_Relay() {
    Serial.print(F("Relay:ON|"));
-   digitalWrite(Relay_Motors, LOW);                         // Turn of the relay for the main battery power
+   if (PCB == 0) digitalWrite(Relay_Motors, LOW);                         // Turn of the relay for the main battery power
+   if (PCB == 1) digitalWrite(Relay_Motors, HIGH); 
    }
 
 void  Turn_Off_Relay() {
    Serial.print(F("Relay:Off|"));
-   digitalWrite(Relay_Motors, HIGH);                         // Turn of the relay for the main battery power
+   if (PCB == 0) (digitalWrite(Relay_Motors, HIGH));                         // Turn of the relay for the main battery power
+   if (PCB == 1) (digitalWrite(Relay_Motors, LOW));    
    }
 
 void Setup_Membrane_Buttons() {

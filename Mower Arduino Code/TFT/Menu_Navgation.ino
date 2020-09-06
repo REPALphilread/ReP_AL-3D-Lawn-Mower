@@ -127,6 +127,7 @@ void React_to_Button_Press_Navigation() {
           Send_Menu_Selected_To_GPS_NodeMCU();         // Tell the Mower MEGA which menu on the TFT is selected
           Serial.println("RX GPS Values");
           delay(100);
+          Serial.println("");
           Receive_GPS_Data();        
           Print_GPS_Menu_Settings();
           

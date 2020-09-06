@@ -56,7 +56,7 @@ void Manouver_Mow_The_Grass() {
            }
         else {
           Motor_Action_Go_Mowing_Speed();
-          Serial.println("Compass not activated in the settings");
+          Serial.println("Comp;OFF|");
           }
       }
 
