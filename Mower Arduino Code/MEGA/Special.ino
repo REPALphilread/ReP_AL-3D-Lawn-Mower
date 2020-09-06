@@ -9,7 +9,8 @@ void Special_Cut_Under_Trampoline_Function() {
 void Special_Move_Into_Garden_Zone_X() {
     Serial.println(F("start mower code here"));
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors
-    SetPins_ToTurnLeft();                                           // Turn left
+    if (CCW_Tracking_To_Start == 1) SetPins_ToTurnLeft();           // Turn left
+    if (CW_Tracking_To_Start == 1) SetPins_ToTurnRight();           // Turn Right
     Motor_Action_Go_Full_Speed();                                       
     delay(1400);                                                     // Turn left for 0.7seconds
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors.
@@ -27,19 +28,35 @@ void _Docking_Station() {
     Serial.print("|");
     Serial.print(F("Right Wheel PWM:"));
     Serial.println(PWM_MaxSpeed_RH);   
-    delay (4000);                                                   // Backwards time
+    delay (4000);                                             // Backwards time
     Motor_Action_Stop_Motors;                                       // Stop
-    SetPins_ToTurnLeft();                                           // Prepare motors to turn left
-    Motor_Action_Turn_Speed();                                      // Turn the wheels
-    delay(500);                                                    // Turn time
-    Motor_Action_Stop_Motors;                                       // Stop
-    SetPins_ToGoBackwards();                                        // Set again to go backwards
-    Motor_Action_Go_Full_Speed();                                   // Turn the wheels
-    delay (500);                                                    // Backwards Time
-    SetPins_ToTurnLeft();                                           // Set to go left             
-    Motor_Action_Turn_Speed();                                      // Turn the wheels
-    delay(200);                                                     // Turning time
-    Motor_Action_Stop_Motors();                                     // Stop
+
+    if (CCW_Tracking_To_Start == 1) {
+        SetPins_ToTurnLeft();                                           // Prepare motors to turn left
+        Motor_Action_Turn_Speed();                                      // Turn the wheels
+        delay(500);                                                    // Turn time
+        Motor_Action_Stop_Motors;                                       // Stop
+        SetPins_ToGoBackwards();                                        // Set again to go backwards
+        Motor_Action_Go_Full_Speed();                                   // Turn the wheels
+        delay (500);                                                    // Backwards Time
+        SetPins_ToTurnLeft();                                           // Set to go left             
+        Motor_Action_Turn_Speed();                                      // Turn the wheels
+        delay(200);                                                     // Turning time
+        Motor_Action_Stop_Motors();                                     // Stop
+        }
+    if (CW_Tracking_To_Start == 1) {
+        SetPins_ToTurnRight();                                           // Prepare motors to turn left
+        Motor_Action_Turn_Speed();                                      // Turn the wheels
+        delay(500);                                                    // Turn time
+        Motor_Action_Stop_Motors;                                       // Stop
+        SetPins_ToGoBackwards();                                        // Set again to go backwards
+        Motor_Action_Go_Full_Speed();                                   // Turn the wheels
+        delay (500);                                                    // Backwards Time
+        SetPins_ToTurnRight();                                           // Set to go left             
+        Motor_Action_Turn_Speed();                                      // Turn the wheels
+        delay(200);                                                     // Turning time
+        Motor_Action_Stop_Motors();                                     // Stop
+        }
     SetPins_ToGoForwards();                                         // Set to go wheel motor pins to go forwards
     Motor_Action_Stop_Motors();                                     // Stop / Park the mower here
     lcd.clear();                                                    // Clears the LCD display

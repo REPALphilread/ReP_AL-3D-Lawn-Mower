@@ -512,54 +512,49 @@ void Send_Data_To_TFT() {
 }
 
 
-// Tip Sensor Menu
+// Pattern Mow Menu
     if (TFT_Menu_Command == 25) {
       Serial.println(F("TX Pattern to TFT"));
       
-      Serial3.print(Turn_90_Delay_LH / 10);
+      Serial3.print(Pattern_Mow );
       Serial3.println("\a");
-      delay(300);  
-
-      Serial3.print(Turn_90_Delay_RH / 10);
+      delay(300); 
+      
+      Serial3.print(Turn_90_Delay_LH / 10);
       Serial3.println("\b");
       delay(300);  
 
-      Serial3.print(Move_to_next_line_delay / 10);
+      Serial3.print(Turn_90_Delay_RH / 10);
       Serial3.println("\c");
       delay(300);  
 
-      Serial3.print(Line_Length_Cycles);
+      Serial3.print(Move_to_next_line_delay / 10);
       Serial3.println("\d");
       delay(300);  
-      
-      Serial3.print(Max_Cycles_Spirals / 10);
+
+      Serial3.print(Line_Length_Cycles);
       Serial3.println("\e");
       delay(300);  
-
-      Serial3.print(Pattern_Mow );
-      Serial3.println("\f");
-      delay(300);        
-
-      Serial3.print(Compass_Mow_Direction / 10 );
-      Serial3.println("\g");
-      delay(300);        
       
-      Serial.print(F("Pattern Mow ON/OFF = "));
-      Serial.println(Pattern_Mow);  
+
+     
+      Serial.print(F("Pattern Mow"));
+      if (Pattern_Mow == 0) Serial.println("OFF");
+      if (Pattern_Mow == 1) Serial.println("Parallel");  
+      if (Pattern_Mow == 3) Serial.println("Spiral"); 
+
       Serial.print(F("Turn 90° LH= "));
       Serial.println(Turn_90_Delay_LH);
+      
       Serial.print(F("Turn 90° RH= "));
       Serial.println(Turn_90_Delay_RH);
+      
       Serial.print(F("Distance to next row= "));
       Serial.println(Move_to_next_line_delay);
-      Serial.print(F("Row Length= "));
-      Serial.println(Line_Length_Cycles);      
-      Serial.print(F("Max Cycles Spirals= "));
-      Serial.println(Max_Cycles_Spirals);  
-      Serial.print(F("Compass Mow Direction= "));
-      Serial.println(Compass_Mow_Direction); 
-      Serial.println(F(" "));
-
+      
+      Serial.print(F("Row Length = "));
+      Serial.println(Line_Length_Cycles);  
+      
 }
 
 
@@ -567,6 +562,8 @@ void Send_Data_To_TFT() {
 // Initial Start Up Values
     if (TFT_Menu_Command == 55) {
       Serial.println("TX Start Up Values TFT");
+
+      Time t = rtc.time();
 
       Serial3.print(Alarm_1_ON);
       Serial3.println("\a");
@@ -579,8 +576,6 @@ void Send_Data_To_TFT() {
       Serial3.print(Alarm_3_ON);
       Serial3.println("\c");
       delay(300); 
-
-      Time t = rtc.time();
         
       Serial3.print(t.hr);
       Serial3.println("\d");         // Sends the time to the Serial Monitor for the TFt to receive
@@ -588,15 +583,15 @@ void Send_Data_To_TFT() {
         
       Serial3.print(t.min);
       Serial3.println("\e");
-      delay(300);
+      delay(100);
 
       Serial3.print(GPS_Enabled);
       Serial3.println("\f");
-      delay(300);
+      delay(100);
  
       Serial3.print(Perimeter_Wire_Enabled);
       Serial3.println("\g");
-      delay(300);
+      delay(100);
 
       Serial.print(F("Alarm 1 ON = "));
       Serial.println(Alarm_1_ON);

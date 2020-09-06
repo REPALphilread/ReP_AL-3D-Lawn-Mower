@@ -26,7 +26,7 @@ void Print_Motion_Menu() {
     int Button_X = Start_X;
     int Button_Y = Start_Y;
    
-    Wheels_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, BLACK, YELLOW, "Wheel >", 2);
+    Wheels_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, YELLOW, BLACK, "Wheel >", 2);
     Wheels_btn.drawButton(false);
     
     // Blade Motor
@@ -34,7 +34,7 @@ void Print_Motion_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Blade_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, BLACK, WHITE, "Blade >", 2);
+    Blade_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, WHITE, BLACK, "Blade >", 2);
     Blade_btn.drawButton(false);
 
     //Pattern
@@ -42,7 +42,7 @@ void Print_Motion_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Pattern_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "Pattern >", 2);
+    Pattern_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, MAGENTA, WHITE, "Pattern >", 2);
     Pattern_btn.drawButton(false);
    
     
@@ -51,7 +51,7 @@ void Print_Motion_Menu() {
     Button_X = Start_X + (Button_W + Column_Spacing) ;
     Button_Y = Start_Y;    
     
-    Movement_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "Turns >", 2);
+    Movement_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLUE, WHITE, "Turns >", 2);
     Movement_btn.drawButton(false);
 
 

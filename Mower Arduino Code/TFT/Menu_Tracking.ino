@@ -171,6 +171,7 @@ void React_to_Button_Press_Tracking() {
           Menu_Active = 98;
           Send_Menu_Selected_To_Mower_MEGA();
           Transmit_Tracking_Menu_Values();
+          Print_Tracking_Menu();
     }  
 
 

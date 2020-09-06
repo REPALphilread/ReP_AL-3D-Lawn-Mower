@@ -6,17 +6,12 @@
 void Send_Menu_Selected_To_Mower_MEGA() {
     Serial.println(" ");
 
-    // Dont print this message if these menus are selected  
-    // 96 Sensors immediate button save
-    // 55 Start up value tranmission).
-    if ((Menu_Active != 96) || (Menu_Active != 55))  {
-          tft.fillScreen(BLACK);
-          tft.setCursor(0, 0);  
-          tft.setTextSize(3); 
-          tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
-          tft.setCursor(50, 50); 
-          tft.println("Please Wait..");
-          }
+    tft.fillScreen(BLACK);
+    tft.setCursor(0, 0);  
+    tft.setTextSize(3); 
+    tft.setTextColor(GREEN, BLACK);           // Text Colour/ Background Colour
+    tft.setCursor(50, 50); 
+    tft.println("Please Wait..");
     Transmit_Active_Menu_Interupt();
     delay(Delay_Transmit - 200);
         

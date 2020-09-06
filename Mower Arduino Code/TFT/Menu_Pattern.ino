@@ -28,7 +28,7 @@ void Print_Pattern_Menu() {
     
     
     
-    //Rain Sensor ON/OFF Button
+    //Pattern Setting
     //------------------------------------------------------------
     
     int Label_X = Start_X;                           // Starting X Point.
@@ -62,7 +62,7 @@ void Print_Pattern_Menu() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Parallel Turn Delay LH"));  
+    tft.print(F("Parallel: Turn Delay LH"));  
 
     
     Button_X = Value_X2 + Menu_Btn_Space;
@@ -94,7 +94,7 @@ void Print_Pattern_Menu() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Parallel Turn Delay RH"));  
+    tft.print(F("Parallel: Turn Delay RH"));  
 
     
     Button_X = Value_X3 + Menu_Btn_Space;
@@ -116,16 +116,16 @@ void Print_Pattern_Menu() {
     //Distance to next row
     //------------------------------------------------------------
 
-    Label_X   = Label_X;
-    Label_Y   = Label_Y + Menu_Spacing;
-    Value_X4  = Label_X;                        // X Position of the item
-    Value_Y4  = Label_Y + Offset_Btn;           // Y Position of the item
-    Value_4   = Move_to_next_line_delay;                           // Value to be modified in the menu
+    Label_X   = Start_X + Column_Spacing + 50;                                // next Column
+    Label_Y   = Start_Y + Menu_Spacing;
+    Value_X4  = Label_X;                                                      // X Position of the item
+    Value_Y4  = Label_Y  + Offset_Btn;                                         // Y Position of the item
+    Value_4   = Move_to_next_line_delay;                                      // Value to be modified in the menu
 
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Distance Between Rows"));  
+    tft.print(F("Parallel: Distance Between Lines"));  
 
     
     Button_X = Value_X4 + Menu_Btn_Space;
@@ -142,6 +142,38 @@ void Print_Pattern_Menu() {
 
     up4_btn.drawButton(false);
     down4_btn.drawButton(false);
+
+
+    //Row Length
+    //------------------------------------------------------------
+
+    Label_X   = Label_X; 
+    Label_Y   = Label_Y  + Menu_Spacing;
+    Value_X5  = Label_X;                        // X Position of the item
+    Value_Y5  = Label_Y + Offset_Btn;           // Y Position of the item
+    Value_5   = Line_Length_Cycles;                           // Value to be modified in the menu
+
+    tft.setTextSize(Txt_Size_Label); 
+    tft.setTextColor(YELLOW, BLACK);            // Text Colour/ Background Colour
+    tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
+    tft.print(F("Parallel: Line Length / Cycles"));  
+
+    
+    Button_X = Value_X5 + Menu_Btn_Space;
+    Button_Y = Value_Y5 + (0.2 * Button_H);
+   
+    tft.setTextSize(Txt_Size_Value); 
+    tft.setTextColor(RED, BLACK);                 //Text Colour/ Background Colour
+    tft.setCursor(Value_X5, Value_Y5);            // Text Coordinates X, Y
+    tft.print(Value_5);    
+
+ 
+    up5_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "+", 2);
+    down5_btn.initButton(&tft, (Button_X + (Button_W + Button_Spacing)), Button_Y, Button_W, Button_H, WHITE, CYAN, BLACK, "-", 2);
+
+    up5_btn.drawButton(false);
+    down5_btn.drawButton(false);
+
 
 // Save Button
 
@@ -283,6 +315,37 @@ void React_to_Button_Press_Pattern() {
         Print_New_Value_Pattern();
         }
     }
+
+
+//If the Button 5 is pressed (up or down)
+ if ((up5_btn.justPressed() )  || (down5_btn.justPressed())) {
+        
+        Value_All = Move_to_next_line_delay;
+        Value_X_All = Value_X5;
+        Value_Y_All = Value_Y5;
+    
+    // Actions if UP is pressed
+    if (up5_btn.justPressed()) {
+        Clear_Old_Value_Pattern();       
+        up5_btn.drawButton(true);
+        Line_Length_Cycles = Line_Length_Cycles + 5;
+        Value_All = Line_Length_Cycles;
+        Int_Float = 0;
+        Print_New_Value_Pattern();
+        }
+
+
+    // Action if down is pressed
+    if (down5_btn.justPressed()) {
+        Clear_Old_Value_Pattern();
+        down5_btn.drawButton(true);
+        Line_Length_Cycles = Line_Length_Cycles - 5;
+        if (Line_Length_Cycles < 10) Line_Length_Cycles = 10;
+        Value_All = Line_Length_Cycles;
+        Int_Float = 0;
+        Print_New_Value_Pattern();
+        }
+    }
  
  // Action if Rain Save is pressed
  if (Save_btn.justPressed()) {
@@ -337,6 +400,8 @@ void Sense_Button_Press_Pattern() {
     down3_btn.press  (down && down3_btn.contains(pixel_x, pixel_y));
     up4_btn.press    (down && up4_btn.contains(pixel_x, pixel_y));
     down4_btn.press  (down && down4_btn.contains(pixel_x, pixel_y));
+    up5_btn.press    (down && up5_btn.contains(pixel_x, pixel_y));
+    down5_btn.press  (down && down5_btn.contains(pixel_x, pixel_y));
     Save_btn.press   (down && Save_btn.contains(pixel_x, pixel_y));
 
     if (ONOFF1_btn.justReleased())  ONOFF1_btn.drawButton();
@@ -346,5 +411,7 @@ void Sense_Button_Press_Pattern() {
     if (down3_btn.justReleased())   down3_btn.drawButton();
     if (up4_btn.justReleased())     up4_btn.drawButton();
     if (down4_btn.justReleased())   down4_btn.drawButton();
+    if (up5_btn.justReleased())     up5_btn.drawButton();
+    if (down5_btn.justReleased())   down5_btn.drawButton();
     if (Save_btn.justReleased())    Save_btn.drawButton();
 }

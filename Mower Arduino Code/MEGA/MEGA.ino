@@ -11,6 +11,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 //#include <EEPROM.h>
+#include <ArduinoJson.h>
 #include "drivers.h"
 #include "adcman.h"
 #include "perimeter.h"
@@ -353,7 +354,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.2";
+  char Version[16] = "V8.3";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
@@ -395,8 +396,8 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
     float  Compass_Mow_Direction = 110;      // Mow Direction of line when pattern mow is activated
 
     // Pattern Parallel
-    int Turn_90_Delay_LH        = 1150;      // adjust this number so the mower turns 90° Left
-    int Turn_90_Delay_RH        = 1250;      // adjust this number so the mower turns 90° Right
+    int Turn_90_Delay_LH        = 1150;      // EEPROM          // adjust this number so the mower turns 90° Left
+    int Turn_90_Delay_RH        = 1250;      // EEPROM          // adjust this number so the mower turns 90° Right
     int Move_to_next_line_delay = 1000;      // distance between lines
     int Line_Length_Cycles      = 25;        // length of the line mowed
 

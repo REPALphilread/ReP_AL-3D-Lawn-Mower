@@ -949,43 +949,37 @@ void Receive_Data_From_TFT()  {
     
       char recieved = Serial3.read();
       if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d'
-          && recieved != '\e' && recieved != '\f' && recieved != '\g') {   
+          && recieved != '\e') {   
           Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
           } 
           else if (recieved == '\a') {
-          Turn_90_Delay_LH = Serial3_RX_Value.toInt();                                 
-          Serial3_RX_Value = ""; // changed to string
-          } 
-          else if (recieved == '\b') {
-          Turn_90_Delay_RH = Serial3_RX_Value.toInt();                                
-          Serial3_RX_Value = "";
-          } 
-          else if (recieved == '\c') {
-          Move_to_next_line_delay = Serial3_RX_Value.toInt();                                
-          Serial3_RX_Value = "";
-          } 
-          else if (recieved == '\d') {
-          Line_Length_Cycles = Serial3_RX_Value.toInt();                                
-          Serial3_RX_Value = "";
-          } 
-          else if (recieved == '\e') {
-          Max_Cycles_Spirals = Serial3_RX_Value.toInt();                                
-          Serial3_RX_Value = "";
-          } 
-          else if (recieved == '\f') {
           Pattern_Mow = Serial3_RX_Value.toInt();                                
           Serial3_RX_Value = "";
           } 
-          else if (recieved == '\g') {
-          Compass_Mow_Direction = Serial3_RX_Value.toInt();                                
+          else if (recieved == '\b') {
+          Turn_90_Delay_LH = Serial3_RX_Value.toInt();                                 
+          Serial3_RX_Value = ""; // changed to string
+          } 
+          else if (recieved == '\c') {
+          Turn_90_Delay_RH = Serial3_RX_Value.toInt();                                
           Serial3_RX_Value = "";
           } 
+          else if (recieved == '\d') {
+          Move_to_next_line_delay = Serial3_RX_Value.toInt();                                
+          Serial3_RX_Value = "";
+          } 
+          else if (recieved == '\e') {
+          Line_Length_Cycles = Serial3_RX_Value.toInt();                                
+          Serial3_RX_Value = "";
+          } 
+
       else Serial.print(F("No Data Received|"));
       }
       
-
-      Serial.print(F("Pattern Mow ON/OFF = "));
-      Serial.println(Pattern_Mow);
+      Serial.print(F("Pattern Mow"));
+      if (Pattern_Mow == 0) Serial.println("OFF");
+      if (Pattern_Mow == 1) Serial.println("Parallel");  
+      if (Pattern_Mow == 3) Serial.println("Spiral"); 
       
       Serial.print(F("Turn 90° LH= "));
       Turn_90_Delay_LH = Turn_90_Delay_LH * 10;
@@ -998,26 +992,20 @@ void Receive_Data_From_TFT()  {
       Serial.print(F("Distance to next row= "));
       Move_to_next_line_delay = Move_to_next_line_delay * 10;
       Serial.println(Move_to_next_line_delay);
-      
-      Serial.print(F("Row Length= "));
-      Serial.println(Line_Length_Cycles);      
-      
-      Serial.print(F("Max Cycles Spirals= "));
-      Max_Cycles_Spirals = Max_Cycles_Spirals * 10;
-      Serial.println(Max_Cycles_Spirals); 
+           
+      Serial.print(F("Line_Length_Cycles= "));
+      Line_Length_Cycles = Line_Length_Cycles;
+      Serial.println(Line_Length_Cycles); 
 
-      Serial.print(F("***Compass Mow Direction= ***"));
-      Serial.println(Compass_Mow_Direction); 
-     
-      Serial.print(F("Compass Mow Direction= "));
-
-      Compass_Mow_Direction = Compass_Mow_Direction * 10;
-      Serial.println(Compass_Mow_Direction); 
-      Serial.println(F(" "));
-
-
-      // EEPROM
-
+      //EEPROM Saved Values
+      EEPROM.write(23, 1);
+      EEPROM.write(24, Pattern_Mow);
+      EEPROM.write(101, 1);
+      EEPROM.write(102, Turn_90_Delay_LH / 10);
+      EEPROM.write(103, 1);
+      EEPROM.write(104, Turn_90_Delay_RH / 10);
+      EEPROM.write(105, 1);
+      EEPROM.write(106, Line_Length_Cycles / 10);
   }
   
 

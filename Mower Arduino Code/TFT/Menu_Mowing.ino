@@ -22,7 +22,7 @@ void Print_Mowing_Menu_Graphic() {
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(20, 10);            // Text Coordinates X, Y
-    tft.print(F("ReP_AL Lawn Mower V8.2"));  
+    tft.print(F("ReP_AL Lawn Mower V8.3"));  
     
     
     

@@ -26,7 +26,7 @@ HardwareSerial TFT_Serial(1);
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "Blynk Code for GPS APP";      // Input your Blank Auth Code here.
+char auth[] = "BLYNK GPS Code APP";      // Input your Blank Auth Code here.
 
 // Your WiFi credentials. Set password to "" for open networks.
 char ssid[] = "WLAN Name";
@@ -227,7 +227,7 @@ delay(100);
 pinMode(GPS_Signal_Pin, OUTPUT);
 pinMode(GPS_Lock_Pin, OUTPUT);
 
-Clear_EEPROM();
+//Clear_EEPROM();         // uncomment to clear EEPROM
 //Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
 
 

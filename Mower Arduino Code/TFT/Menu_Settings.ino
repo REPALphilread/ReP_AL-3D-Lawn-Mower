@@ -65,7 +65,7 @@ void Print_Settings_Menu() {
     Button_X = Button_X;
     Button_Y = Start_Y + (Button_H + Menu_Spacing);    
     
-    Navigation_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, BLUE, WHITE, "NAVI >", 2);
+    Navigation_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, GREY, BLACK, "NAVI >", 2);
     Navigation_btn.drawButton(false);
 
     //More Options
@@ -73,7 +73,7 @@ void Print_Settings_Menu() {
     Button_X = Button_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Next_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, YELLOW, YELLOW, BLACK, "Next >", 2);
+    Next_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, BLUE, BLUE, WHITE, "Next >", 2);
     Next_btn.drawButton(false);
 
 // Done Button
@@ -110,7 +110,7 @@ void React_to_Button_Press_Options() {
           Menu_Active = 6;
           Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected
           Serial.println("RX Sonar Values");
-          delay(Receive_Values_Delay);
+          delay(Receive_Values_Delay + 300);
           Receive_Sensor_Menu1_Data(); 
           Print_Sensors_Menu();
           

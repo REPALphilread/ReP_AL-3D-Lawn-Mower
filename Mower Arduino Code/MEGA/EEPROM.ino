@@ -424,6 +424,30 @@ Serial.println("*** EEPROM Settings ***");
     if (GPS_Enabled == 1) Serial.println(F("Enabled"));
   }
 
+  int Turn_90_Delay_LH_EEPROM = EEPROM.read(101);
+  if (Turn_90_Delay_LH_EEPROM == 1) {
+    Turn_90_Delay_LH = EEPROM.read(102);  
+    Turn_90_Delay_LH = Turn_90_Delay_LH * 10;
+    Serial.print(F("Turn_90_Delay_LH Enabled from EEPROM : "));
+    Serial.println(Turn_90_Delay_LH);
+  }
+
+  int Turn_90_Delay_RH_EEPROM = EEPROM.read(103);
+  if (Turn_90_Delay_RH_EEPROM == 1) {
+    Turn_90_Delay_RH = EEPROM.read(104);  
+    Turn_90_Delay_RH = Turn_90_Delay_RH * 10;
+    Serial.print(F("Turn_90_Delay_RH Enabled from EEPROM : "));
+    Serial.println(Turn_90_Delay_RH);
+  }
+
+  int Line_Length_Cycles_EEPROM = EEPROM.read(105);
+  if (Line_Length_Cycles_EEPROM == 1) {
+    Line_Length_Cycles = EEPROM.read(106);  
+    Line_Length_Cycles = Line_Length_Cycles * 10;
+    Serial.print(F("Line_Length_Cycles Enabled from EEPROM : "));
+    Serial.println(Line_Length_Cycles);
+  }
+
 Serial.println(F("*************************"));
  delay(500);
 
@@ -479,8 +503,11 @@ void Clear_EERPOM() {
   EEPROM.write(94,0);     // Wheel Slow Speed LH
   EEPROM.write(96,0);     // Wheel Slow Speed RH
   EEPROM.write(98,0);     // Slow MAG Point
-  EEPROM.write(100,0);     // GPS Enabled
-  Serial.println(F("All EEPROM Settings Cleared"));
-  delay(1000);
+  EEPROM.write(100,0);    // GPS Enabled
+  EEPROM.write(102,0);    // Turn_90_Delay_LH 
+  EEPROM.write(104,0);    // Turn_90_Delay_RH
+  EEPROM.write(106,0);    // Line_Length_Cycles
+
+
   
 }

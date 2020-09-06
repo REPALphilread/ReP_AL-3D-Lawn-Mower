@@ -1,7 +1,7 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V8.2  24.06.2020
+Code V8.3  26.06.2020
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
@@ -12,14 +12,16 @@ Upload the ESP32_Rover Code to the ESP32 Board (GPS)
 Upload the BMP Files to the TFT SD Card
 
 
-Features of 8.2
+Features of 8.3
 ---------------
 
-- TFT Display functions improved
+- Fixed the CW CCW exit from dock and enter into garden.  The mower now turns in the right orientation for each.
+- TFT Display functions improved - Many small errors removed when transfereing between screens
+- Fixed the pattern mow selection and parallel options in the TFT display
 - BETA version of GPS navigation (lots to improve)
 
 
-Known Issues of 8.2
+Known Issues of 8.3
 -------------------
 - Mower can sometimes stop due the miss-communication between MEGA mower and TFT.
 - GPS communication between ESP32 and TFT is unstable

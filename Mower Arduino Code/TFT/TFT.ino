@@ -444,10 +444,9 @@ tft.println("PLEASE WAIT....");
 tft.println(" ");
 
 bmpDraw("logo.bmp", 75, 80);
-delay(5000);
+delay(4000);
 Get_Initial_Values();
-
-delay(1200);
+delay(3000);
 tft.fillScreen(BLACK);
 
 

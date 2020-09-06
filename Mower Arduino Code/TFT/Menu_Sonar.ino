@@ -1,5 +1,5 @@
 void Print_Sonar_Menu() {  
-
+    tft.fillScreen(BLACK);
     if (Draw_Pictures == 1) bmpDraw("Sensors.bmp", 0, 80);      //Draw the mower picture
     delay(100); 
     

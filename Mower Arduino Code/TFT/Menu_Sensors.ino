@@ -121,7 +121,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 26;
           Send_Menu_Selected_To_Mower_MEGA();
           Serial.println("RX Battery Values");        
-          delay(Receive_Values_Delay);
+          delay(Receive_Values_Delay + 300);
           Receive_Battery_Data();
           Print_Battery_Menu();
           
@@ -163,6 +163,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 96;
           Send_Menu_Selected_To_Mower_MEGA();
           Transmit_Sensor_Menu1_Values();
+          Print_Sensors_Menu();
     }
 
 
@@ -174,8 +175,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 12;
           Send_Menu_Selected_To_Mower_MEGA();
           Serial.println("RX Rain Sensor Values");        
-          delay(Receive_Values_Delay);
-          //delay(750);
+          delay(Receive_Values_Delay + 400);
           Receive_Rain_Sensor_Data();
           Print_Rain_Sensor_Menu();
           
@@ -217,6 +217,7 @@ void React_to_Button_Press_Sensors() {
           Menu_Active = 96;
           Send_Menu_Selected_To_Mower_MEGA();
           Transmit_Sensor_Menu1_Values();
+          Print_Sensors_Menu();
     }  
 
     

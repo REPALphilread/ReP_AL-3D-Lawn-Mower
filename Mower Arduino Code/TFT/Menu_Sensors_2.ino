@@ -112,6 +112,8 @@ void React_to_Button_Press_Sensors_2() {
           Menu_Active = 96;
           Send_Menu_Selected_To_Mower_MEGA();
           Transmit_Sensor_Menu1_Values();
+          Print_Sensors_Menu_2();
+          
     }
 
  // Action if Done is pressed

@@ -460,41 +460,31 @@ void   Transmit_Saved_Pattern_Values() {
       
       Serial.println(F("TX Pattern to MEGA"));
       
-      Serial1.print(Turn_90_Delay_LH / 10);
+      Serial1.print(Pattern_Mow );
       Serial1.println("\a");
-      delay(300);  
-
-      Serial1.print(Turn_90_Delay_RH / 10);
+      delay(300); 
+      
+      Serial1.print(Turn_90_Delay_LH / 10);
       Serial1.println("\b");
       delay(300);  
 
-      Serial1.print(Move_to_next_line_delay / 10);
+      Serial1.print(Turn_90_Delay_RH / 10);
       Serial1.println("\c");
       delay(300);  
 
-      Serial1.print(Line_Length_Cycles);
+      Serial1.print(Move_to_next_line_delay / 10);
       Serial1.println("\d");
       delay(300);  
-      
-      Serial1.print(Max_Cycles_Spirals / 10);
+
+      Serial1.print(Line_Length_Cycles);
       Serial1.println("\e");
-      delay(300);  
-
-      Serial1.print(Pattern_Mow );
-      Serial1.println("\f");
-      delay(300);    
-
-
-      Serial.print(F("**Compass Mow Direction*** = "));
-      Serial.println(Compass_Mow_Direction);  
-      
-      Serial1.print(Compass_Mow_Direction / 10 );
-      Serial1.println("\g");
-      delay(300);              
+      delay(300);          
       
       
-      Serial.print(F("Pattern Mowe ON/OFF = "));
-      Serial.println(Pattern_Mow);
+      Serial.print(F("Pattern Mow"));
+      if (Pattern_Mow == 0) Serial.println("OFF");
+      if (Pattern_Mow == 1) Serial.println("Parallel");  
+      if (Pattern_Mow == 3) Serial.println("Spiral"); 
       
       Serial.print(F("Turn 90° LH= "));
       Serial.println(Turn_90_Delay_LH);
@@ -508,12 +498,6 @@ void   Transmit_Saved_Pattern_Values() {
       Serial.print(F("Row Length= "));
       Serial.println(Line_Length_Cycles);      
       
-      Serial.print(F("Max Cycles Spirals= "));
-      Serial.println(Max_Cycles_Spirals);  
-      
-      Serial.print(F("Compass Mow Direction= "));
-      Serial.println(Compass_Mow_Direction);  
-      Serial.println(F(" "));
       }
 
 

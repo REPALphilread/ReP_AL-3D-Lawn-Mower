@@ -1003,45 +1003,40 @@ void Receive_Pattern_Data()  {
   
     char recieved = Serial1.read();
     if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' 
-    && recieved != '\e' && recieved != '\f' && recieved != '\g' ) {   
+    && recieved != '\e') {   
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
       else if (recieved == '\a') {
-      Turn_90_Delay_LH = Serial1_RX_Value.toInt();                                 
-      Serial1_RX_Value = ""; // changed to string
-      } 
-      else if (recieved == '\b') {
-      Turn_90_Delay_RH = Serial1_RX_Value.toInt();                         
-      Serial1_RX_Value = "";
-      } 
-      else if (recieved == '\c') {
-      Move_to_next_line_delay = Serial1_RX_Value.toInt();                           
-      Serial1_RX_Value = "";
-      } 
-      else if (recieved == '\d') {
-      Line_Length_Cycles = Serial1_RX_Value.toInt();                       
-      Serial1_RX_Value = "";
-      } 
-      else if (recieved == '\e') {
-      Max_Cycles_Spirals = Serial1_RX_Value.toInt();                          
-      Serial1_RX_Value = "";
-      } 
-      else if (recieved == '\f') {
       Pattern_Mow = Serial1_RX_Value.toInt();                          
       Serial1_RX_Value = "";
       } 
-      else if (recieved == '\g') {
-      Compass_Mow_Direction = Serial1_RX_Value.toInt();                          
+      else if (recieved == '\b') {
+      Turn_90_Delay_LH = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\c') {
+      Turn_90_Delay_RH = Serial1_RX_Value.toInt();                         
       Serial1_RX_Value = "";
       } 
+      else if (recieved == '\d') {
+      Move_to_next_line_delay = Serial1_RX_Value.toInt();                           
+      Serial1_RX_Value = "";
+      } 
+      else if (recieved == '\e') {
+      Line_Length_Cycles = Serial1_RX_Value.toInt();                       
+      Serial1_RX_Value = "";
+      } 
+
 
      
     else Serial.print(F("No Data Received|"));
   }
 
  
-      Serial.print(F("Pattern Mowe ON/OFF"));
-      Serial.println(Pattern_Mow);
+      Serial.print(F("Pattern Mow"));
+      if (Pattern_Mow == 0) Serial.println("OFF");
+      if (Pattern_Mow == 1) Serial.println("Parallel");  
+      if (Pattern_Mow == 3) Serial.println("Spiral");      
       
       Serial.print(F("Turn 90° LH= "));
       Turn_90_Delay_LH = Turn_90_Delay_LH * 10;
@@ -1054,18 +1049,9 @@ void Receive_Pattern_Data()  {
       Serial.print(F("Distance to next row= "));
       Move_to_next_line_delay = Move_to_next_line_delay * 10;
       Serial.println(Move_to_next_line_delay);
-      
+
       Serial.print(F("Row Length= "));
-      Serial.println(Line_Length_Cycles);      
-      
-      Serial.print(F("Max Cycles Spirals= "));
-      Max_Cycles_Spirals = Max_Cycles_Spirals * 10;
-      Serial.println(Max_Cycles_Spirals);  
-      
-      Serial.print(F("Compass Mow Direction= "));
-      Compass_Mow_Direction = Compass_Mow_Direction * 10;
-      Serial.println(Compass_Mow_Direction); 
-      Serial.println(F(" "));
+      Serial.println(Line_Length_Cycles);  
 
 }
 
