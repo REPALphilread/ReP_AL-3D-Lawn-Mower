@@ -1,8 +1,8 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V8.6  30.07.2020
-------------------------------
+Code V8.71  17.08.2020
+----------------------
 
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
@@ -11,26 +11,29 @@ Upload the TFT Code to the TFT MEGA Shield
 Upload the ESP32_Rover Code to the ESP32 Board (GPS)
 Upload the BMP Files to the TFT SD Card
 
-PLEASE UPDATE THE LIBRARY FILES WITH THIS RELEASE
 
-
-Features of 8.6
+Features of 8.71
 ---------------
 
-- PCB support as the onboard clock and relay are setup differently
-- Added various QMC libraries (please use DF Robot for now)
-- Added GY521 GYRO support. (GYRO will alway override compass if enabled)
+- Includes the Motor Amp Sensor Code and Menu options in the TFT menu
+- Reduced / Eliminated "ghost" double turns at the wire
+- Fixed TFT clock transfer for none PCB boards
+- Included a PCB ON/OFF option (EEPROM) in the TFT Menu Other Settings
+- Fixed void Exit_Dock text in specials tab
+- Stopping of the mower improved when going home 
+- TFT Display functions improved
 - BETA version of GPS navigation (lots to improve)
 
 
-Known Issues of 8.6
--------------------
+Known Issues of 8.71
+--------------------
 - Mower can sometimes stop due the miss-communication between MEGA mower and TFT.
-- GPS communication between ESP32 and TFT is unstable
-- Missing funtions for ESP32 communication (select fence etc.) - to be updated in the next release.
-- Normal RTC clock not tested with this version yet.
+- TFT screnn can go back to the main menu when mowing (working on that now)
 
 
+Planned for next release
+------------------------
+- GYRO / Compass options (which device will control the mower)
 
 
 NodeMCU Board URL:

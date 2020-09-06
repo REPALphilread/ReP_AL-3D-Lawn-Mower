@@ -46,13 +46,22 @@ void Print_Motion_Menu() {
     Pattern_btn.drawButton(false);
    
     
-    //Movement
+    //Turns
     
     Button_X = Start_X + (Button_W + Column_Spacing) ;
     Button_Y = Start_Y;    
     
     Movement_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLUE, WHITE, "Turns >", 2);
     Movement_btn.drawButton(false);
+
+
+    //Block
+    
+    Button_X = Start_X + (Button_W + Column_Spacing) ;
+    Button_Y = Start_Y + (Button_H + Menu_Spacing); ;    
+    
+    Wheel_Amp_Block_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "Amp Wheel>", 2);
+    Wheel_Amp_Block_btn.drawButton(false);
 
 
 
@@ -136,7 +145,7 @@ void React_to_Button_Press_Motion() {
  if (Movement_btn.justPressed() ) {
           Menu_Complete_Movement = false;
           tft.fillScreen(BLACK);
-          Serial.println(F("Blade Motor Screen Selected"));
+          Serial.println(F("Movement Screen Selected"));
           Menu_Active = 16;
           Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected 
           Serial.println("RX Movement Values");
@@ -151,6 +160,25 @@ void React_to_Button_Press_Motion() {
            }
      }
 
+
+ if (Wheel_Amp_Block_btn.justPressed() ) {
+          Menu_Complete_Wheel_Amp_Block = false;
+          tft.fillScreen(BLACK);
+          Serial.println(F("Wheel Amp Block Selected"));
+          Menu_Active = 29;
+          Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected 
+          Serial.println("RX Wheel Amp Block Values");
+          delay(Receive_Values_Delay + 400);
+          Receive_Wheel_Amp_Block_Menu_Data(); 
+          Print_Wheel_Amp_Block_Menu();
+           
+          // Sense for the settings buttons until the saved button is pressed.
+          while (Menu_Complete_Wheel_Amp_Block == false) {
+            Sense_Button_Wheel_Amp_Block();
+            React_to_Button_Wheel_Amp_Block();
+           }
+     }
+     
 
 
  // Action if Save is pressed
@@ -192,11 +220,13 @@ void Sense_Button_Press_Motion() {
     Blade_btn.press     (down && Blade_btn.contains(pixel_x, pixel_y));
     Pattern_btn.press   (down && Pattern_btn.contains(pixel_x, pixel_y));
     Movement_btn.press  (down && Movement_btn.contains(pixel_x, pixel_y));
+    Wheel_Amp_Block_btn.press  (down && Wheel_Amp_Block_btn.contains(pixel_x, pixel_y));
     Save_btn.press      (down && Save_btn.contains(pixel_x, pixel_y));
 
     if (Wheels_btn.justReleased())    Wheels_btn.drawButton();
     if (Blade_btn.justReleased())     Blade_btn.drawButton();  
     if (Pattern_btn.justReleased())   Pattern_btn.drawButton();
     if (Movement_btn.justReleased())  Movement_btn.drawButton();
+    if (Wheel_Amp_Block_btn.justReleased())  Wheel_Amp_Block_btn.drawButton();
     if (Save_btn.justReleased())   Save_btn.drawButton();
     }

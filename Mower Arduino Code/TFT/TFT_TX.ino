@@ -158,6 +158,19 @@ void Transmit_Blade_Motor_Values() {
       Serial.println(F(" "));
       }
 
+void Transmit_Setup_Other_Values() {
+      Serial.println("TX PCB");
+      
+      Serial1.print(PCB);
+      Serial1.println("\a");
+      delay(300);  
+
+      Serial.print(F("PCB = "));
+      if (PCB == 1) Serial.println(F("Enabled"));
+      if (PCB == 0) Serial.println(F("Disabled"));
+      Serial.println(" ");
+}
+
 void Transmit_Save_Movement_Values() {
       Serial.println("TX Movement");
       
@@ -596,6 +609,26 @@ void Transmit_Saved_Tip_Sensor_Values() {
       Serial.println(Tip_Over_Sensor_Enabled);
       Serial.println(F(" "));
       }
+
+
+void Transmit_Saved_Wheel_Block_Values() {
+      Serial.println("TX Wheel Amp");
+      
+      Serial1.print(Wheel_Amp_Sensor_ON);
+      Serial1.println("\a");
+      delay(300);  
+
+      Serial1.print(Max_Wheel_Amps * 100);
+      Serial1.println("\b");
+      delay(200);  
+    
+    Serial.print(F("Wheel Amp ON: "));
+        if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
+        if (Wheel_Amp_Sensor_ON == 0) Serial.println("OFF");
+    
+    Serial.print(F("Wheel Amps Max: "));
+    Serial.print(Max_Wheel_Amps);
+    }
 
 
 void Transmit_Saved_GPS_Values() {

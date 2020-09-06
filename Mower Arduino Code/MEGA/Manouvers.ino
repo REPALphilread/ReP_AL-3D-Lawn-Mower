@@ -456,6 +456,7 @@ void Manouver_Turn_Around() {
     Serial.println(F(""));
     if (Outside_Wire == 1)     Serial.println(F("Mower is Outside the Wire"));
     if (GPS_Inside_Fence == 0) Serial.println(F("Mower is Outside the GPS Fence"));
+    if (Wheel_Blocked == 4)    Serial.println(F("Mower Wheels are jammed"));
     Serial.println(F("Mower is Turning"));
     if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
     Serial.println(F(""));
@@ -706,6 +707,9 @@ void Manouver_Dock_The_Mower() {
 
 // Mower is a parked position and needs manual charging
 void Manouver_Park_The_Mower_Low_Batt() {
+
+  Motor_Action_Stop_Motors();
+  Motor_Action_Stop_Spin_Blades();
  
   if ((Exiting_Dock == 1) && (TFT_Screen_Menu == 1))  {
         Serial.println(F("Sending TFT Tracking Data"));
@@ -733,14 +737,15 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
 
-  Motor_Action_Stop_Motors();
-  Motor_Action_Stop_Spin_Blades();
 
 }
 
 
 // Mower is in a parked or paused potion ready to restart
 void Manouver_Park_The_Mower() {
+
+  Motor_Action_Stop_Motors();
+  Motor_Action_Stop_Spin_Blades();
 
   if (Mower_Parked == 0 ) lcd.clear();
   if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
@@ -762,8 +767,6 @@ void Manouver_Park_The_Mower() {
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
   Manuel_Mode           = 0;
-  Motor_Action_Stop_Motors();
-  Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
 
   Alarm_Timed_Mow_ON = 0;                                           // Turns off the 1 hr Alarm
@@ -775,7 +778,10 @@ void Manouver_Park_The_Mower() {
 
 // Puts the mower to sleep - normally due to an error being found 
 void Manouver_Hibernate_Mower() {
- 
+
+  Motor_Action_Stop_Motors();
+  Motor_Action_Stop_Spin_Blades();
+  
   // This function requires 2 different strategies to send the correct information to the TFT based on if the mower 
   // is running or exiting the dock.  The Error function is therefore transmitted diffrently depending on the expected
   // Package of daat the TFT is waiting for.  i.e. in Exit Dock Mode the TFT expects the Exit Dock TFT Data Package
@@ -825,13 +831,15 @@ void Manouver_Hibernate_Mower() {
         Manuel_Mode           = 0;
  
   // Powers down the mower motors and cuts the main power via the relay. 
-  Motor_Action_Stop_Motors();
-  Motor_Action_Stop_Spin_Blades();
+
   Turn_Off_Relay();
   }
 
 // Mower is sent to the charging station after low volts are detected or mebrane key input.
 void Manouver_Go_To_Charging_Station() {
+
+  Motor_Action_Stop_Spin_Blades();
+  Motor_Action_Stop_Motors();
 
   if ((TFT_Screen_Menu == 1) && (Mower_Parked = 1)) {
       Mower_Docked          = 0;
@@ -869,10 +877,7 @@ void Manouver_Go_To_Charging_Station() {
   No_Wire_Found_Bck     = 0;
   Manage_Alarms();                                              // Switches on or off the Alarms depending on the setup
 
-  Motor_Action_Stop_Spin_Blades();
-  Motor_Action_Stop_Motors();
 
- 
   if (WIFI_Enabled == 1) Get_WIFI_Commands();
   delay(5);
   delay(2000);

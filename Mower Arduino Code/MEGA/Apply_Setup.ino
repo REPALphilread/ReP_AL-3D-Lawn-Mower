@@ -60,17 +60,8 @@ void Setup_Manuel_QMC5883_Compass_2() {
 
 
 void Setup_Manuel_QMC5883_Compass() {
-  Wire.begin();
-  Serial.println(F("Manuel QMC5883 Setup Complete!"));
-  Compass_Detected = 3;
-  byte n = 0;
-  if (0 != i2c_write(QMC5883_ADDRESS, QMC5883_SETRESET, QMC5883_SETRESET_DEFAULT))
-    return ;
-  if (0 != i2c_write(QMC5883_ADDRESS, QMC5883_CONTROL, QMC5883_CONTROL_MODE_CONTINUOUS | QMC5883_CONTROL_ODR_200HZ | QMC5883_CONTROL_RNG_8G | QMC5883_CONTROL_OSR_512 ))
-    return ;
-  if (0 != i2c_write(QMC5883_ADDRESS, QMC5883_CONTROL2, QMC5883_CONTROL2_INTERRUPT | QMC5883_CONTROL2_ROL_PNT))
-    return ;
-  return;
+  //Enter Manual Code here
+  Serial.println(F("No Manuel Code Written - Use DF Robot and GY282 Compass"));
 
 }
 

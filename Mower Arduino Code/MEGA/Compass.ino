@@ -63,49 +63,7 @@ void Get_DFRobot_QMC5883_Reading() {
 
 void Get_Manuel_QMC5883_Reading() {
   
-  char msg[80];
-  Wire.beginTransmission(QMC5883_ADDRESS);
-  Wire.write(QMC5883_STATUS);
-  Wire.endTransmission();
-  Wire.requestFrom(QMC5883_ADDRESS, 1);
-
-  if (Wire.available() == 1) {
-    byte status  = Wire.read();
-    if (status & QMC5883_STATUS_DREADY) {
-      Wire.beginTransmission(QMC5883_ADDRESS);
-      Wire.write(QMC5883_OUTPUT_DATA);
-      Wire.endTransmission();
-      Wire.requestFrom(QMC5883_ADDRESS, 6);
-      if (Wire.available() == 6) {
-        int x, y, z;
-        x = Wire.read();
-        x |= Wire.read() << 8;
-        y = Wire.read() ;
-        y |= Wire.read() << 8;
-        z = Wire.read() ;
-        z |= Wire.read() << 8;
-
-        sprintf(msg, "%d\t%d\t%d", x,y,z);
-        Serial.print(msg);
-        Serial.print("   X:");
-        Serial.print(x);
-        Serial.print(" Y:");
-        Serial.print(y);
-        Serial.print(" Z:");
-        Serial.print(z);        
-        Heading = atan2(y,x);                          //Calculate Heading in Radians.
-        
-      } else {
-        Serial.println("output data underflow");
-      }
-    } else {
-      Serial.print(status);
-      Serial.println(":output data not ready");
-    }
-  } else {
-    Serial.println("status read underflow");
-  }
-  delay(100);
+  Serial.println(F("Use DF Robot and GY282"));
 
 }
 

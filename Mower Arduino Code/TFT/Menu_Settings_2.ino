@@ -26,15 +26,15 @@ void Print_Settings_2_Menu() {
     
     
     
-    //Time Options Menu
+    //Other Options Menu
     //------------------------------------------------------------
     
    
     int Button_X = Start_X;
     int Button_Y = Start_Y;
    
-    TFT_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, YELLOW, BLACK, "TFT >", 2);
-    TFT_btn.drawButton(false);
+    Setup_Other_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, YELLOW, BLACK, "Other >", 2);
+    Setup_Other_btn.drawButton(false);
     
     //Tests Options
     
@@ -59,17 +59,25 @@ void Print_Settings_2_Menu() {
 void React_to_Button_Press_Settings_2() {
 
     // Action if TFT is pressed
-    if (TFT_btn.justPressed()) {
-          Menu_Complete_TFT_Setup = false;
+    if (Setup_Other_btn.justPressed()) {
+          Menu_Complete_Setup_Other = false;
           tft.fillScreen(BLACK);
-          Serial.println(F("TFT Options Screen Selected"));
-          Print_TFT_Menu();
+          Serial.println(F("Setup Other Screen Selected"));
+          Menu_Active = 30;
+          Send_Menu_Selected_To_Mower_MEGA();         // Tell the Mower MEGA which menu on the TFT is selected 
+          Serial.println("RX Motor Values");
+          delay(Receive_Values_Delay +1000);
+          Receive_Setup_Other_Data(); 
+          Print_Setup_Other_Menu();
           
           // Sense for the settings buttons until the saved button is pressed.
-          while (Menu_Complete_TFT_Setup == false) {
-            Sense_Button_Press_TFT_Setup();
-            React_to_Button_Press_TFT_Setup();
-            }
+          while (Menu_Complete_Setup_Other == false) {
+            Sense_Button_Press_Setup_Other();
+            React_to_Button_Press_Setup_Other();
+          }
+    
+    
+    
     }
           
     // Action if Tests is pressed
@@ -101,12 +109,12 @@ void React_to_Button_Press_Settings_2() {
 
 void Sense_Button_Press_Settings_2() {
     down = Touch_getXY();
-    TFT_btn.press         (down && TFT_btn.contains(pixel_x, pixel_y));
+    Setup_Other_btn.press (down && Setup_Other_btn.contains(pixel_x, pixel_y));
     Tests_btn.press       (down && Tests_btn.contains(pixel_x, pixel_y));
     Done2_btn.press       (down && Done2_btn.contains(pixel_x, pixel_y));
 
-    if (TFT_btn.justReleased())        TFT_btn.drawButton();
-    if (Tests_btn.justReleased())      Tests_btn.drawButton();
-    if (Done2_btn.justReleased())      Done2_btn.drawButton();
+    if (Setup_Other_btn.justReleased())   Setup_Other_btn.drawButton();
+    if (Tests_btn.justReleased())         Tests_btn.drawButton();
+    if (Done2_btn.justReleased())         Done2_btn.drawButton();
 
 }

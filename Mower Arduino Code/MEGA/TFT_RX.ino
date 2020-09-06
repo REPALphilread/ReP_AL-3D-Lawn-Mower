@@ -745,7 +745,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Time Alarm data from TFT
   if (TFT_Menu_Command == 920) {
-      Serial.println(F("Receiving Alarm 1 Values from TFT ..."));
+      Serial.println(F("RX Alarm 1 TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";                                             
 
@@ -807,7 +807,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Alarm 2 data from TFT
   if (TFT_Menu_Command == 921) {
-      Serial.println(F("Receiving Alarm 2 Values from TFT ..."));
+      Serial.println(F("RX Alarm 2 TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";                                             
 
@@ -867,7 +867,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Alarm 3 data from TFT
   if (TFT_Menu_Command == 922) {
-      Serial.println(F("Receiving Alarm 3 Values from TFT ..."));
+      Serial.println(F("RX Alarm 3 TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";                                             
 
@@ -928,7 +928,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Time data from TFT
   if (TFT_Menu_Command == 923) {
-      Serial.println(F("Receiving Time Values from TFT ..."));
+      Serial.println(F("RX Time from TFT ..."));
       delay(1100);
       String Serial3_RX_Value  = "";          
       int set_hour;
@@ -976,8 +976,49 @@ void Receive_Data_From_TFT()  {
   }
 
 
+
+  if (TFT_Menu_Command == 929) {
+    Serial.println(F("RX Wheel Block"));                               
+    delay(1100);
+    String Serial3_RX_Value  = "";      
+
+   while (Serial3.available() > 0) {
+    
+    char recieved = Serial3.read();
+    if ( recieved != '\a' && recieved != '\b') {   
+      Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\a') {
+      Wheel_Amp_Sensor_ON = Serial3_RX_Value.toInt();                                 
+      Serial3_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\b') {
+      Max_Wheel_Amps = Serial3_RX_Value.toInt();                         
+      Serial3_RX_Value = "";
+      } 
+
+    else Serial.print(F("No Data Received|"));
+   }
+      
+    Max_Wheel_Amps = Max_Wheel_Amps /  100;
+    
+    Serial.print(F("Wheel Amp ON: "));
+        if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
+        if (Wheel_Amp_Sensor_ON == 0) Serial.println("OFF");
+    
+    Serial.print(F("Wheel Amps Max: "));
+    Serial.print(Max_Wheel_Amps);
+
+      //EEPROM Saved Values
+      EEPROM.write(115, 1);
+      EEPROM.write(116, Wheel_Amp_Sensor_ON);
+      EEPROM.write(117, 1);
+      EEPROM.write(118, Max_Wheel_Amps * 100);
+      }
+
+
   if (TFT_Menu_Command == 924) {
-    Serial.println(F("Receiving Tip Setup Values from TFT ..."));                               
+    Serial.println(F("RX Tip from TFT ..."));                               
     delay(1100);
     String Serial3_RX_Value  = "";      
 
@@ -1018,7 +1059,7 @@ void Receive_Data_From_TFT()  {
 // Receive the Pattern Values Back again
   if (TFT_Menu_Command == 925) {
       delay(1500);
-      Serial.println(F("Receiving Pattern Mow Values from TFT ..."));
+      Serial.println(F("RX Pattern from TFT"));
       String Serial3_RX_Value  = "";                                              
 
       while (Serial3.available() > 0) {
@@ -1083,6 +1124,44 @@ void Receive_Data_From_TFT()  {
       EEPROM.write(105, 1);
       EEPROM.write(106, Line_Length_Cycles / 10);
   }
+
+
+
+// Receive the Navigation data from TFT
+  if (TFT_Menu_Command == 930) {
+      Serial.println(F("RX PCB from TFT ..."));
+      delay(1100);
+      String Serial3_RX_Value  = "";                                             
+
+  while (Serial3.available() > 0) {
+    
+    char recieved = Serial3.read();
+    if ( recieved != '\a') {   
+        Serial3_RX_Value = Serial3_RX_Value +  (char)recieved;          
+        } 
+
+       else if (recieved == '\a') {
+          PCB = Serial3_RX_Value.toInt();                               
+          Serial3_RX_Value = "";
+          }
+    
+    else Serial.print(F("No Data Received|"));
+    }
+
+      Serial.print(F("PCB = "));
+      if (PCB == 1) Serial.println(F("Enabled"));
+      if (PCB == 0) Serial.println(F("Disabled"));
+      Serial.println(" ");
+
+      Serial.println(" ");
+      // EEPROM
+      EEPROM.write(119 , 1);
+      EEPROM.write(120, PCB);
+      
+      Serial.println(F("Saved to EEPROM"));
+      Serial.println(F(" "));
+
+}
   
 
 // Start Relay Test
@@ -1095,6 +1174,13 @@ void Receive_Data_From_TFT()  {
   if (TFT_Menu_Command == 43) {
     Serial.println(F("Running Wheel Test"));
     Test_Wheel_Motors();
+
+    }
+
+// Start Wheel Amp Test
+  if (TFT_Menu_Command == 38) {
+    Serial.println(F("Running Wheel Amp Test"));
+    Test_Wheel_Amps();
     }
 
 // Start Motor Test
@@ -1112,7 +1198,7 @@ void Receive_Data_From_TFT()  {
 
 // Receive the Mower Start Conditions from the TFT Screen
   if (TFT_Menu_Command == 92) {
-      Serial.println(F("Receiving Mower Start Conditions from TFT ..."));
+      Serial.println(F("RX Mower Start Values"));
       delay(1100);
       String Serial3_RX_Value  = "";                                              
 

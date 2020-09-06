@@ -92,8 +92,10 @@ if (TFT_Menu_Command == 25) Serial.println(F("Pattern Menu"));
 if (TFT_Menu_Command == 26) Serial.println(F("Battery Menu"));
 if (TFT_Menu_Command == 27) Serial.println(F("Compass Menu"));
 if (TFT_Menu_Command == 28) Serial.println(F("GYRO Menu"));
+if (TFT_Menu_Command == 29) Serial.println(F("Wheel Block Amps Menu"));
+if (TFT_Menu_Command == 30) Serial.println(F("Setup Other Menu"));
 
-
+if (TFT_Menu_Command == 38) Serial.println(F("Wheel Amp Test"));
 if (TFT_Menu_Command == 39) Serial.println(F("GYRO Test"));
 if (TFT_Menu_Command == 40) Serial.println(F("Tilt Test"));
 if (TFT_Menu_Command == 41) Serial.println(F("Wire Test"));

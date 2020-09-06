@@ -58,6 +58,23 @@ void Test_Relay() {
 }
 
 
+void Test_Wheel_Amps () {
+    Serial.println("Test Wheel Amps");
+    Turn_On_Relay();
+    delay(300);
+    SetPins_ToGoForwards();
+    Motor_Action_Go_Full_Speed();
+      for (int i = 0; i <= 100; i++) {
+        Read_Serial1_Nano(); 
+        Calculate_Wheel_Amps();
+        Test_Check_Wheel_Amps();             
+        Send_Wheel_Amp_Data();
+        Serial.println("");
+        }
+    Motor_Action_Stop_Motors();
+    Turn_Off_Relay();
+}
+
 
 void Test_Wheel_Motors() {
   I = 1;

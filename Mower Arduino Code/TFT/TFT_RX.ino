@@ -400,6 +400,30 @@ void Receive_Tracking_Data() {
 }
 
 
+void Receive_Setup_Other_Data() {
+   String Serial1_RX_Value  = "";                                           
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' ) {   
+        Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+        } 
+        else if (recieved == '\a') {
+          PCB = Serial1_RX_Value.toInt();                                 
+          Serial1_RX_Value = ""; // changed to string
+          } 
+    
+    else Serial.print(F("No Data Received|"));
+    } 
+
+      Serial.print(F("PCB = "));
+      if (PCB == 1) Serial.println(F("Enabled"));
+      if (PCB == 0) Serial.println(F("Disabled"));
+      Serial.println(" ");
+}
+
+
 void Receive_Track_PID_Data() {
 
     String Serial1_RX_Value  = "";                                            
@@ -1208,6 +1232,65 @@ void Receive_Mower_Tracking_Data() {
     Serial.print(Docking_Complete); 
     Serial.print(F("  Mower Status = "));
     Serial.println(Mower_Status_Value);
+}
+
+
+void Receive_Wheel_Amp_Data() {
+
+  String Serial1_RX_Value  = "";                                            
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a') {   
+      Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\a') {
+      Wheel_Blocked = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+    else Serial.print(F("No Data Received|"));
+  }
+        Serial.print(F("Wheel Status: "));
+        if (Wheel_Blocked == 1) Serial.println("Blocked");
+        if (Wheel_Blocked == 0) Serial.println("- - - -");
+    
+
+
+}
+
+
+void Receive_Wheel_Amp_Block_Menu_Data() {
+
+  String Serial1_RX_Value  = "";                                            
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' && recieved != '\b') {   
+      Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\a') {
+      Wheel_Amp_Sensor_ON = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\b') {
+      Max_Wheel_Amps = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+    else Serial.print(F("No Data Received|"));
+  }
+    
+    Max_Wheel_Amps = Max_Wheel_Amps / 100;
+    
+    Serial.print(F("Wheel Amp ON: "));
+    if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
+    if (Wheel_Amp_Sensor_ON == 0) Serial.println("OFF");
+    
+    Serial.print(F("Wheel Amps Max: "));
+    Serial.print(Max_Wheel_Amps);
+
+  
 }
 
 

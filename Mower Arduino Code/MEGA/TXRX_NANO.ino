@@ -5,7 +5,7 @@ void Read_Serial1_Nano() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\q' && recieved != '\j' && recieved != '\w' ) {   
+    if ( recieved != '\q' && recieved != '\j' && recieved != '\w' && recieved != '\s' ) {   
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          // hack to joining chars in correct way to Serial1_Rx_Value
       } 
       else if (recieved == '\q') {
@@ -20,8 +20,16 @@ void Read_Serial1_Nano() {
       Rain_Detected = Serial1_RX_Value.toInt();                               // same as upper but for VoltsTX
       Serial1_RX_Value = "";
       } 
+      else if (recieved == '\s') {
+      RawWheelAmp = Serial1_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Serial1_RX_Value = "";
+      } 
     else Serial.print(F("No Data Received|"));
   }
+
+  //Serial.print("WAMpRaw: ");
+  //Serial.print(RawWheelAmp);
+  //Serial.print(" |");
 
 Calculate_Volt_Amp_Charge();
 

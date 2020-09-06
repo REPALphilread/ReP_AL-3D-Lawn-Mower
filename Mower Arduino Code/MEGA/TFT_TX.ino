@@ -79,6 +79,22 @@ void Send_Data_To_TFT() {
       
 }
 
+// Setup Other
+    if (TFT_Menu_Command == 30) {
+      Serial.println("TX Setup Other");
+      
+      Serial3.print(PCB);
+      Serial3.println("\a");
+      delay(300);  
+
+      Serial.print(F("PCB = "));
+      if (PCB == 1) Serial.println(F("Enabled"));
+      if (PCB == 0) Serial.println(F("Disabled"));
+      Serial.println(" ");
+      
+}
+
+
     // Menu Sonar
     if (TFT_Menu_Command == 6) {
       Serial.println("TX Sensors to TFT");
@@ -378,6 +394,26 @@ void Send_Data_To_TFT() {
       Serial.println(GPower);     
     }
 
+
+// Wheel Block
+    if (TFT_Menu_Command == 29) {
+
+      Serial3.print(Wheel_Amp_Sensor_ON);
+      Serial3.println("\a");
+      delay(300);  
+
+      Serial3.print(Max_Wheel_Amps * 100);
+      Serial3.println("\b");
+      delay(300);
+
+    Serial.print(F("Wheel Amp ON: "));
+        if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
+        if (Wheel_Amp_Sensor_ON == 0) Serial.println("OFF");
+    
+    Serial.print(F("Wheel Amps Max: "));
+    Serial.print(Max_Wheel_Amps);     
+    }
+
 // Alarm 1
     if (TFT_Menu_Command == 20) {
       Serial.println("TX Alarm1 TFT");
@@ -503,8 +539,8 @@ void Send_Data_To_TFT() {
       Serial.println("Set Time TFT");
       if (PCB == 0) {
         Time t = rtc.time();
-        int Time_Hour = t.hr;
-        int Time_Minute = t.min;  
+        Time_Hour = t.hr;
+        Time_Minute = t.min;  
         }
       if (PCB == 1) {
         byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
@@ -605,15 +641,19 @@ void Send_Data_To_TFT() {
 
       if (PCB == 0) {
         Time t = rtc.time();
-        int Time_Hour = t.hr;
-        int Time_Minute = t.min;
-      }
+        Serial.println("PCB = 0 Time ");
+        Serial.print(t.hr);
+        Serial.print(":");
+        Serial.println(t.min);
+        Time_Hour = t.hr;
+        Time_Minute = t.min;
+        }
       if (PCB == 1) {        
         byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
         Read_DS3231_Time(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);
-        int Time_Hour = hour;
-        int Time_Minute = minute;
-        int Time_Second = second;
+        Time_Hour = hour;
+        Time_Minute = minute;
+        Time_Second = second;
         }
 
       Serial3.print(Alarm_1_ON);
@@ -627,11 +667,11 @@ void Send_Data_To_TFT() {
       Serial3.print(Alarm_3_ON);
       Serial3.println("\c");
       delay(300); 
-        
+
       Serial3.print(Time_Hour);
       Serial3.println("\d");         // Sends the time to the Serial Monitor for the TFt to receive
       delay(300);  
-        
+          
       Serial3.print(Time_Minute);
       Serial3.println("\e");
       delay(100);
@@ -1070,6 +1110,17 @@ void Send_Mower_Running_Data() {
         }
 
 
+// Sends Wheel Amp Data during Test
+void Send_Wheel_Amp_Data() {
+        Serial3.print(Wheel_Blocked);      
+        Serial3.println("\a");
+        delay(300);
+
+      
+        Serial.print(F("Wheel Status: "));
+        if (Wheel_Blocked == 4) Serial.println("Blocked");
+        if (Wheel_Blocked == 0) Serial.println("- - - -");
+        }
 
 
 

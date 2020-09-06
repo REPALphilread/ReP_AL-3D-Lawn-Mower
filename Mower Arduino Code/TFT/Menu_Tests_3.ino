@@ -48,7 +48,7 @@ void Print_Testing_3_Menu() {
     Button_X = Start_X;
     Button_Y = Button_Y + (Button_H + Menu_Spacing);    
     
-    Test3_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "SPARE", 2);
+    Test3_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, BLACK, WHITE, "Wheel Amp", 2);
     Test3_btn.drawButton(false);
 
     //Spare Test
@@ -152,7 +152,30 @@ if (GYRO_Test_btn.justPressed()) {
     }
     
 // Test 3
- if (Test3_btn.justPressed()) {
+if (Test3_btn.justPressed()) {
+    Setup_TFT_Screen_Test();
+    Menu_Active = 38;
+    Send_Menu_Selected_To_Mower_MEGA_No_RX();
+    tft.println(F("Testing Wheel Amp Sensor"));
+    tft.setTextSize(2); 
+    tft.setCursor(50,80);
+    tft.print("Status");
+    int Wheel_Amp_Sensor_Count = 0;
+    Menu_Complete_Wheel_Amp_Test = false;
+    while (Menu_Complete_Wheel_Amp_Test == false) {
+          tft.setTextColor(BLACK, BLACK);   
+          if (Wheel_Blocked == 0) Print_Wheel_Blocked_Text();    
+          Receive_Wheel_Amp_Data();              
+          tft.setTextColor(YELLOW, BLACK);  
+          if (Wheel_Blocked == 4) Print_Wheel_Blocked_Text(); 
+          delay(500);
+          Wheel_Amp_Sensor_Count = Wheel_Amp_Sensor_Count + 1;
+          if (Wheel_Amp_Sensor_Count < 3)    Menu_Complete_Wheel_Amp_Test = false;   // Stops any first problems with the TXRX cancelling the test
+          if (Wheel_Amp_Sensor_Count > 70)  Menu_Complete_Wheel_Amp_Test = true;    // Backup Exit Clause
+          }
+
+    tft.fillScreen(BLACK);
+    Print_Testing_3_Menu(); 
     }
 
 // Test 4
@@ -185,6 +208,13 @@ void Print_Y_Angle_Text() {
       tft.setTextSize(6); 
       tft.setCursor(250,110);
       tft.print(GYRO_Y_Angle);
+      }
+
+     
+void Print_Wheel_Blocked_Text() {
+      tft.setTextSize(6); 
+      tft.setCursor(80,110);
+      tft.print("Blocked");
       }
 
       

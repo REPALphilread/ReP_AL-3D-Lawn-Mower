@@ -107,6 +107,11 @@ if (Show_TX_Data == 1) {
       Serial.print(F("Rain:"));
       Serial.print(Rain_Detected);
       Serial.print(F("|"));
+      if (Wheel_Amp_Sensor_ON == 1) {
+          Serial.print(F("WBlock:"));
+          Serial.print(Wheel_Blocked);
+          Serial.print(F("|"));
+          }
       }
 
 // Calculate Amps from NANO RX Data

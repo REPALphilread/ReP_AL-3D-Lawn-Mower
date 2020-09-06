@@ -53,10 +53,11 @@ Adafruit_GFX_Button up1_btn, down1_btn, up2_btn, down2_btn, up3_btn, down3_btn, 
                     Save_Blade_btn, Save_Wheels_btn, Movement_btn, Save_Movement_btn, Save_Tracking_Exit_btn, Done_Tracking_btn, Exit_Point_btn,
                     Find_Wire_btn, Track_PID_btn, Dock_ONOFF_btn, Spare_btn, Save_Tracking_btn, Tracking_Rotation_btn, Compass_ONOFF_btn,
                     Save_Track_Find_Wire_btn, Save_Track_PID_btn, Done_Navigation_btn, HeadHold_btn, PCompass_btn, GPS_btn, Alarm1_btn,
-                    Alarm2_btn, Alarm3_btn, SetTime_btn, Done_Time_btn, Save_AlarmX_btn, Save_Set_Time_btn, Next_btn, TFT_btn, Done3_btn, 
+                    Alarm2_btn, Alarm3_btn, SetTime_btn, Done_Time_btn, Save_AlarmX_btn, Save_Set_Time_btn, Next_btn, Setup_Other_btn, Done3_btn, 
                     Tests_btn, Test1_btn, Test2_btn, Test3_btn, Test4_btn, Test5_btn, Done4_btn, Cancel_QG_btn, Cancel_ED_btn, Clear_Error_btn,
                     Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn, Create_Fence_btn, GPS_Enabled_ONOFF_btn, Save_GPS_Point_btn, Save_Fence_btn,
-                    GYRO_Test_btn, GYRO_Enabled_btn, Compass_btn, Done_Compass_btn, GYRO_btn, Done_GYRO_btn, Comp_Mode_btn;
+                    GYRO_Test_btn, GYRO_Enabled_btn, Compass_btn, Done_Compass_btn, GYRO_btn, Done_GYRO_btn, Comp_Mode_btn, Wheel_Amp_Block_btn,
+                    ONOFF_Amp_btn;
                     
 
 unsigned long time;
@@ -69,7 +70,7 @@ bool  Menu_Complete;
 bool  Menu_Complete_2;
 bool  Menu_Complete_Main;
 bool  Menu_Complete_Mowing;
-bool  Menu_Complete_TFT_Setup;
+bool  Menu_Complete_Setup_Other;
 bool  Menu_Complete_Settings;
 bool  Menu_Complete_Settings_2;
 bool  Menu_Complete_Settings_3;
@@ -110,7 +111,8 @@ bool  Menu_Complete_GPS_New_Fence;
 bool  Menu_Complete_Compass;
 bool  Menu_Complete_GPS;
 bool  Menu_Complete_GYRO;
-
+bool  Menu_Complete_Wheel_Amp_Test;
+bool  Menu_Complete_Wheel_Amp_Block;
 
 
 int  Mower_Status_Value = 1;
@@ -155,6 +157,8 @@ int GYRO_Y_Angle;
 int GYRO_Enabled;
 float GPower;
 
+// Wheel Blocked
+int Wheel_Blocked;
 
 // Motor Menu
 
@@ -176,6 +180,9 @@ int Bar_Pos_Y;
 int Bar_Width;
 int Button_W;
 int LH_RH_Spacing;
+
+int Wheel_Amp_Sensor_ON;
+float Max_Wheel_Amps;
 
 
 //Tracking
@@ -415,6 +422,7 @@ bool Touch_getXY(void) {
 //*****************************
 
 bool Draw_Pictures = 1;
+int  PCB;
 int  Delay_Transmit = 600;
 int  Receive_Values_Delay = 750;
 int  Battery_Display = 2;
@@ -458,7 +466,7 @@ tft.println(F("PLEASE WAIT...."));
 tft.println(F(" "));
 
 bmpDraw("logo.bmp", 75, 80);
-delay(4000);
+delay(4500);
 Get_Initial_Values();
 delay(3000);
 tft.fillScreen(BLACK);

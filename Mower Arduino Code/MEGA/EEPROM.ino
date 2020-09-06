@@ -478,6 +478,32 @@ Serial.println("*** EEPROM Settings ***");
     Serial.println(GPower);
   }
 
+
+  int Wheel_Amp_Sensor_ON_Enabled_EEPROM = EEPROM.read(115);
+  if (Wheel_Amp_Sensor_ON_Enabled_EEPROM == 1) {
+    Wheel_Amp_Sensor_ON = EEPROM.read(116);  
+    Serial.print(F("Wheel Block Amp Sensor Enabled from EEPROM : "));
+    if (Wheel_Amp_Sensor_ON == 0) Serial.println(F("Disabled"));
+    if (Wheel_Amp_Sensor_ON == 1) Serial.println(F("Enabled"));
+  }
+  
+  int Max_Wheel_Amps_EEPROM = EEPROM.read(117);
+  if (Max_Wheel_Amps_EEPROM == 1) {
+    Max_Wheel_Amps = EEPROM.read(118); 
+    Max_Wheel_Amps = Max_Wheel_Amps / 100; 
+    Serial.print(F("Wheel Block Amps set from EEPROM : "));
+    Serial.println(Max_Wheel_Amps);
+  }
+
+  int PCB_EEPROM = EEPROM.read(119);
+  if (PCB_EEPROM == 1) {
+    PCB = EEPROM.read(120); 
+    Serial.print(F("PCB Enabled from EEPROM : "));
+      if (PCB == 1) Serial.println(F("Enabled"));
+      if (PCB == 0) Serial.println(F("Disabled"));
+  }
+
+
 Serial.println(F("*************************"));
  delay(500);
 
@@ -540,4 +566,6 @@ void Clear_EERPOM() {
   EEPROM.write(109,0);    // GYRO Enabled
   EEPROM.write(111,0);    // GYRO Power
   EEPROM.write(113,0);    // Compass Setup Mode
+  EEPROM.write(115,0);    // Wheel amp sensor 
+  EEPROM.write(117,0);    // Wheel amp sensor value
 }

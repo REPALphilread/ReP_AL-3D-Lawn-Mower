@@ -49,51 +49,6 @@ DFRobot_QMC5883 compass;
 #include <QMC5883L.h>
 QMC5883L compass2;
 
-// Manuel Access QMC5883L Compass
-#define QMC5883_ADDRESS                  0x0D
-#define QMC5883_OUTPUT_DATA              0x00
-#define QMC5883_XL                       0x00
-#define QMC5883_XH                       0x01
-#define QMC5883_YL                       0x02
-#define QMC5883_YH                       0x03
-#define QMC5883_ZL                       0x04
-#define QMC5883_ZH                       0x05
-// STATUS (R)
-#define QMC5883_STATUS                   0x06
-#define QMC5883_STATUS_DREADY            B00000001
-#define QMC5883_STATUS_OVERFLOW          B00000010
-#define QMC5883_STATUS_DATASKIP          B00000100
-// TEMPERATURE (R)
-#define QMC5883_TEMPERATURE1             0x07
-#define QMC5883_TEMPERATURE2             0x08
-#define LSB_C_MULTIPLIER  100
-// MODE CONTROL (RW)
-#define QMC5883_CONTROL                  0x09
-// MODE CONTROL
-#define QMC5883_CONTROL_MODE_STBY        B00000000
-#define QMC5883_CONTROL_MODE_CONTINUOUS  B00000001
-// OUTPUT DATA RATE
-#define QMC5883_CONTROL_ODR_10HZ         B00000000
-#define QMC5883_CONTROL_ODR_50HZ         B00000100
-#define QMC5883_CONTROL_ODR_100HZ        B00001000
-#define QMC5883_CONTROL_ODR_200HZ        B00001100
-// RANGE SCALE
-#define QMC5883_CONTROL_RNG_2G           B00000000
-#define QMC5883_CONTROL_RNG_8G           B00010000
-#define LSB_G_MULTIPLIER_8G  3000
-#define LSB_G_MULTIPLIER_2G  12000
-// OVER SAMPLE RATIO
-#define QMC5883_CONTROL_OSR_512          B00000000
-#define QMC5883_CONTROL_OSR_256          B01000000
-#define QMC5883_CONTROL_OSR_128          B10000000
-#define QMC5883_CONTROL_OSR_64           B11000000
-#define QMC5883_CONTROL2                 0x0A
-#define QMC5883_CONTROL2_INTERRUPT       B00000001 // set to disable
-#define QMC5883_CONTROL2_SOFTRST         B10000000 // set to signal soft reset
-#define QMC5883_CONTROL2_ROL_PNT         B01000000 // set to enable roll over reads
-#define QMC5883_SETRESET                 0x0B
-#define QMC5883_SETRESET_DEFAULT         B00000001
-
 //Pin setup for Arduino MEGA
 
 //Perimeter Wire Pins
@@ -158,7 +113,6 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 // Tilt Sensors
 #define Tilt_Angle A8           // measures the angle of the mower
 #define Tilt_Orientation A9     // measures if the mower is upside down
-
 
 
 //Global Variables
@@ -411,6 +365,11 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Find_Wire_Track;
   bool Go_To_Charging_Station;
 
+  // Wheel Amp Sensors
+  int    RawWheelAmp;
+  int    Wheel_Blocked;
+  float  WheelAmps;
+
  
 /***********************************************************************************************
 
@@ -428,11 +387,11 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.6";
+  char Version[16] = "V8.71";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
-  bool PCB                        = 1;                          // USE Printed Circuit Board Relay
+  bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -518,6 +477,9 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Mower_Turn_Delay_Min       = 1000;    //EEPROM            // Min Max Turn time of the Mower after it reverses at the wire. 1000 = 1 second
   int Mower_Turn_Delay_Max       = 2500;    //EEPROM            // A random turn time between these numbers is selected by the software
   int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
+
+  bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blovked wheels.
+  float Max_Wheel_Amps           = 0.6;                         // Maximum amperage allowed in the wheels before a blockage is called.
 
       
 
@@ -608,6 +570,9 @@ void setup() {
   Serial.println(F("==================="));
   Load_EEPROM_Saved_Data();
 
+Compass_Activate = 1;
+  Compass_Setup_Mode = 1;
+
 
   // If the manuel set time is switched on
   if (Set_Time == 1 ) {
@@ -691,6 +656,7 @@ if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                      
 if  (Mower_Running == 1)                                                                                                  Check_Timed_Mow();                  // Check to see if the time to go home has come.
 if  (Mower_Running == 1)                                                                                                  TestforBoundaryWire();              // Test is the boundary wire is live
 if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
+if  ((Mower_Running == 1) && (Wheel_Amp_Sensor_ON == 1) )                                                                 Check_Wheel_Amps();                 // Tests to see if the wheels are blocked.
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                                         Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
 if ((Mower_Running == 1) && (GPS_Enabled == 1))                                                                           Check_GPS_In_Out();                 // Test is the GPS Fence has been crossed
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD

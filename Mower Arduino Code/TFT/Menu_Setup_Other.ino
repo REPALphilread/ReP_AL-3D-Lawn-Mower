@@ -1,5 +1,6 @@
-void Print_TFT_Menu() {  
+void Print_Setup_Other_Menu() {  
 
+    tft.fillScreen(BLACK);
     //if (Draw_Pictures == 1)   bmpDraw("Rain.bmp", 270, 60);      //Draw the mower picture
     delay(100);    
    
@@ -23,7 +24,7 @@ void Print_TFT_Menu() {
     tft.setTextSize(Txt_Size_Main_Menu); 
     tft.setTextColor(GREEN, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(10, 10);            // Text Coordinates X, Y
-    tft.print(F("TFT Screen Options"));  
+    tft.print(F("Other Setup Options"));  
     
     
     
@@ -49,7 +50,7 @@ void Print_TFT_Menu() {
     ONOFF1_btn.drawButton(false);
 
 
-    //Turn Over sensor
+    //Use PCB Option
 
     Label_X = Start_X;                           // Starting X Point.
     Label_Y = Button_Y + Menu_Spacing;                           // Starting Y Point
@@ -57,7 +58,7 @@ void Print_TFT_Menu() {
     tft.setTextSize(Txt_Size_Label); 
     tft.setTextColor(YELLOW, BLACK);      //Text Colour/ Background Colour
     tft.setCursor(Label_X, Label_Y);            // Text Coordinates X, Y
-    tft.print(F("Spare"));  
+    tft.print(F("USE PCB"));  
     
     Button_X = Label_X + (0.5 * Button_W);
     Button_Y = Label_Y + Offset_Btn + (0.3 * Button_H);   
@@ -65,8 +66,8 @@ void Print_TFT_Menu() {
     Value_X2 = Button_X;
     Value_Y2 = Button_Y;
     
-    if (Spare == 1) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
-    if (Spare == 0) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
+    if (PCB == 1) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
+    if (PCB == 0) ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
     ONOFF2_btn.drawButton(false);
 
 
@@ -80,7 +81,7 @@ void Print_TFT_Menu() {
 }
 
 
-void React_to_Button_Press_TFT_Setup() {
+void React_to_Button_Press_Setup_Other() {
 
  // If the Angle Sensor Button is pressed
  if (ONOFF1_btn.justPressed() ) {
@@ -109,7 +110,7 @@ void React_to_Button_Press_TFT_Setup() {
  }
 
 
- // If the Tip Over Sensor Button is pressed
+ // If the PCB Enabled Button is pressed
  if (ONOFF2_btn.justPressed() ) {
 
         int Button_W = 120;                // width of the button
@@ -119,15 +120,15 @@ void React_to_Button_Press_TFT_Setup() {
         int Button_Y = Value_Y2;
         bool Changed = 0;
 
-        if ((Spare == 1) && (Changed ==0))  {
-          Spare = 0;
+        if ((PCB == 1) && (Changed ==0))  {
+          PCB = 0;
           Changed = 1;
           ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "OFF", 2);
           ONOFF2_btn.drawButton(false);
           }
         
-        if ((Spare == 0) && (Changed ==0)) {
-          Spare = 1;
+        if ((PCB == 0) && (Changed ==0)) {
+          PCB = 1;
           Changed = 1;
           ONOFF2_btn.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, GREEN, BLACK, "ON", 2);
           ONOFF2_btn.drawButton(false);
@@ -138,11 +139,16 @@ void React_to_Button_Press_TFT_Setup() {
  
  // Action if Tip ensor Save is pressed
  if (Save_btn.justPressed()) {
-         Menu_Complete_TFT_Setup = true;
+         Menu_Complete_Setup_Other = true;
          tft.fillScreen(BLACK);
          Serial.println(F("Tip Sensor Data Saved and TX"));
          EEPROM.write(2, 1);
          EEPROM.write(3, Draw_Pictures); 
+         
+         Menu_Active = 930;
+         Send_Menu_Selected_To_Mower_MEGA();
+         Transmit_Setup_Other_Values();     
+         
          Print_Settings_2_Menu();
          }  
 
@@ -151,7 +157,7 @@ void React_to_Button_Press_TFT_Setup() {
 }
 
 
-void Sense_Button_Press_TFT_Setup() {
+void Sense_Button_Press_Setup_Other() {
     down = Touch_getXY();
     ONOFF1_btn.press (down && ONOFF1_btn.contains(pixel_x, pixel_y));
     ONOFF2_btn.press (down && ONOFF2_btn.contains(pixel_x, pixel_y));

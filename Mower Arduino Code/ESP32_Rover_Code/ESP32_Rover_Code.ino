@@ -26,12 +26,12 @@ HardwareSerial TFT_Serial(1);
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "BLYNK AUTH";      // Little Monster Input your Blank Auth Code here.
-
+char auth[] = "BLYNK AUTH CODE";  // 330 Monster
 
 // Your WiFi credentials. Set password to "" for open networks.
-char ssid[] = "WLAN-NAme";
-char pass[] = "WLAN-Password";
+char ssid[] = "WLAN-NAME";
+char pass[] = "WLAN Passowrd";
+
 
 
 BlynkTimer timer;

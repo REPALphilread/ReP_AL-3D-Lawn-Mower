@@ -6,6 +6,7 @@ SoftwareSerial mySerial(10, 11);  // RX, TX
 //Amp Sensor Variables.
 int RawValueAmp= 0;
 int RawValueVolt = 0;
+int RawWheelAmp = 0;
 int Raining = 5;
 int Charging = 0;
 
@@ -13,14 +14,22 @@ int Charging = 0;
 // Transmission of the raw sensor values to the Arduino MEGA
 float AmpsTX; 
 float VoltsTX;
-bool Test;
-
+float WheelAmpsTX;
+bool  Test;
+int   Wheel_Blocked;
+float AmpLimit = 1.0;
 
 void setup(){ 
  Serial.begin(9600);
  mySerial.begin(1200);
  Test = 0;
+
+ 
+ 
+ pinMode(A1, INPUT);
+ pinMode(A2, INPUT);
  pinMode(A3, INPUT);
+ pinMode(A6, INPUT);
 
  if (Test == 1) {
   RawValueAmp = 510;
@@ -39,6 +48,8 @@ void Calculate_Volt_Amp() {
  VoltageAmp = (RawValueAmp / 1024.0) * 5000; // Gets you mV
  AmpsTX =  ((VoltageAmp - ACSoffset) / mVperAmp);
 
+ VoltageAmp = (RawWheelAmp / 1024.0) * 5000; // Gets you mV
+ WheelAmpsTX =  ((VoltageAmp - ACSoffset) / mVperAmp);
 
 
 // Calculate Voltage Sensor Value from Battery
@@ -80,6 +91,12 @@ void TX_Raining()  {
   mySerial.println("\w");
 }
 
+void TX_Wheel_Blocked()  {
+  mySerial.print(RawWheelAmp);
+  //mySerial.print(Wheel_Blocked);
+  mySerial.println("\s");
+}
+
 void loop(){
 
  //Read Amp and Volt Raw Number Sensor Values 
@@ -87,6 +104,7 @@ void loop(){
  RawValueAmp = analogRead(A1);
  RawValueVolt = analogRead(A2);
  Raining = analogRead(A3);
+ RawWheelAmp = analogRead(A6);
  }
 
   if (Test == 1 )   {
@@ -103,7 +121,9 @@ void loop(){
  Serial.print("AmpsTX Raw = ");
  Serial.print (RawValueAmp);
  Serial.print("|");
-
+ Serial.print("Wheel Raw = ");
+ Serial.print (RawWheelAmp);
+ Serial.print("|");
 
  Calculate_Volt_Amp();
 
@@ -132,6 +152,17 @@ Serial.print( "Raining = ");
 Serial.print(Raining);
 Serial.print("|");
 
+Serial.print( "Wheel Amps = ");
+Serial.print(WheelAmpsTX);
+Serial.print("|");
+
+if (WheelAmpsTX > AmpLimit) {
+  Serial.println("!! Wheel Blocked !!");
+  Wheel_Blocked = 4;
+  }
+if (WheelAmpsTX <= AmpLimit) {
+  Wheel_Blocked = 0;
+  }
 
  Serial.println("");
  
@@ -143,6 +174,9 @@ Serial.print("|");
  delay(5);
 
  TX_Raining();
+ delay(5);
+
+ TX_Wheel_Blocked();
 
     
 } 
