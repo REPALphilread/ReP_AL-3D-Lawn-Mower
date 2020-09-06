@@ -1192,7 +1192,7 @@ void Receive_Mower_Tracking_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' && recieved != '\f') {   
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\l' && recieved != '\f') {   
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
       else if (recieved == '\a') {
@@ -1211,7 +1211,7 @@ void Receive_Mower_Tracking_Data() {
       Docking_Complete = Serial1_RX_Value.toInt();                         
       Serial1_RX_Value = "";
       } 
-      else if (recieved == '\e') {
+      else if (recieved == '\l') {
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       }  
@@ -1281,7 +1281,7 @@ void Receive_Wheel_Amp_Block_Menu_Data() {
     else Serial.print(F("No Data Received|"));
   }
     
-    Max_Wheel_Amps = Max_Wheel_Amps / 100;
+    Max_Wheel_Amps = Max_Wheel_Amps / 10;
     
     Serial.print(F("Wheel Amp ON: "));
     if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
@@ -1356,7 +1356,7 @@ void Receive_Mower_Running_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' 
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\s' && recieved != '\e' 
     && recieved != '\f' && recieved != '\g' && recieved != '\h' && recieved != '\i' ) { 
               
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
@@ -1373,7 +1373,7 @@ void Receive_Mower_Running_Data() {
       Bumper_Status = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\d') {
+      else if (recieved == '\s') {
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
@@ -1436,7 +1436,7 @@ void Receive_Docked_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e') { 
+    if ( recieved != '\a' && recieved != '\w' && recieved != '\c' && recieved != '\d' && recieved != '\e') { 
       
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
@@ -1444,7 +1444,7 @@ void Receive_Docked_Data() {
       VoltsTX = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\b') {
+      else if (recieved == '\w') {
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       }       

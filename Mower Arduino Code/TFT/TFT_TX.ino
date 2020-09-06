@@ -618,7 +618,7 @@ void Transmit_Saved_Wheel_Block_Values() {
       Serial1.println("\a");
       delay(300);  
 
-      Serial1.print(Max_Wheel_Amps * 100);
+      Serial1.print(Max_Wheel_Amps * 10);
       Serial1.println("\b");
       delay(200);  
     

@@ -490,7 +490,7 @@ Serial.println("*** EEPROM Settings ***");
   int Max_Wheel_Amps_EEPROM = EEPROM.read(117);
   if (Max_Wheel_Amps_EEPROM == 1) {
     Max_Wheel_Amps = EEPROM.read(118); 
-    Max_Wheel_Amps = Max_Wheel_Amps / 100; 
+    Max_Wheel_Amps = Max_Wheel_Amps / 10; 
     Serial.print(F("Wheel Block Amps set from EEPROM : "));
     Serial.println(Max_Wheel_Amps);
   }

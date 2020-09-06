@@ -1000,7 +1000,7 @@ void Receive_Data_From_TFT()  {
     else Serial.print(F("No Data Received|"));
    }
       
-    Max_Wheel_Amps = Max_Wheel_Amps /  100;
+    Max_Wheel_Amps = Max_Wheel_Amps /  10;
     
     Serial.print(F("Wheel Amp ON: "));
         if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
@@ -1013,7 +1013,7 @@ void Receive_Data_From_TFT()  {
       EEPROM.write(115, 1);
       EEPROM.write(116, Wheel_Amp_Sensor_ON);
       EEPROM.write(117, 1);
-      EEPROM.write(118, Max_Wheel_Amps * 100);
+      EEPROM.write(118, Max_Wheel_Amps * 10);
       }
 
 

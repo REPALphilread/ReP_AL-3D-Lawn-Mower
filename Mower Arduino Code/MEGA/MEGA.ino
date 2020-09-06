@@ -387,7 +387,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.71";
+  char Version[16] = "V8.8";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
@@ -479,7 +479,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
 
   bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blovked wheels.
-  float Max_Wheel_Amps           = 0.6;                         // Maximum amperage allowed in the wheels before a blockage is called.
+  float Max_Wheel_Amps           = 1.8;                         // Maximum amperage allowed in the wheels before a blockage is called.
 
       
 

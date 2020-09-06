@@ -81,8 +81,8 @@ void Print_Wheel_Amp_Block_Menu() {
 
 // Save Button
 
-    Save_btn.initButton(&tft, 425, 278, 80, 40, WHITE, CYAN, BLACK, "Save", 2);
-    Save_btn.drawButton(false);
+    Save_Wheel_Amp_btn.initButton(&tft, 425, 278, 80, 40, WHITE, CYAN, BLACK, "Save", 2);
+    Save_Wheel_Amp_btn.drawButton(false);
 
 
 }
@@ -145,7 +145,7 @@ void React_to_Button_Wheel_Amp_Block() {
         Clear_Old_Value_Wheel_Block();
         down2_btn.drawButton(true);
         Max_Wheel_Amps = Max_Wheel_Amps - 0.1;
-        if (Max_Wheel_Amps < 0.1) Max_Wheel_Amps = 0.1;
+        if (Max_Wheel_Amps < 0.5) Max_Wheel_Amps = 0.5;
         Value_All_Float = Max_Wheel_Amps;
         Int_Float = 0;
         Print_New_Value_Wheel_Block();
@@ -154,7 +154,7 @@ void React_to_Button_Wheel_Amp_Block() {
 
  
  // Action if Rain Save is pressed
- if (Save_btn.justPressed()) {
+ if (Save_Wheel_Amp_btn.justPressed()) {
          Menu_Complete_Wheel_Amp_Block = true;
          tft.fillScreen(BLACK);
          Serial.println(F("Rain Data Saved and TX"));
@@ -204,10 +204,10 @@ void Sense_Button_Wheel_Amp_Block() {
     ONOFF_Amp_btn.press (down && ONOFF_Amp_btn.contains(pixel_x, pixel_y));
     up2_btn.press    (down && up2_btn.contains(pixel_x, pixel_y));
     down2_btn.press  (down && down2_btn.contains(pixel_x, pixel_y));
-    Save_btn.press   (down && Save_btn.contains(pixel_x, pixel_y));
+    Save_Wheel_Amp_btn.press   (down && Save_Wheel_Amp_btn.contains(pixel_x, pixel_y));
 
     if (ONOFF_Amp_btn.justReleased())  ONOFF_Amp_btn.drawButton();
     if (up2_btn.justReleased())     up2_btn.drawButton();
     if (down2_btn.justReleased())   down2_btn.drawButton();
-    if (Save_btn.justReleased())    Save_btn.drawButton();
+    if (Save_Wheel_Amp_btn.justReleased())    Save_Wheel_Amp_btn.drawButton();
 }

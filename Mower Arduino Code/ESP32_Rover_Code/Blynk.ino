@@ -6,14 +6,15 @@ void myTimerEvent()  {
 void Run_Blynk_Data() {
 
   
-  if(!Blynk.connected()) {
+  if(!Blynk.connected()) {                      // if disconnected from Blynk
+    digitalWrite(GPS_Signal_Pin, LOW);          // Call OUTSIDE FENCE = 0V on Pin 26
+    Serial.println("------------------------");
+    Serial.println("ESP32 Disconnected from Blynk");
+    Serial.println("Reconnecting ... ");
+    Set_Mode_ESP32_WIFI ();
+    WIFI_Connect();
     Blynk.run();
     timer.run();  
-    //digitalWrite(LED, HIGH);
-    Serial.println("------------------------");
-    Serial.println("ESP32 Disconnected");
-    Serial.println("Reconnecting ... ");
-    WIFI_Connect() ;
     }
   else {
     Blynk.run();

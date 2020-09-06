@@ -57,7 +57,7 @@ Adafruit_GFX_Button up1_btn, down1_btn, up2_btn, down2_btn, up3_btn, down3_btn, 
                     Tests_btn, Test1_btn, Test2_btn, Test3_btn, Test4_btn, Test5_btn, Done4_btn, Cancel_QG_btn, Cancel_ED_btn, Clear_Error_btn,
                     Tip_btn, Done5_btn, Done6_btn, Tilt_Test_btn, Create_Fence_btn, GPS_Enabled_ONOFF_btn, Save_GPS_Point_btn, Save_Fence_btn,
                     GYRO_Test_btn, GYRO_Enabled_btn, Compass_btn, Done_Compass_btn, GYRO_btn, Done_GYRO_btn, Comp_Mode_btn, Wheel_Amp_Block_btn,
-                    ONOFF_Amp_btn;
+                    ONOFF_Amp_btn, Save_Wheel_Amp_btn;
                     
 
 unsigned long time;

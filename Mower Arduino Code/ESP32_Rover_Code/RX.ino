@@ -58,7 +58,7 @@ void Receive_Data_From_TFT()  {
       Serial.print("Activating Settings");
       delay(2000);
       
-      if (GPS_WIFI_Enabled == 1) Connect_ESP32_to_WIFI();
+      if (GPS_WIFI_Enabled == 1) WIFI_Connect();
       Blynk.virtualWrite(V1, "clr");
       First_Plot = 1;
       Activate_GPS_Fence();

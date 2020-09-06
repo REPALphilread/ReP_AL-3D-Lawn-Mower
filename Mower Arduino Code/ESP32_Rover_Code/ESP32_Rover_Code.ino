@@ -1,4 +1,4 @@
- 
+  
 // ReP_AL GPs Fence Software
 // The GPS fence can be defined in the YGPS XGPS Arrays on the TAB GPS_Fence_Coordinates
 // Additonal Array points can be added or deleted to create the fence data.
@@ -26,12 +26,11 @@ HardwareSerial TFT_Serial(1);
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "BLYNK AUTH CODE";  // 330 Monster
+char auth[] = "Blynk Code";  // 330 Monster
 
 // Your WiFi credentials. Set password to "" for open networks.
-char ssid[] = "WLAN-NAME";
-char pass[] = "WLAN Passowrd";
-
+char ssid[] = "WLAN name";
+char pass[] = "WLAN Password";
 
 
 BlynkTimer timer;
@@ -186,6 +185,7 @@ int Spare = 5;
 
 
 
+
 // ReP_AL GPS Fence Arduino Sketch Settings
 //-------------------------------------------------
 
@@ -226,7 +226,10 @@ pinMode(GPS_Lock_Pin, OUTPUT);
 //Clear_EEPROM();
 Activate_EEPROM_Seetings();                                                   // Reads in the settings for the EEPROM to override the standard setup with the user setup
 Activate_GPS_Fence();
-if (GPS_WIFI_Enabled == true) Connect_ESP32_to_WIFI();
+if (GPS_WIFI_Enabled == true) {
+  Set_Mode_ESP32_WIFI();
+  WIFI_Connect();
+}
 
 }
 
@@ -310,20 +313,7 @@ if (GPS_WIFI_Enabled == true) {
   Serial.println("");
   }
 
-if (GPS_WIFI_Enabled == 1)  {
-    if(!Blynk.connected()) {
-        digitalWrite(GPS_Signal_Pin, LOW);       // OUTSIDE FENCE = 0V on Pin 26
-        digitalWrite(LED, LOW);
-        Serial.println("ESP32 Disconnected");
-        Serial.println("Reconnecting . . . . . . ");
-        WIFI_Connect();
-        digitalWrite(GPS_Signal_Pin, HIGH);       // OUTSIDE FENCE = 0V on Pin 26
-        digitalWrite(LED, HIGH);
-        }
-  else {
 
-    }
+    
   
-}
-
 }

@@ -1,7 +1,7 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V8.71  17.08.2020
+Code V8.8  21.08.2020
 ----------------------
 
 Upload the MEGA code to the Arduino MEGA
@@ -10,25 +10,23 @@ Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 Upload the TFT Code to the TFT MEGA Shield
 Upload the ESP32_Rover Code to the ESP32 Board (GPS)
 Upload the BMP Files to the TFT SD Card
+Upload the ESP WebCAM to the FPV Camera
 
 
-Features of 8.71
+Features of 8.8
 ---------------
 
-- Includes the Motor Amp Sensor Code and Menu options in the TFT menu
-- Reduced / Eliminated "ghost" double turns at the wire
-- Fixed TFT clock transfer for none PCB boards
-- Included a PCB ON/OFF option (EEPROM) in the TFT Menu Other Settings
-- Fixed void Exit_Dock text in specials tab
-- Stopping of the mower improved when going home 
+- Fixes a bug if too high an amp setting was chosen it was missaved to EEPROM
 - TFT Display functions improved
+- Fixed errors whereby TFT screen shows the wrong menu when mowing
 - BETA version of GPS navigation (lots to improve)
+- Improved reconnect of WIFI on GPS and FPV Camera.
+- I included the FPV software in the download (web page version which is the one I use)
 
 
-Known Issues of 8.71
+Known Issues of 8.8
 --------------------
 - Mower can sometimes stop due the miss-communication between MEGA mower and TFT.
-- TFT screnn can go back to the main menu when mowing (working on that now)
 
 
 Planned for next release

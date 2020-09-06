@@ -402,7 +402,7 @@ void Send_Data_To_TFT() {
       Serial3.println("\a");
       delay(300);  
 
-      Serial3.print(Max_Wheel_Amps * 100);
+      Serial3.print(Max_Wheel_Amps * 10);
       Serial3.println("\b");
       delay(300);
 
@@ -1010,7 +1010,7 @@ void Send_Mower_Tracking_Data() {
         delay(300);    
 
         Serial3.print(Mower_Status_Value);
-        Serial3.println("\e");
+        Serial3.println("\l");
         delay(300); 
 
         Serial3.print(Mower_Error_Value);
@@ -1057,7 +1057,7 @@ void Send_Mower_Running_Data() {
         delay(Delay_running);    
 
         Serial3.print(Mower_Status_Value);
-        Serial3.println("\d");
+        Serial3.println("\s");
         delay(Delay_running);    
 
         Serial3.print(Mower_Error_Value);      
@@ -1137,7 +1137,7 @@ void Send_Mower_Docked_Data()  {
         delay(300);
       
         Serial3.print(Mower_Status_Value);      
-        Serial3.println("\b");
+        Serial3.println("\w");
         delay(300); 
 
         Serial3.print(Mower_Error_Value);      

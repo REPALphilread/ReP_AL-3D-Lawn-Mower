@@ -6,6 +6,7 @@ void Calculate_Wheel_Amps() {
  double Amps = 0;
  VoltageAmp = (RawWheelAmp / 1024.0) * 5000; // Gets you mV
  WheelAmps =  ((VoltageAmp - ACSoffset) / mVperAmp);
+ if (WheelAmps < 0) WheelAmps = WheelAmps * - 1;
  }
 
 
