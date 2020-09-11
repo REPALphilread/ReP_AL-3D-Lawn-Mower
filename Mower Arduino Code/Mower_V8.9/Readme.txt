@@ -8,8 +8,10 @@ Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
 Upload the TFT Code to the TFT MEGA Shield
-Upload the ESP32_Rover Code to the ESP32 Board (GPS)
 Upload the BMP Files to the TFT SD Card
+Upload the ESP32_Rover Code to the ESP32 Board (GPS)
+Upload the ESP32_Web Cam FPV WebCam board
+
 
 
 Features of 8.9
