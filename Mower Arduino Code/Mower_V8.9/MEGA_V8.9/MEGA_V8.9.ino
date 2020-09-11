@@ -416,14 +416,14 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Max_Cycle_Wire_Find_Back    = 50;     //EEPROM            // Maximum number of Backward tracking cycles in finding wire before the mower restarts a compass turn and wire find.  
 
   //Compass Settings
-  int  Compass_Setup_Mode             = 2;                      // 1 to use DFRobot Library   2 to use Manual access code.  3 MechaQMC Library
+  int  Compass_Setup_Mode             = 1;                      // 1 to use DFRobot Library   2 to use Manual access code.  3 MechaQMC Library
   bool Compass_Activate               = 0;       //EEPROM       // Turns on the Compass (needs to be 1 to activate further compass features)
   bool Compass_Heading_Hold_Enabled   = 1;       //EEPROM       // Activates the compass heading hold function to keep the mower straight
   int  Home_Wire_Compass_Heading      = 110;     //EEPROM       // Heading the Mower will search for the wire once the mowing is completed.
   float CPower                        = 2;       //EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
 
   // GYRO Settings
-  bool GYRO_Enabled                   = 1;      // EEPROM       // Enable the GYRO - Automatically activates the GYRO heading hold               
+  bool GYRO_Enabled                   = 0;      // EEPROM       // Enable the GYRO - Automatically activates the GYRO heading hold               
   float GPower                        = 3;      // EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
   
   // Pattern Mow
