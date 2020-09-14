@@ -180,16 +180,7 @@ void loop()  {
     Blynk.run();
     timer.run();  
     digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...        
-    if ((Update_APP_Buttons == 3) && ((Mower_Docked == 1) || (Mower_Parked ==1)) ) {
-      delay(1500);
-      for (int i = 0; i <= 3; i++) { 
-       Recieve_App_Button_Status();
-       delay(235);
-       Serial.println(""); 
-       }
-      Update_APP_Buttons = 4;
-      }
-    else  Receive_All_From_MEGA();
+    Receive_All_From_MEGA();
     Update_Blynk_App_With_Status();
     if (MEGA_Watch_Enabled == 1) Check_MEGA_Status();
     Serial.println("");     // new line serial monitor
