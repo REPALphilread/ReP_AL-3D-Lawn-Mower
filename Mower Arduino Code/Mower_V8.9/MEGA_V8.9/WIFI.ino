@@ -6,16 +6,8 @@
 void Get_WIFI_Commands() {
   Receive_Data_From_NODEMCU(); 
   delay(5); 
-  Update_APP_Buttons = Update_APP_Buttons + 1;
-  
-  if ((Update_APP_Buttons == 4) && ((Mower_Docked == 1) || (Mower_Parked == 1)) )  {
-    for (int i = 0; i <= 3; i++)
-     Transmit_APP_Buttons_Status(); 
-     }
-  else Transmit_All_To_NODEMCU(); 
-  
-  if (Update_APP_Buttons == 15) Update_APP_Buttons = 0;
-  }
+  Transmit_All_To_NODEMCU(); 
+
 
 void Receive_Data_From_NODEMCU() {
   while(Serial2.available()>0){
