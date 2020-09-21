@@ -7,6 +7,7 @@ void Get_WIFI_Commands() {
   Receive_Data_From_NODEMCU(); 
   delay(5); 
   Transmit_All_To_NODEMCU(); 
+  }
 
 
 void Receive_Data_From_NODEMCU() {
