@@ -1,6 +1,9 @@
 STL Files to 3D print
-Latest and all Previous Versions of the ReP_AL Lawn Mower
-=========================================================
+330 Archive Version of the ReP_AL Lawn Mower
+============================================
+
+The Latest Monster Version of the Mowwer with TFT Touchscreen is available on the website
+www.repalmakershop.com
 
 ReP_AL Lawn Mower STL's
 =======================
