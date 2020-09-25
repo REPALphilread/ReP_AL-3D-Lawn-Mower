@@ -20,6 +20,12 @@ Upload the BMP Files to the TFT SD Card
 Perimeter Wire - Sender_station_V1 needs to be uploaded to the Arduino in the perimeter wire transmitter.
 
 
+Perimeter Wire Transmitter
+--------------------------
+
+Upload the code from this folder to the wire transmitter
+
+
 Libraries
 ---------
 All the libraries I used for the Arduino Code can be found in this folder.
