@@ -1,0 +1,3 @@
+[0610/220254.457:ERROR:file_io_win.cc(179)] CreateFile C:\Users\Hp\AppData\Local\Google\Chrome\User Data\Crashpad\settings.dat: Zugriff verweigert (0x5)
+[0610/220254.488:ERROR:registration_protocol_win.cc(131)] TransactNamedPipe: Die Pipe wurde beendet. (0x6D)
+[0610/220254.504:ERROR:file_io_win.cc(179)] CreateFile C:\Users\Hp\AppData\Local\Google\Chrome\User Data\Crashpad\settings.dat: Zugriff verweigert (0x5)
