@@ -2,6 +2,10 @@ ReP_AL-3D-Lawn-Mower
 Code and Files for the ReP_AL 3D Printed Lawn Mower
 ---------------------------------------------------
 
+All build instructions and the latest STL files are found at
+
+www.repalmakershop.com
+
 
 Arduino Code
 ------------
