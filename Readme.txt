@@ -6,6 +6,8 @@ Code and Files for the ReP_AL 3D Printed Lawn Mower
 Arduino Code
 ------------
 The mower software is in the folder Mower Arduino Code:  
+PLEASE ALWAYS USE THE LATEST VERSION OF THE CODE
+
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
