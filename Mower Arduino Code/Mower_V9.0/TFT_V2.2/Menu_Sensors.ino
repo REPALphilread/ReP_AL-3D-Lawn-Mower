@@ -102,8 +102,8 @@ void Print_Sensors_Menu() {
     Button_X = Button_X;
     Button_Y = Start_Y + (Button_H + Menu_Spacing);    
     
-    if (WIFI_Enabled == 1) OPTION1_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, GREEN, BLACK, "WIFI ON", 2);
-    if (WIFI_Enabled == 0) OPTION1_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "WIFI OFF", 2);
+    if (WIFI_Enabled == 1) OPTION5_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, GREEN, BLACK, "WIFI ON", 2);
+    if (WIFI_Enabled == 0) OPTION5_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "WIFI OFF", 2);
     OPTION1_BTN.drawButton(false);
 
     //More Options
@@ -200,7 +200,7 @@ void React_to_Button_Press_Sensors() {
 
 
     // Action if WIFIis pressed
-    if (OPTION1_BTN.justPressed()) {
+    if (OPTION5_BTN.justPressed()) {
         
         bool Changed = 0;
         int Start_X = 70;
@@ -216,15 +216,15 @@ void React_to_Button_Press_Sensors() {
         if ((WIFI_Enabled == 1) && (Changed == 0))  {
           WIFI_Enabled  = 0;
           Changed = 1;
-          OPTION1_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "WIFI OFF", 2);
-          OPTION1_BTN.drawButton(false);
+          OPTION5_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, WHITE, RED, WHITE, "WIFI OFF", 2);
+          OPTION5_BTN.drawButton(false);
           }
         
         if ((WIFI_Enabled  == 0) && (Changed == 0)) {
           WIFI_Enabled  = 1;
           Changed = 1;
-          OPTION1_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, GREEN, BLACK, "WIFI ON", 2);
-          OPTION1_BTN.drawButton(false);
+          OPTION5_BTN.initButton(&tft, Button_X, Button_Y, Button_W, Button_H, RED, GREEN, BLACK, "WIFI ON", 2);
+          OPTION5_BTN.drawButton(false);
         }          
           Menu_Active = 96;
           Send_Menu_Selected_To_Mower_MEGA();
@@ -264,19 +264,19 @@ void React_to_Button_Press_Sensors() {
 
 void Sense_Button_Press_Sensors() {
     down = Touch_getXY();
-    OPTION1_BTN.press           (down && OPTION1_BTN.contains(pixel_x, pixel_y));   // SONAR
+    OPTION1_BTN.press         (down && OPTION1_BTN.contains(pixel_x, pixel_y));   // SONAR
     OPTION2_BTN.press         (down && OPTION2_BTN.contains(pixel_x, pixel_y));
-    OPTION3_BTN.press            (down && OPTION3_BTN.contains(pixel_x, pixel_y));
-    OPTION4_BTN.press            (down && OPTION4_BTN.contains(pixel_x, pixel_y));
-    OPTION1_BTN.press            (down && OPTION1_BTN.contains(pixel_x, pixel_y));
+    OPTION3_BTN.press         (down && OPTION3_BTN.contains(pixel_x, pixel_y));
+    OPTION4_BTN.press         (down && OPTION4_BTN.contains(pixel_x, pixel_y));
+    OPTION5_BTN.press         (down && OPTION5_BTN.contains(pixel_x, pixel_y));
     Next_btn.press            (down && Next_btn.contains(pixel_x, pixel_y));
     DONE2_BTN.press           (down && DONE2_BTN.contains(pixel_x, pixel_y));
 
-    if (OPTION1_BTN.justReleased())       OPTION1_BTN.drawButton();
+    if (OPTION1_BTN.justReleased())     OPTION1_BTN.drawButton();
     if (OPTION2_BTN.justReleased())     OPTION2_BTN.drawButton();
-    if (OPTION3_BTN.justReleased())        OPTION3_BTN.drawButton();
-    if (OPTION4_BTN.justReleased())        OPTION4_BTN.drawButton();
-    if (OPTION1_BTN.justReleased())        OPTION1_BTN.drawButton();
+    if (OPTION3_BTN.justReleased())     OPTION3_BTN.drawButton();
+    if (OPTION4_BTN.justReleased())     OPTION4_BTN.drawButton();
+    if (OPTION5_BTN.justReleased())     OPTION5_BTN.drawButton();
     if (Next_btn.justReleased())        Next_btn.drawButton();  
     if (DONE2_BTN.justReleased())       DONE2_BTN.drawButton();
 
