@@ -327,7 +327,9 @@ void Send_Data_To_TFT() {
       Serial3.println("\b");
       delay(200);  
 
-      Serial3.print(P * 100);
+      P = P * 100;
+      
+      Serial3.print(P);
       Serial3.println("\c");
       delay(200);  
 
@@ -336,7 +338,7 @@ void Send_Data_To_TFT() {
       Serial.print(F("Max Cycles Right Wheel = "));
       Serial.println(Max_Tracking_Turn_Right);         
       Serial.print(F("PID P = "));
-      Serial.println(P);
+      Serial.println(P/100);
       Serial.println(F(" "));     
       }
 
