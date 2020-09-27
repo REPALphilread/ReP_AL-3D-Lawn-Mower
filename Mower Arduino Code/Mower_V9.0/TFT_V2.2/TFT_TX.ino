@@ -264,9 +264,7 @@ void Transmit_Saved_Tracking_PID_Values() {
       Serial.println("TX Find");
       Data1 = Max_Tracking_Turn_Left / 10;
       Data2 = Max_Tracking_Turn_Right / 10;
-      P = P * 100;
-      int PTX = P;
-      Data3 = PTX;
+      Data3 = P * 100;
       Data4 = 0;
       Data5 = 0;
       Data6 = 0;
