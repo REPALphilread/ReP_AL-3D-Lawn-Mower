@@ -420,7 +420,8 @@ void Receive_Data_From_TFT()  {
       Receive_7_Data_Sets_Serial3();
       Max_Tracking_Turn_Left  = Data1 * 10;
       Max_Tracking_Turn_Right = Data2 * 10;
-      P                       = Data3 / 100;
+      P                       = Data3;
+      P = P / 100;
       Data4 = 0;
       Data5 = 0;
       Data6 = 0;
