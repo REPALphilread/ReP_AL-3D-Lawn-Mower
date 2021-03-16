@@ -1,12 +1,12 @@
 
-// Test sketch to sense the tip of the Mower and shut dowen the
+// Test sketch to sense the tip of the Mower and shut down the
 // Mower blade.
 
 
 void Read_X_Y_Values() {
   
   // Retrieve the raw values from the magnetometer (not scaled).
-//  MagnetometerRaw raw = compass.ReadRawAxis();
+  //  MagnetometerRaw raw = compass.ReadRawAxis();
   
   // Retrieve the scaled values from the magnetometer (scaled to the configured scale).
   //MagnetometerScaled scaled = compass.ReadScaledAxis();
