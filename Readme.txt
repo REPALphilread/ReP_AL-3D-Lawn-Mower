@@ -42,10 +42,6 @@ They are designed to test the indiviual components in your build to see if they 
 Ihe idea is to debug the components indicudually so you are faster in completing the project.
 
 
-STL Files
----------
-Previous 330 Mower STL Data
-
 
 
 ----------------------------------------------
