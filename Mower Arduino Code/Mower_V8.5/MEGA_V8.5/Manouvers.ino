@@ -212,7 +212,7 @@ void Manouver_Find_Wire_Track()  {
         ADCMan.run();
         PrintBoundaryWireStatus();                                                                // Prints of the status of the wire sensor readings.
         Serial.println("");
-        if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands(); 
+        if ((WIFI_Enabled == 1) && (Manual_Mode == 0)) Get_WIFI_Commands(); 
         if (Mower_Parked == 1) {
           Serial.println("Abort Wire Find");
           Abort_Wire_Find = 1;
@@ -256,7 +256,7 @@ void Manouver_Find_Wire_Track()  {
           ADCMan.run();
           PrintBoundaryWireStatus();                                                            // Prints of the status of the wire sensor readings.
           Serial.println("");
-          if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands(); 
+          if ((WIFI_Enabled == 1) && (Manual_Mode == 0)) Get_WIFI_Commands(); 
           if (Mower_Parked == 1) {
             Serial.println("Abort Wire Find");
             Abort_Wire_Find = 1;
@@ -357,7 +357,7 @@ void Manouver_Find_Wire_Track()  {
         Spin_Attempts = Spin_Attempts + 1;                                            // checks that the mower is not blocked trying to spin on the wire and gets stuck in this loop
         WIFI_Check_Up = WIFI_Check_Up + 1;
         if (WIFI_Check_Up = 20) {
-          if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands(); 
+          if ((WIFI_Enabled == 1) && (Manual_Mode == 0)) Get_WIFI_Commands(); 
           WIFI_Check_Up = 0;
           }
         }
@@ -558,7 +558,7 @@ void Manouver_Turn_Around_Sonar() {
   }
 
 
-void Manouver_Manuel_Mode() {
+void Manouver_Manual_Mode() {
   Mower_Docked          = 0;
   Mower_Parked          = 0;
   Mower_Running         = 0;
@@ -567,7 +567,7 @@ void Manouver_Manuel_Mode() {
   Mower_Track_To_Charge = 0;
   Exiting_Dock          = 0;
   Mower_Error           = 0;
-  Manuel_Mode           = 1;
+  Manual_Mode           = 1;
   Loop_Cycle_Mowing     = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
@@ -595,7 +595,7 @@ void Manouver_Start_Mower() {
   Mower_Error           = 0;
   Exiting_Dock          = 0;
   Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
   Wire_Refind_Tries     = 0;
   Calculate_TFT_Mower_Status_Value(); 
   Turn_On_Relay();
@@ -611,7 +611,7 @@ void Manouver_Mower_Exit_Dock() {
   Mower_Parked_Low_Batt = 0;
   Rain_Hit_Detected     = 0;
   Mower_Error           = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
   Tracking_Wire         = 0;
   Exiting_Dock          = 1;  
   Mower_Status_Value    = 9;
@@ -643,7 +643,7 @@ void Manouver_Dock_The_Mower() {
   Mower_Track_To_Charge = 0;
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
   Exiting_Dock          = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
@@ -682,7 +682,7 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Mower_Track_To_Charge = 0;
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
 
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
@@ -712,7 +712,7 @@ void Manouver_Park_The_Mower() {
   Mower_Track_To_Exit   = 0;
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
   Turn_Off_Relay();
@@ -773,7 +773,7 @@ void Manouver_Hibernate_Mower() {
         Tracking_Wire         = 0;
         Mower_Track_To_Exit   = 0;
         Loop_Cycle_Mowing     = 0;
-        Manuel_Mode           = 0;
+        Manual_Mode           = 0;
  
   // Powers down the mower motors and cuts the main power via the relay. 
   Motor_Action_Stop_Motors();
@@ -815,7 +815,7 @@ void Manouver_Go_To_Charging_Station() {
   Mower_Track_To_Exit   = 0;
   Mower_Error           = 0;
   Loop_Cycle_Mowing     = 0;
-  Manuel_Mode           = 0;
+  Manual_Mode           = 0;
   No_Wire_Found_Fwd     = 0;
   No_Wire_Found_Bck     = 0;
   Manage_Alarms();                                              // Switches on or off the Alarms depending on the setup

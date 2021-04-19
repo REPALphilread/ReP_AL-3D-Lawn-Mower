@@ -20,12 +20,12 @@ void Receive_Data_From_NODEMCU() {
   }
  }
 
-void Receive_WIFI_Manuel_Commands() {
+void Receive_WIFI_Manual_Commands() {
   while(Serial2.available()>0){
       val_WIFI = Serial2.parseInt();
       if(Serial2.read()== '\p'){
         delay(5);
-        Execute_Manuel_Blynk_Command_To_Mower();
+        Execute_Manual_Blynk_Command_To_Mower();
         }
   }
  }
@@ -153,15 +153,15 @@ delay(30);
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
-// Manuel Button in Blynk App
+// Manual Button in Blynk App
  if (val_WIFI == 15)  {    
    Serial.println("");
    Serial.print(F("WIFI Command: ")); 
    Serial.print(val_WIFI);
-   Serial.println(F("|Manuel Mode"));
+   Serial.println(F("|Manual Mode"));
    Manouver_Park_The_Mower(); 
    delay(1000);
-   Manouver_Manuel_Mode(); 
+   Manouver_Manual_Mode(); 
    Turn_On_Relay(); 
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
@@ -230,7 +230,7 @@ delay(30);
 
 }
 
-void Execute_Manuel_Blynk_Command_To_Mower() {
+void Execute_Manual_Blynk_Command_To_Mower() {
 // insert wheel motions here.
 
  if (val_WIFI == 16)  {    

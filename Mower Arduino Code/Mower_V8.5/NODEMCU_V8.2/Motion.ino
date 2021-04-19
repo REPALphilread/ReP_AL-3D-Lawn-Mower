@@ -35,13 +35,13 @@ void Exit_Dock() {
   }
 
 
-void Set_To_Manuel_Mode() {
+void Set_To_Manual_Mode() {
     Serial.println("");
-    Serial.println("Manuel Mode Selected");
+    Serial.println("Manual Mode Selected");
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 5;
     Transmit_Blynk_Data_to_Mega();
-    Manuel_Mode = 1;
+    Manual_Mode = 1;
 }
 
 void Set_To_Automatic_Mode_Random() {

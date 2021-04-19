@@ -1065,7 +1065,7 @@ void Calculate_TFT_Mower_Status_Value() {
         Mower_Error_Value = 3;   
         }
    if (Mower_Running == 1)                                  Mower_Status_Value = 5;
-   if (Manuel_Mode == 1)                                    Mower_Status_Value = 6;
+   if (Manual_Mode == 1)                                    Mower_Status_Value = 6;
    if (Tracking_Wire == 1)                                  Mower_Status_Value = 7;
    if (Rain_Hit_Detected == 1)                              Mower_Status_Value = 8;
    if (Exiting_Dock == 1)                                   Mower_Status_Value = 9;
