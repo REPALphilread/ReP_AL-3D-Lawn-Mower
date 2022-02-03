@@ -18,7 +18,7 @@ void Update_Blynk_App_With_Status() {
            Blynk.virtualWrite(V1, LOW);       // Go To Dock Button
            }
 
-        if (Manuel_Mode == 1)   {
+        if (Manual_Mode == 1)   {
            //App Buttons
            Blynk.virtualWrite(V10,LOW);       // Exit Dock Button 
            Blynk.virtualWrite(V0, LOW);       // Quick Start Button
@@ -111,9 +111,9 @@ BLYNK_WRITE(V10)      // Exit Dock Function
 }
 
 
-BLYNK_WRITE(V13)                        // Manuel Forward Motion
+BLYNK_WRITE(V13)                        // Manual Forward Motion
 {
-  if (Manuel_Mode = 1) {
+  if (Manual_Mode = 1) {
   int pinValue = param.asInt(); // assigning incoming value from pin V10 to a variable
   if (pinValue == 1)
   transmit_blynk_code = 7;
@@ -124,9 +124,9 @@ BLYNK_WRITE(V13)                        // Manuel Forward Motion
 
 }
 
-BLYNK_WRITE(V14)                        // Manuel Reverse Motion
+BLYNK_WRITE(V14)                        // Manual Reverse Motion
 {
-  if (Manuel_Mode = 1) {
+  if (Manual_Mode = 1) {
   int pinValue = param.asInt(); // assigning incoming value from pin V10 to a variable
   if (pinValue == 1)
   transmit_blynk_code = 8;
@@ -134,9 +134,9 @@ BLYNK_WRITE(V14)                        // Manuel Reverse Motion
   }
 }
 
-BLYNK_WRITE(V15)                        // Manuel Left Turn
+BLYNK_WRITE(V15)                        // Manual Left Turn
 {
-  if (Manuel_Mode = 1) {
+  if (Manual_Mode = 1) {
   int pinValue = param.asInt(); // assigning incoming value from pin V10 to a variable
   if (pinValue == 1)
   transmit_blynk_code = 9;
@@ -144,9 +144,9 @@ BLYNK_WRITE(V15)                        // Manuel Left Turn
   }
 }
 
-BLYNK_WRITE(V16)                        // Manuel Right Turn
+BLYNK_WRITE(V16)                        // Manual Right Turn
 {
-  if (Manuel_Mode = 1) {
+  if (Manual_Mode = 1) {
   int pinValue = param.asInt(); // assigning incoming value from pin V10 to a variable
   if (pinValue == 1)
   transmit_blynk_code = 10;
@@ -162,7 +162,7 @@ BLYNK_WRITE(V4) {
     case 1: { // Item 1
         Serial.println("Automatic Mode");
         Automatic_Mode = 1;
-        Manuel_Mode = 0;
+        Manual_Mode = 0;
         Set_To_Automatic_Mode_Random();
         Update_Blynk_App_With_Status();
         break;
@@ -170,7 +170,7 @@ BLYNK_WRITE(V4) {
     case 2: { // Item 2
         Serial.println("Automatic Spiral");
         Automatic_Mode = 2;
-        Manuel_Mode = 0;
+        Manual_Mode = 0;
         Set_To_Automatic_Mode_Spiral();
         Update_Blynk_App_With_Status();
         break;
@@ -178,7 +178,7 @@ BLYNK_WRITE(V4) {
     
     case 3: { // Item 3
         Serial.println("Automatic Parallel");
-        Manuel_Mode = 0;
+        Manual_Mode = 0;
         Automatic_Mode = 1;
         Set_To_Automatic_Mode_Parallel();
         Mower_Parked = 0;
@@ -190,10 +190,10 @@ BLYNK_WRITE(V4) {
 
     
     case 4: { // Item 4
-        Serial.println("Manuel Mode");
-        Manuel_Mode = 1;
+        Serial.println("Manual Mode");
+        Manual_Mode = 1;
         Automatic_Mode = 0;
-        Set_To_Manuel_Mode();
+        Set_To_Manual_Mode();
         Mower_Parked = 0;
         Mower_Docked = 0;
         Mower_Running = 0;

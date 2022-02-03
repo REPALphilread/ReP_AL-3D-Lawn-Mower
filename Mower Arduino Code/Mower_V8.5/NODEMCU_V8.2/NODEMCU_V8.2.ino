@@ -51,7 +51,7 @@ int j;
 int k;
 int transmit_blynk_code = 0;
 
-bool Manuel_Mode;
+bool Manual_Mode;
 int Automatic_Mode;
 
 

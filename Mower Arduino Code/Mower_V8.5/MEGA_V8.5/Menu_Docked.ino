@@ -118,7 +118,7 @@ void Activate_Menu_Option_Docked() {
      if (Menu_Mode_Selection == 1) {
        // Exit the mower from the Garage and go to Zone 1;
        lcd.clear();
-       lcd.print("Manuel Start");
+       lcd.print("Manual Start");
        lcd.setCursor(0,1);
        lcd.print("Exit Dock Z1");
        Serial.println(F("Exit to Zone 1 - Free Mow"));
@@ -141,7 +141,7 @@ void Activate_Menu_Option_Docked() {
        // Exit the mower from the Garage and go to Zone 2;
        Menu_Mode_Selection = 0;
        lcd.clear();
-       lcd.print("Manuel Start");
+       lcd.print("Manual Start");
        lcd.setCursor(0,1);
        lcd.print("Exit Dock Z2");
        delay(1000);

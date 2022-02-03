@@ -145,9 +145,9 @@ void Print_LCD_Info_Parked() {
     lcd.print("Parked");
     }
 
-void Print_LCD_Info_Manuel() {
+void Print_LCD_Info_Manual() {
     lcd.setCursor(0,1);
-    lcd.print("Manuel");
+    lcd.print("Manual");
     }
 
 void Print_LCD_Info_Docked() {
